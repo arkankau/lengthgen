@@ -1,0 +1,5 @@
+scope,target,group,n,positive_rate,best_feature,best_auroc,best_spearman
+pooled,collapse_failure,thermo,240,0.2625,basin_margin,0.6926284638149045,0.2937637201045585
+within_setting_mean,collapse_failure,thermo,240,0.2625,native_entropy,0.8870793650793651,0.46423493473059346
+pooled,collapse_failure,simple,240,0.2625,steering_strength,0.9560129136400323,0.6957854769438652
+within_setting_mean,collapse_failure,simple,240,0.2625,risk,0.9366071428571429,0.6764305795818896

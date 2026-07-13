@@ -1,0 +1,4 @@
+target,null_attention_delta_cv_r2,null_attention_best_feature,residual_steering_delta_cv_r2,residual_steering_best_feature,delta_gap_null_minus_residual
+utility_loss,0.10930085407816548,thermo_collapse,0.010454057923802162,basin_margin,0.09884679615436331
+coherence,0.10218012025188339,thermo_collapse,0.006642683215832168,basin_margin,0.09553743703605122
+collapse_failure,0.06949921772514112,mean_entropy,-0.0012031492046753467,steering_alignment,0.07070236692981646

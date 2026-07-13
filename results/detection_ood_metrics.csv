@@ -1,0 +1,9 @@
+eval,detector,auroc,tpr@fpr10
+disguised_pooled,surface_risk,0.6593,0.2833
+disguised_pooled,basin_margin,0.5761,0.1583
+disguised_pooled,single_anchor_cos,0.5222,0.1542
+leave_one_template_out,logistic_probe_ood,1.0,
+leave_one_template_out,basin_margin,0.7552,
+leave_one_template_out,single_anchor_cos,0.6005,
+raw_to_disguised,logistic_probe_ood,0.9988,
+raw_indist,logistic_probe_cv_ref,see detection_metrics.csv,

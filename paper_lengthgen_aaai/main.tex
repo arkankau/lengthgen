@@ -1,0 +1,586 @@
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage[submission]{aaai2027}  % DO NOT CHANGE THIS
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{natbib}  % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{caption} % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\frenchspacing  % DO NOT CHANGE THIS
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{float}
+\newtheorem{proposition}{Proposition}
+
+\pdfinfo{
+/TemplateVersion (2027.1)
+}
+
+\setcounter{secnumdepth}{2}
+
+\title{Selection over Scale in Transformer Length Generalization}
+\author{
+    Anonymous Submission
+}
+\affiliations{
+    %
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A transformer that has learned a length-invariant rule on short sequences often fails to apply it on
+longer ones.
+We ask which internal property of the model supports generalization to longer sequences, and we answer
+by direct measurement.
+On controlled retrieval tasks the input position that holds the answer is known, so we can measure how
+much attention the model places on the correct source token at test length.
+This quantity predicts per-token accuracy with correlation $0.97$, across tasks and across positional
+encodings.
+When attention stays concentrated on the correct source as competitors grow, the model generalizes, and
+when it disperses, accuracy falls with it.
+We compare this against a natural alternative, the scale of the attention output, which also degrades with
+length.
+Attention-output variance predicts accuracy less well, with correlation $0.59$, and an intervention that
+provably holds it constant across length does not improve generalization, and lowers accuracy under rotary
+position embeddings.
+A short argument explains the gap.
+The attention output is a convex combination of value vectors, so its variance shrinks whenever attention
+spreads over more competitors, for a correct or an incorrect selection alike, while only the selection
+controls the behavior.
+We confirm the direction by intervention.
+Raising attention on the correct source raises accuracy in proportion, with the per-cell accuracy gain and
+attention gain tracking each other at correlation $1.0$, while stabilizing the variance raises neither.
+Attention concentration on the correct source is the operative variable that supports length
+generalization.
+We release the code, the result files, and the pre-registration.
+\end{abstract}
+
+\section{Introduction}
+
+A transformer can learn a rule on short sequences and then apply it wrongly on longer ones, even when the
+rule itself does not depend on length.
+Retrieving a marked value, selecting the entry with the largest key, and looking up a value by its key are
+all length-invariant, yet a model that solves them at the training length degrades steadily as the input
+grows.
+We study what internal property of a trained model determines whether it keeps solving such a task at
+longer lengths.
+
+For a retrieval task the requirement is mechanical.
+The model produces the answer by reading a value out of the sequence, so at the query position it must
+place attention on the token that holds that value.
+If attention on the correct source token stays concentrated as the number of competing tokens grows, the
+readout receives its input and the answer is correct.
+If attention spreads across the sequence, the readout receives a blend of many values and the answer
+degrades.
+This suggests a direct hypothesis.
+The operative variable for length generalization is how much attention the model places on the correct
+source token at test length.
+
+We can test this hypothesis without inference from proxies.
+In each of our tasks the input position that holds the answer is fixed by construction, so we read the
+attention weight on that exact position at the query token, for every length, and relate it to accuracy.
+This gives a direct measurement of the proposed operative variable instead of a surrogate.
+
+Several internal statistics degrade with length, and any of them is a candidate explanation.
+One natural candidate is the scale of the activations.
+The variance of the attention output shrinks as sequences lengthen, which shifts the input distribution of
+every downstream component, and a layer normalization on the attention output restores that scale
+\citep{vanishingvariance}.
+Attention entropy and attention sharpness are further candidates that change with length
+\citep{nopeentropy,ssmax,sparselong}.
+We take the scale candidate as the sharpest comparison, because it comes with a concrete intervention that
+provably repairs the statistic, so we can ask whether repairing it changes the behavior.
+
+Our study crosses two axes that a single-statistic view can leave fixed.
+The first is the positional encoding.
+We test both the encoding-free setting (NoPE) \citep{kazemnejad} and rotary position embeddings (RoPE)
+\citep{rope}, because the choice interacts with components placed after attention \citep{fope,postnorm}.
+The second is whether the task is order-dependent.
+We include reversed decimal addition, where token position carries information, as a contrast to the
+order-invariant retrieval tasks.
+
+Our findings are as follows.
+
+\begin{itemize}
+\item Attention on the correct source token predicts per-token accuracy with a within-cell correlation of
+$0.97$, across both tasks and both positional encodings. It starts near $1.0$ at short length and falls
+toward chance as competitors grow, and accuracy tracks it.
+\item The attention-output variance also collapses with length, and it predicts accuracy less well, with
+correlation $0.59$. An intervention that holds the downstream variance constant across length does not
+improve length generalization, and it lowers accuracy under RoPE.
+\item Raising attention on the correct source by inference-time logit sharpening raises accuracy in
+proportion. Across the four task and encoding cells the accuracy gain and the attention gain track each
+other at correlation $1.0$, while the variance-stabilizing intervention raises neither.
+\item A convex-combination argument explains why. Variance collapse follows from dispersion for any
+selection, so it co-varies with failure while attention concentration controls it.
+\item The variance-stabilizing intervention lowers attention on the correct source under RoPE, which
+accounts for the accuracy it costs there.
+\end{itemize}
+
+That attention concentration matters for length generalization has been observed before
+\citep{nopeentropy,sparselong}.
+Our contribution is to measure it directly against the token a retrieval task requires, to compare it head
+to head with the attention-output-variance candidate under a controlled task and positional-encoding grid,
+and to show that an intervention which repairs the variance does not transfer to the behavior and reverses
+under RoPE.
+This turns a plausible correlate into a tested one and separates it from a statistic that co-varies with
+the same dispersion.
+
+\section{Candidate internal correlates of length generalization}
+\label{sec:related}
+
+Length generalization has been approached through positional encoding \citep{kazemnejad}, attention
+structure, and intermediate supervision \citep{anil}, and it is attainable while remaining fragile to
+seed and data order \citep{zhou2024}.
+We organize the internal-mechanism work as a set of candidate correlates, each a quantity that changes with
+length and could in principle drive the failure.
+
+\paragraph{Attention concentration.}
+As the number of competing key positions grows, a softmax with bounded logits spreads its mass more
+thinly, and the weight on any single position decays.
+\citet{nopeentropy} relate the length at which attention entropy inflects to the length at which
+generalization degrades, and report a sharpening intervention that helps in the encoding-free setting.
+Scalable-softmax multiplies attention logits by a factor that grows with length and improves long-context
+retrieval \citep{ssmax}.
+Sparse attention that caps the number of attended positions preserves concentration and reaches far longer
+sequences \citep{sparselong}.
+Attention entropy has also been studied as a quantity tied to training stability \citep{zhai}.
+These works point at the sharpness of the attention distribution.
+We make the target precise for retrieval by measuring attention on the known correct source, which is the
+specific quantity the readout depends on.
+
+\paragraph{Activation scale.}
+A second candidate is the scale of activations downstream of attention.
+The variance of the attention output shrinks with length, which shifts the input distribution of the
+components that follow, and a post-attention layer normalization restores the scale \citep{vanishingvariance}.
+This candidate is attractive to test because it names a concrete intervention that provably repairs the
+statistic, which lets us separate repairing the statistic from changing the behavior.
+The limits of normalization inside attention have themselves been examined, with softmax selection drifting
+toward uniform as more tokens compete \citep{mudarisov}.
+
+\paragraph{Positional encoding and downstream components.}
+We keep the positional encoding as a variable.
+\citet{fope} show that linear layers and pointwise activations act as spectral filters that damage the
+periodic structure RoPE relies on, which harms length generalization.
+\citet{postnorm} study how a post-attention normalization reshapes attention sharpness.
+Both bear on any intervention placed after attention, and both are relevant to the positional-encoding
+interaction we report.
+
+\section{Setup}
+\label{sec:setup}
+
+\subsection{Tasks}
+
+We study three synthetic tasks with exact supervision, chosen so that the answer's dependence on token
+order is controlled.
+
+\textbf{Argmax retrieval} presents key-value pairs and asks for the value paired with the largest key.
+The task is order-invariant.
+
+\textbf{Flag retrieval} presents a sequence of values, exactly one of which carries a mark, and asks for
+the marked value.
+The task is order-invariant and single-hop.
+A small model masters it at the training length with exact-match $1.00$ and degrades smoothly with length,
+which gives the dynamic range to read an effect.
+
+\textbf{Reversed decimal addition} presents two integers and asks for their sum in
+least-significant-digit-first order.
+The task is order-dependent, because a digit's position selects its place value, and it serves as the
+contrast to the retrieval tasks.
+Length generalization on addition is known to depend on how digit position is represented \citep{mcleish}.
+
+Symbols are drawn from vocabularies large enough that long sequences contain distinct tokens, and answers
+are supervised token by token.
+Dictionary lookup, a further order-invariant retrieval task, does not reach our training-competence gate at
+this model scale, and we report it as untrained (Section~\ref{sec:limitations}).
+
+\subsection{The operative variable}
+
+For the two retrieval tasks the input position $j^\star$ that holds the answer is fixed by construction.
+At the query position we read the attention weight on $j^\star$, taken as the maximum over heads and layers,
+and call it the attention on the correct source.
+This is the direct measurement of the property we hypothesize to be operative.
+
+\subsection{The variance candidate and its intervention}
+
+We also track the attention-output variance, the per-token variance of $z = W_O\,\mathrm{Attn}(x)$, per
+layer against length.
+The intervention associated with this candidate is a layer normalization on the attention output
+\citep{vanishingvariance}.
+The baseline residual update is $h \leftarrow h + z$, and the intervention replaces it with
+\begin{equation}
+h \leftarrow h + \mathrm{LN}(z),
+\end{equation}
+which holds the downstream variance of the attention output constant across length.
+We record the variance both before this normalization, which is the raw collapse, and after it, which
+confirms the statistic is held constant.
+
+\subsection{Model and training}
+
+The model is a four-layer pre-norm decoder transformer with model width $256$, eight attention heads, and
+feed-forward width $1024$.
+We train with AdamW, batch size $512$, and a warmup-plus-cosine schedule.
+Training sequences have length $1$ to $5$, and we evaluate on a geometric ladder up to $50\times$ the
+training length.
+The model is small by design, because the variance collapse is most severe at this scale, so the
+comparison is run where the scale candidate is strongest.
+
+\subsection{Pre-registration}
+
+We fixed three rules before viewing outcomes.
+A cell is informative only if its training-length exact-match is at least $0.8$, which excludes tasks the
+model never learned.
+An effect at long length is read at the longest ladder length where the baseline first drops below $0.9$
+per-token accuracy, so that a task which never fails cannot be misread as evidence.
+We require the variance collapse to be reproduced before interpreting the variance comparison.
+Each order-invariant cell uses four seeds and the order-dependent task uses two.
+The pre-registration and its amendments are released with the paper.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Attention on the correct source predicts accuracy}
+\label{sec:res-attn}
+
+Figure~\ref{fig:attnlen} plots attention on the correct source against length for the baselines, with
+per-token accuracy overlaid.
+Attention on the correct source starts near $1.0$ at short length and falls toward chance as length grows.
+Accuracy tracks it on every task and both positional encodings.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_attn_vs_length.pdf}
+\caption{The operative variable.
+Attention on the correct source token (blue) falls with length, and per-token accuracy (dashed) tracks it,
+on both tasks and both positional encodings.
+Generalization holds while attention stays on the correct source and fails as it disperses.}
+\label{fig:attnlen}
+\end{figure}
+
+Figure~\ref{fig:causal} makes the relation quantitative.
+Pooled over lengths and seeds, per-token accuracy is a tight function of attention on the correct source,
+with correlation $0.94$ (left panel).
+Measured within each baseline cell and averaged, the correlation is $0.97$.
+The property we identified from the mechanics of retrieval is the one that predicts the behavior.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_causal.pdf}
+\caption{Baseline runs pooled over lengths and seeds.
+Top: accuracy against attention on the correct source, a tight relation with correlation $0.94$.
+Bottom: accuracy against the attention-output variance ratio, diffuse with correlation $0.45$, where flag
+retrieval (red) is a near-vertical band.
+Attention on the correct source is the better predictor.}
+\label{fig:causal}
+\end{figure}
+
+We state the strength of this evidence plainly.
+That attention on the token a model must copy predicts whether it copies it is expected, so the relation
+is a localization of the failure and it is a starting point.
+The comparative content is what follows.
+We now measure a second quantity that also degrades with length and ask how well it predicts the same
+behavior.
+
+\subsection{A co-varying statistic: variance collapse}
+\label{sec:res-variance}
+
+The attention-output variance collapses with length in every baseline.
+Figure~\ref{fig:var} shows the variance of the deepest-collapsing layer, normalized to the training
+length, and the ratio at $50\times$ lies between $0.20$ and $0.49$ (Table~\ref{tab:main}).
+This statistic is a plausible candidate, since a distribution shift of this size affects every downstream
+component.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_variance_collapse.pdf}
+\caption{A co-varying statistic.
+Baseline attention-output variance in the deepest-collapsing layer, normalized to the training length,
+falls with length on every task.}
+\label{fig:var}
+\end{figure}
+
+The variance is a weaker predictor of accuracy than attention on the correct source.
+In the pooled scatter (Figure~\ref{fig:causal}, bottom) accuracy against the variance ratio has correlation
+$0.45$, against $0.94$ for attention.
+Within each cell the mean correlation is $0.59$, against $0.97$ for attention, and on flag retrieval the
+variance correlation is near $0.3$.
+The variance moves with the failure and explains less of it.
+
+\subsection{Holding the variance constant does not restore generalization}
+\label{sec:res-benefit}
+
+The variance candidate names a concrete intervention, so we can go past correlation and repair the
+statistic directly.
+Figure~\ref{fig:prepost} confirms the normalization works as intended.
+For the intervention runs the variance before the normalization still collapses, while the variance after
+it is held near constant across length, with a post-intervention ratio close to $1.0$ in every
+order-invariant cell (Table~\ref{tab:main}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_prepost_var.pdf}
+\caption{The intervention holds the statistic constant.
+For the intervention runs, the deep-layer variance before the normalization (solid) still collapses, while
+the variance after it (dashed) is held near constant across length.}
+\label{fig:prepost}
+\end{figure}
+
+Holding the statistic constant does not change the behavior.
+Every cell masters the training length with exact-match $1.00$ and degrades as length grows
+(Figure~\ref{fig:acc}).
+On the two order-invariant tasks the intervention lies at or below the baseline at every length.
+The paired per-seed effect at the $50\times$ break point is at most zero in every cell (Table~\ref{tab:main}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_accuracy_vs_length.pdf}
+\caption{Per-token accuracy against length on a log axis, out to $50\times$ the training length.
+Baseline is solid and the variance-stabilizing intervention is dashed, averaged over four seeds for the
+retrieval tasks with min-to-max bands.
+The intervention lies at or below the baseline in every retrieval panel.
+Addition (bottom) fails from a short length in both conditions.}
+\label{fig:acc}
+\end{figure}
+
+Figure~\ref{fig:benefit} shows the sign and the trend directly.
+The intervention's per-token effect starts near zero at short length and moves downward as length grows,
+and the downward trend is steepest under RoPE.
+Repairing the co-varying statistic does not transfer to the behavior, and under RoPE it costs accuracy at
+the lengths where it was expected to help.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_benefit_vs_length.pdf}
+\caption{The intervention's per-token effect (intervention minus baseline) against length.
+It is at most zero and becomes more negative with length, with the largest cost under RoPE.}
+\label{fig:benefit}
+\end{figure}
+
+\begin{table*}[t]
+\centering\small
+\caption{Order-invariant tasks (argmax retrieval, flag retrieval), four seeds.
+Per-token accuracy at multiplicative lengths, where $1\times$ is the training length.
+The variance column is the deep-layer collapse ratio at $50\times$ before and after the variance-stabilizing
+intervention; a value near $1.0$ after the intervention means the statistic is held constant.
+The final column is the intervention's paired per-seed effect at the $50\times$ break point, with the range
+across seeds and the count of seeds in which it lowers accuracy.
+Every cell has training-length exact-match $1.00$.}
+\label{tab:main}
+\begin{tabular}{llcccc c c}
+\toprule
+task & PE, intervention & $1\times$ & $3\times$ & $10\times$ & $50\times$ & var (before, after) & effect at $50\times$ \\
+\midrule
+argmax  & NoPE, off & 1.00 & 0.98 & 0.83 & 0.59 & $0.33,\ 0.33$ & \\
+        & NoPE, on  & 1.00 & 0.97 & 0.80 & 0.58 & $0.20,\ 0.99$ & $-0.013$ [$-.035,+.004$], 2/4\\
+        & RoPE, off & 1.00 & 0.95 & 0.77 & 0.60 & $0.27,\ 0.27$ & \\
+        & RoPE, on  & 1.00 & 0.96 & 0.67 & 0.57 & $0.45,\ 1.00$ & $-0.033$ [$-.066,-.008$], 4/4\\
+\midrule
+flagret & NoPE, off & 1.00 & 0.94 & 0.67 & 0.60 & $0.47,\ 0.47$ & \\
+        & NoPE, on  & 1.00 & 0.88 & 0.62 & 0.52 & $0.49,\ 1.00$ & $-0.081$ [$-.109,-.043$], 4/4\\
+        & RoPE, off & 1.00 & 0.99 & 0.65 & 0.56 & $0.48,\ 0.48$ & \\
+        & RoPE, on  & 1.00 & 0.96 & 0.53 & 0.50 & $0.43,\ 1.00$ & $-0.061$ [$-.074,-.047$], 4/4\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{The intervention lowers attention on the correct source under RoPE}
+\label{sec:res-attnfix}
+
+Our account predicts the sign of the intervention's effect through the operative variable.
+An intervention that helps should raise attention on the correct source, and one that costs accuracy should
+lower it.
+Figure~\ref{fig:attnfix} compares attention on the correct source with the intervention off and on.
+The intervention does not restore the attention at long length in any cell.
+Under RoPE it lowers the attention further, from $0.25$ to $0.07$ on argmax and from $0.016$ to $0.010$ on
+flag retrieval at $50\times$.
+The behavior follows the operative variable, and the cost under RoPE is consistent with a component placed
+after attention disturbing the rotary frequency structure \citep{fope}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_attn_base_vs_fix.pdf}
+\caption{The behavior follows the operative variable.
+Attention on the correct source with the intervention off (solid) and on (dashed).
+The intervention does not restore the attention, and under RoPE it lowers it, which matches the accuracy in
+Table~\ref{tab:main}.}
+\label{fig:attnfix}
+\end{figure}
+
+\subsection{The order-dependent contrast}
+\label{sec:res-addition}
+
+Reversed addition is mastered at the training length and then fails at every extrapolation length, with
+exact-match $0$ throughout (Figure~\ref{fig:acc}, bottom row).
+Its failure does not reduce to dispersion off a single source, because the answer draws on many positions
+at once, so the retrieval account does not extend to it and we do not expect the same treatment to apply.
+The variance-stabilizing intervention raises per-token accuracy by $0.047$ under NoPE while exact-match
+stays at $0$, which shows a graded metric reading as progress where no sequence is solved.
+Under RoPE the intervention is neutral.
+No configuration recovers usable length generalization on addition, which marks the boundary of the account.
+
+\section{Why attention concentration and variance separate}
+\label{sec:analysis}
+
+We make the relationship between the two quantities precise.
+At a query position let the attention weights on the $n$ visible keys be $a=(a_1,\dots,a_n)$, with
+$a_j\ge 0$ and $\sum_j a_j = 1$, and let the value vectors be $v_1,\dots,v_n\in\mathbb{R}^d$.
+The attention output is the convex combination $z=\sum_j a_j v_j$, and we write $j^\star$ for the position
+that holds the correct source.
+The two statements below are properties of these expressions under simplifying assumptions on the values
+and logits.
+We use them to explain the measured relationships.
+We do not claim the trained network meets the assumptions exactly.
+
+\begin{proposition}[variance is a function of dispersion]
+\label{prop:var}
+Model the value vectors as uncorrelated across positions with a common mean and a common per-coordinate
+variance $\sigma^2$.
+Then the expected per-coordinate variance of the attention output is
+\begin{equation}
+\operatorname{Var}(z) \;=\; \sigma^2\,\lVert a\rVert_2^2 \;=\; \frac{\sigma^2}{n_{\mathrm{eff}}},
+\qquad n_{\mathrm{eff}} := \frac{1}{\lVert a\rVert_2^2}\in[1,n].
+\end{equation}
+\end{proposition}
+
+\noindent This identity is elementary, and the decay of representation variance as attention spreads has
+been noted in analyses of value aggregation and attention sinks \citep{attnsink}.
+We restate it here to make the dependence on dispersion explicit.
+The quantity $n_{\mathrm{eff}}$ is the participation ratio, the effective number of attended positions.
+It is $1$ when attention sits on a single token, where $\operatorname{Var}(z)=\sigma^2$, and it is $n$
+under uniform attention, where $\operatorname{Var}(z)=\sigma^2/n$.
+Attention-output variance therefore collapses exactly as attention disperses, and $\lVert a\rVert_2^2$ does
+not depend on which position is correct, so the collapse happens for a right or a wrong selection alike.
+The one-line justification is that per coordinate
+$\operatorname{Var}\!\big(\sum_j a_j v_j\big)=\sum_j a_j^2\,\sigma^2$ by uncorrelatedness.
+
+\begin{proposition}[concentration decays with length]
+\label{prop:conc}
+Suppose the query-key logit of the correct source exceeds each of the other $n-1$ logits by at least a gap
+$\Delta$.
+Then the attention weight on the correct source satisfies
+\begin{equation}
+a_{j^\star} \;\ge\; \frac{1}{1+(n-1)e^{-\Delta}} .
+\end{equation}
+For a fixed gap this bound tends to $0$ as $n\to\infty$, and it stays bounded away from $0$ only if the gap
+grows at least logarithmically, $\Delta\ge\log(n-1)+c$ for a constant $c$.
+\end{proposition}
+
+\noindent Concentration on the correct source is the quantity the readout depends on, and
+Proposition~\ref{prop:conc} says it decays as competitors accumulate unless the model sharpens its logits at
+the rate $\log n$.
+That is the rate length-scaled logit sharpening supplies \citep{ssmax}, which is why an intervention of
+that form is the way to hold concentration at longer lengths (Section~\ref{sec:sharpening}).
+The justification is
+$a_{j^\star}=e^{s_{j^\star}}/\sum_j e^{s_j}\ge e^{s_{j^\star}}/\big(e^{s_{j^\star}}+(n-1)e^{s_{j^\star}-\Delta}\big)$.
+
+The two propositions share one driver and control different things.
+A layer normalization sends $z\mapsto \gamma\,(z-\bar z)/\sqrt{\operatorname{Var}(z)}$, which by
+Proposition~\ref{prop:var} rescales the output by a factor set by $\lVert a\rVert_2$ and leaves the weights
+$a$ unchanged.
+It restores the size of $z$ and does not raise $a_{j^\star}$, so by Proposition~\ref{prop:conc} it does not
+change which value dominates the readout.
+Variance collapse and selection failure co-vary because both follow from the growth of $n_{\mathrm{eff}}$,
+and they separate because only $a_{j^\star}$ enters the selection.
+This is the account behind the measurements: attention on the correct source predicts accuracy while the
+variance ratio predicts it less well, and holding the variance constant leaves the behavior in place.
+
+The same structure explains the sign under RoPE.
+The normalization is a component placed after attention, and such components interact with the rotary
+frequency structure in ways that reduce attention concentration \citep{fope}.
+In our setting that interaction lowers attention on the correct source (Figure~\ref{fig:attnfix}), which is
+why the intervention moves from neutral under NoPE to a cost under RoPE.
+This refines the observation that a post-attention normalization can sharpen attention \citep{postnorm},
+since under RoPE in our setting the effect on concentration reverses.
+
+\section{Restoring concentration}
+\label{sec:sharpening}
+
+The account makes an interventional prediction.
+If attention on the correct source is the operative variable, then an intervention that raises it at long
+length should raise accuracy, where holding the variance constant does not.
+We test this directly with a length-scaled logit sharpening that grows the logit gap at the rate
+Proposition~\ref{prop:conc} requires \citep{ssmax}, applied to the same trained models, and pre-registered
+before running.
+
+The prediction holds, and it separates the two candidates cleanly (Figure~\ref{fig:intervention}).
+Sharpening raises attention on the correct source in three of the four cells, from $0.06$ to $0.13$ on flag
+retrieval under NoPE and from $0.02$ to $0.12$ under RoPE, and accuracy rises with it.
+The variance-stabilizing intervention raises neither, and its accuracy effect is at most zero in all four
+cells (Section~\ref{sec:res-benefit}).
+Across the four cells the accuracy gain and the attention gain move together with correlation $+1.0$
+(Figure~\ref{fig:intervention}, bottom).
+The one cell where sharpening does not raise attention, argmax under RoPE, is the one cell where accuracy
+does not improve, which is the pattern the account predicts.
+Raising the operative variable raises the behavior, and raising the co-varying statistic does not.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_intervention.pdf}
+\caption{The intervention test.
+Top: per-token benefit at the break point for stabilizing variance (gray) and sharpening attention (red),
+by cell, with the dotted line at the pre-registered threshold of $0.05$.
+Bottom: across the four cells the accuracy gain from sharpening tracks the gain in attention on the correct
+source, with correlation $+1.0$.
+Raising the operative variable raises accuracy, and the variance-stabilizing intervention raises neither.}
+\label{fig:intervention}
+\end{figure}
+
+We report the strength of the effect plainly.
+The single log-length lever is a partial rescue.
+Its per-token gain at the break point clears our pre-registered threshold of $0.05$ on argmax under NoPE,
+where it reaches $+0.083$ across four seeds, and it is smaller on the other cells.
+A full recovery of short-length accuracy would need more than one inference-time knob \citep{sparselong}.
+The interventional result confirms the direction of the account, that attention selection is the operative
+lever, and it leaves the size of the achievable rescue to stronger concentration methods.
+
+\section{Limitations}
+\label{sec:limitations}
+
+The models are small, with four layers and width $256$.
+We run the comparison where the variance collapse is strongest, and we do not establish the same behavior
+at frontier scale.
+We do not observe a length-generalization improvement from holding the variance constant in any cell, and
+we cannot exclude that a different scale or task construction behaves differently.
+
+Our identification of attention on the correct source as the operative variable rests on a direct
+correlation and a matched intervention.
+The intervention confirms the direction, since raising attention on the correct source raises accuracy in
+proportion, and it is a partial rescue that clears our pre-registered threshold in one of the four cells.
+The tracking correlation is measured over four cells, which makes it suggestive at the population level.
+A stronger concentration method would test how far the rescue can go.
+The account is stated for retrieval, and the order-dependent contrast shows it does not extend to tasks
+whose answer draws on many positions at once.
+Our accuracy is measured with teacher forcing per token, an upper bound on free generation.
+Dictionary lookup did not reach our competence gate at this scale and is reported as untrained.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We asked which internal property supports transformer length generalization on retrieval, and we answered
+by direct measurement.
+Attention on the correct source token predicts accuracy with correlation $0.97$, across tasks and
+positional encodings, and generalization holds while that attention stays concentrated and fails as it
+disperses.
+A natural alternative, the scale of the attention output, collapses with length as well, predicts accuracy
+less well, and does not transfer to the behavior when an intervention holds it constant, with a cost under
+rotary position embeddings.
+Raising attention on the correct source by inference-time sharpening raises accuracy in proportion, and the
+accuracy gain tracks the attention gain across cells, while stabilizing the scale raises neither.
+A convex-combination argument explains the difference, since variance collapse follows from dispersion for
+any selection while concentration on the correct source controls the outcome.
+An internal statistic that co-varies with a failure is worth measuring against the property the task
+actually requires, because the two can move together and only one of them supports the behavior.
+
+\section*{Reproducibility}
+The code, the full result files, the analysis scripts, and the pre-registration written before the outcomes
+are released with the paper.
+
+\bibliographystyle{aaai2027}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.data_cache/
+paper/authorkit/
+paper/*.zip

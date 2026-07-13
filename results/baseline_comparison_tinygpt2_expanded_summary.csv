@@ -1,0 +1,3 @@
+method,threshold,jailbreak_collapse_rate,benign_false_collapse_rate,critical_risk,max_slope,susceptibility_peak,low_risk_response,high_risk_response,jump,thermodynamic_observables
+null_attractor,,0.0,0.0,0.34896911052195356,0.2715976530524373,0.0001853228792521768,0.0353815094111111,0.03319693014596287,-0.0021845792651482288,yes
+threshold,0.09510017761588097,1.0,0.2857142857142857,0.05109378636302427,10.071327688759379,0.25,0.25,1.0,0.75,no

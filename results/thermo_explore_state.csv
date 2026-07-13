@@ -1,0 +1,3 @@
+observable,n_significant_layers,significant_layers,max_abs_effect,base_interior_peak_layer,instruct_interior_peak_layer,passed
+specific_heat,0,,0.03155,21,21,False
+entropy,0,,0.0355,1,1,False

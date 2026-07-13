@@ -1,0 +1,13 @@
+target,group,n,positive_rate,best_feature,best_auroc,best_spearman,source
+benign_damage,thermo,24,0.875,mean_spectral_gap,0.7301587301587301,0.26408142122358913,intervention_grid_qwen_detail.csv
+benign_damage,simple,24,0.875,layer_value,0.7857142857142857,0.37796447300922725,intervention_grid_qwen_detail.csv
+collapse_failure,thermo,48,0.7291666666666666,thermo_collapse,0.6263736263736264,0.1946150976830803,intervention_grid_qwen_detail.csv
+collapse_failure,simple,48,0.7291666666666666,semantic_mode,0.6230769230769231,-0.23204774044612858,intervention_grid_qwen_detail.csv
+benign_damage,thermo,24,1.0,,,,intervention_grid_qwen_fixed_detail.csv
+benign_damage,simple,24,1.0,,,,intervention_grid_qwen_fixed_detail.csv
+collapse_failure,thermo,48,0.7916666666666666,mean_psi,0.7605263157894737,0.36676468072821733,intervention_grid_qwen_fixed_detail.csv
+collapse_failure,simple,48,0.7916666666666666,layer_value,0.5631578947368421,0.1025978352085154,intervention_grid_qwen_fixed_detail.csv
+benign_damage,thermo,24,0.375,mean_m_null,0.8111111111111111,0.5226573750625902,intervention_grid_qwen_norepeat_detail.csv
+benign_damage,simple,24,0.375,layer_value,0.6333333333333333,-0.2581988897471611,intervention_grid_qwen_norepeat_detail.csv
+collapse_failure,thermo,48,0.4166666666666667,mean_m_null,0.7196428571428571,0.3752541294874819,intervention_grid_qwen_norepeat_detail.csv
+collapse_failure,simple,48,0.4166666666666667,semantic_mode,0.6,-0.2091650066335189,intervention_grid_qwen_norepeat_detail.csv

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="360.0" y="28" text-anchor="middle" font-family="Arial" font-size="18">Mean attention entropy by suite</text>
+<line x1="60" y1="360" x2="660" y2="360" stroke="#111827"/>
+<line x1="60" y1="60" x2="60" y2="360" stroke="#111827"/>
+<line x1="55" y1="360.0" x2="60" y2="360.0" stroke="#111827"/>
+<text x="51" y="364.0" text-anchor="end" font-family="Arial" font-size="11">0.00</text>
+<line x1="55" y1="285.0" x2="60" y2="285.0" stroke="#111827"/>
+<text x="51" y="289.0" text-anchor="end" font-family="Arial" font-size="11">0.25</text>
+<line x1="55" y1="210.0" x2="60" y2="210.0" stroke="#111827"/>
+<text x="51" y="214.0" text-anchor="end" font-family="Arial" font-size="11">0.50</text>
+<line x1="55" y1="135.0" x2="60" y2="135.0" stroke="#111827"/>
+<text x="51" y="139.0" text-anchor="end" font-family="Arial" font-size="11">0.75</text>
+<line x1="55" y1="60.0" x2="60" y2="60.0" stroke="#111827"/>
+<text x="51" y="64.0" text-anchor="end" font-family="Arial" font-size="11">1.00</text>
+<rect x="60.0" y="-351.0" width="59.2" height="711.0" fill="#0f766e"/>
+<text x="89.6" y="-357.0" text-anchor="middle" font-family="Arial" font-size="11">2.37</text>
+<text x="89.6" y="374" text-anchor="middle" font-family="Arial" font-size="10">benign</text>
+<rect x="137.2" y="-388.9" width="59.2" height="748.9" fill="#0f766e"/>
+<text x="166.9" y="-394.9" text-anchor="middle" font-family="Arial" font-size="11">2.50</text>
+<text x="166.9" y="374" text-anchor="middle" font-family="Arial" font-size="10">benign_complex</text>
+<rect x="214.5" y="254.0" width="59.2" height="106.0" fill="#0f766e"/>
+<text x="244.1" y="248.0" text-anchor="middle" font-family="Arial" font-size="11">0.35</text>
+<text x="244.1" y="374" text-anchor="middle" font-family="Arial" font-size="10">direct_jailbreak</text>
+<rect x="291.8" y="-96.5" width="59.2" height="456.5" fill="#0f766e"/>
+<text x="321.4" y="-102.5" text-anchor="middle" font-family="Arial" font-size="11">1.52</text>
+<text x="321.4" y="374" text-anchor="middle" font-family="Arial" font-size="10">long_context_jailbreak</text>
+<rect x="369.0" y="-511.8" width="59.2" height="871.8" fill="#0f766e"/>
+<text x="398.6" y="-517.8" text-anchor="middle" font-family="Arial" font-size="11">2.91</text>
+<text x="398.6" y="374" text-anchor="middle" font-family="Arial" font-size="10">many_shot_jailbreak</text>
+<rect x="446.2" y="-127.6" width="59.2" height="487.6" fill="#0f766e"/>
+<text x="475.9" y="-133.6" text-anchor="middle" font-family="Arial" font-size="11">1.63</text>
+<text x="475.9" y="374" text-anchor="middle" font-family="Arial" font-size="10">obfuscated_jailbreak</text>
+<rect x="523.5" y="-460.3" width="59.2" height="820.3" fill="#0f766e"/>
+<text x="553.1" y="-466.3" text-anchor="middle" font-family="Arial" font-size="11">2.73</text>
+<text x="553.1" y="374" text-anchor="middle" font-family="Arial" font-size="10">paraphrased_adversarial</text>
+<rect x="600.8" y="-402.7" width="59.2" height="762.7" fill="#0f766e"/>
+<text x="630.4" y="-408.7" text-anchor="middle" font-family="Arial" font-size="11">2.54</text>
+<text x="630.4" y="374" text-anchor="middle" font-family="Arial" font-size="10">safety_research</text>
+</svg>

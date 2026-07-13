@@ -1,0 +1,148 @@
+% Bibliography for "Attention Concentration Supports Transformer Length Generalization".
+% All entries verified against the arXiv abstract pages (title, authors, year, primary class).
+
+% ---- candidate internal correlates ---------------------------------------------------------
+
+@misc{vanishingvariance,
+  title        = {On Vanishing Variance in Transformer Length Generalization},
+  author       = {Ruining Li and Gabrijel Boduljak and Jinghao Zhou},
+  year         = {2025},
+  eprint       = {2504.02827},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2504.02827}
+}
+
+@misc{nopeentropy,
+  title        = {Length Generalization of Causal Transformers without Position Encoding},
+  author       = {Jie Wang and Tao Ji and Yuanbin Wu and Hang Yan and Tao Gui and Qi Zhang and Xuanjing Huang and Xiaoling Wang},
+  year         = {2024},
+  eprint       = {2404.12224},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {arXiv:2404.12224. Tunes attention-head temperature to improve NoPE length generalization.}
+}
+
+@misc{ssmax,
+  title        = {Scalable-Softmax Is Superior for Attention},
+  author       = {Ken M. Nakanishi},
+  year         = {2025},
+  eprint       = {2501.19399},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {arXiv:2501.19399. Scales attention logits with context length to counter softmax flattening.}
+}
+
+@misc{sparselong,
+  title        = {Long-Context Generalization with Sparse Attention},
+  author       = {Pavlo Vasylenko and Hugo Pitorro and Andr\'e F. T. Martins and Marcos Treviso},
+  year         = {2025},
+  eprint       = {2506.16640},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {arXiv:2506.16640. Uses alpha-entmax sparse attention to avoid dispersion and generalize to longer contexts.}
+}
+
+@misc{zhai,
+  title        = {Stabilizing Transformer Training by Preventing Attention Entropy Collapse},
+  author       = {Shuangfei Zhai and Tatiana Likhomanenko and Etai Littwin and Dan Busbridge and Jason Ramapuram and Yizhe Zhang and Jiatao Gu and Josh Susskind},
+  year         = {2023},
+  eprint       = {2303.06296},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2303.06296. Studies attention entropy as a quantity tied to training stability.}
+}
+
+% ---- positional encoding and downstream components -----------------------------------------
+
+@misc{rope,
+  title        = {RoFormer: Enhanced Transformer with Rotary Position Embedding},
+  author       = {Jianlin Su and Yu Lu and Shengfeng Pan and Ahmed Murtadha and Bo Wen and Yunfeng Liu},
+  year         = {2021},
+  eprint       = {2104.09864},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {arXiv:2104.09864. Introduces rotary position embedding (RoPE).}
+}
+
+@misc{kazemnejad,
+  title        = {The Impact of Positional Encoding on Length Generalization in Transformers},
+  author       = {Amirhossein Kazemnejad and Inkit Padhi and Karthikeyan Natesan Ramamurthy and Payel Das and Siva Reddy},
+  year         = {2023},
+  eprint       = {2305.19466},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {arXiv:2305.19466. Finds the no-positional-encoding (NoPE) setting generalizes well.}
+}
+
+@misc{fope,
+  title        = {Fourier Position Embedding: Enhancing Attention's Periodic Extension for Length Generalization},
+  author       = {Ermo Hua and Che Jiang and Xingtai Lv and Kaiyan Zhang and Youbang Sun and Yuchen Fan and Xuekai Zhu and Biqing Qi and Ning Ding and Bowen Zhou},
+  year         = {2024},
+  eprint       = {2412.17739},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {arXiv:2412.17739. Shows components after attention cause spectrum damage to RoPE, harming length generalization.}
+}
+
+@misc{postnorm,
+  title        = {Post-Norm can Resharpen Attention},
+  author       = {P\'al Zs\'amboki and Benjamin Levi and David Ansel Josef Smith and Mitansh Kagalwala and Arlington Kell and Samuel Liechty and Cong Wang},
+  year         = {2025},
+  eprint       = {2510.08341},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2510.08341. Studies how a post-attention normalization reshapes attention sharpness.}
+}
+
+% ---- length generalization: task and overview ----------------------------------------------
+
+@misc{anil,
+  title        = {Exploring Length Generalization in Large Language Models},
+  author       = {Cem Anil and Yuhuai Wu and Anders Andreassen and Aitor Lewkowycz and Vedant Misra and Vinay Ramasesh and Ambrose Slone and Guy Gur-Ari and Ethan Dyer and Behnam Neyshabur},
+  year         = {2022},
+  eprint       = {2207.04901},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {arXiv:2207.04901.}
+}
+
+@misc{mcleish,
+  title        = {Transformers Can Do Arithmetic with the Right Embeddings},
+  author       = {Sean McLeish and Arpit Bansal and Alex Stein and Neel Jain and John Kirchenbauer and Brian R. Bartoldson and Bhavya Kailkhura and Abhinav Bhatele and Jonas Geiping and Avi Schwarzschild and Tom Goldstein},
+  year         = {2024},
+  eprint       = {2405.17399},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2405.17399. Length generalization on addition via digit-position embeddings.}
+}
+
+@misc{zhou2024,
+  title        = {Transformers Can Achieve Length Generalization But Not Robustly},
+  author       = {Yongchao Zhou and Uri Alon and Xinyun Chen and Xuezhi Wang and Rishabh Agarwal and Denny Zhou},
+  year         = {2024},
+  eprint       = {2402.09371},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2402.09371. Length generalization is attainable but fragile to seed and data order.}
+}
+
+@misc{mudarisov,
+  title        = {Limitations of Normalization in Attention Mechanism},
+  author       = {Timur Mudarisov and Mikhail Burtsev and Tatiana Petrova and Radu State},
+  year         = {2025},
+  eprint       = {2508.17821},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2508.17821. As more tokens are selected, softmax attention drifts toward uniform selection.}
+}
+
+@misc{attnsink,
+  title        = {The Structural Origin of Attention Sink: Variance Discrepancy, Super Neurons, and Dimension Disparity},
+  author       = {Siquan Li and Kaiqi Jiang and Jiacheng Sun and Tianyang Hu},
+  year         = {2026},
+  eprint       = {2605.06611},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2605.06611. Value aggregation in self-attention produces a systematic variance discrepancy across positions.}
+}

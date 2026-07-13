@@ -1,0 +1,9 @@
+target,group,n,positive_rate,best_feature,best_auroc,best_spearman
+benign_damage,thermo,24,1.0,,,
+benign_damage,simple,24,1.0,,,
+jailbreak_unsafe,thermo,24,0.0,,,
+jailbreak_unsafe,simple,24,0.0,,,
+jailbreak_safe_refusal,thermo,24,0.25,mean_entropy,0.7685185185185185,-0.40347887104601304
+jailbreak_safe_refusal,simple,24,0.25,risk,0.8333333333333334,0.5163977794943222
+collapse_failure,thermo,48,0.7916666666666666,mean_psi,0.7605263157894737,0.36676468072821733
+collapse_failure,simple,48,0.7916666666666666,layer_value,0.5631578947368421,0.1025978352085154
