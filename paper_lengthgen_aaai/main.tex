@@ -53,10 +53,12 @@ The attention output is a convex combination of value vectors, so its variance s
 spreads over more competitors, for a correct or an incorrect selection alike, while only the selection
 controls the behavior.
 We confirm the direction by intervention.
-Raising attention on the correct source raises accuracy in proportion, with the per-cell accuracy gain and
-attention gain tracking each other at correlation $1.0$, while stabilizing the variance raises neither.
+Raising attention on the correct source raises accuracy in proportion, with the accuracy gain and attention
+gain tracking each other across the four cells (correlation $1.0$), while stabilizing the variance raises
+neither.
 Attention concentration on the correct source is the operative variable that supports length
 generalization.
+The findings reproduce at eight layers and width $512$.
 We release the code, the result files, and the pre-registration.
 \end{abstract}
 
@@ -116,6 +118,9 @@ improve length generalization, and it lowers accuracy under RoPE.
 \item Raising attention on the correct source by inference-time logit sharpening raises accuracy in
 proportion. Across the four task and encoding cells the accuracy gain and the attention gain track each
 other at correlation $1.0$, while the variance-stabilizing intervention raises neither.
+\item Patching the attention distribution directly onto the correct source, holding the weights fixed,
+restores accuracy from $0.59$ to near $1.0$ at $50\times$ the training length, which shows attention on the
+correct source is sufficient to drive the behavior.
 \item A convex-combination argument explains why. Variance collapse follows from dispersion for any
 selection, so it co-varies with failure while attention concentration controls it.
 \item The variance-stabilizing intervention lowers attention on the correct source under RoPE, which
@@ -204,6 +209,9 @@ this model scale, and we report it as untrained (Section~\ref{sec:limitations}).
 For the two retrieval tasks the input position $j^\star$ that holds the answer is fixed by construction.
 At the query position we read the attention weight on $j^\star$, taken as the maximum over heads and layers,
 and call it the attention on the correct source.
+We take the maximum because the readout can use the correct value if any head or layer routes it, and we
+verify in Section~\ref{sec:res-attn} that the comparison with the variance candidate does not depend on
+this choice.
 This is the direct measurement of the property we hypothesize to be operative.
 
 \subsection{The variance candidate and its intervention}
@@ -266,6 +274,12 @@ Figure~\ref{fig:causal} makes the relation quantitative.
 Pooled over lengths and seeds, per-token accuracy is a tight function of attention on the correct source,
 with correlation $0.94$ (left panel).
 Measured within each baseline cell and averaged, the correlation is $0.97$.
+The pooled estimates use $384$ length-by-seed points, with a bootstrap $95\%$ interval of $[0.92,0.95]$ for
+attention.
+The ranking does not depend on how layers are combined.
+Under mean-over-layers aggregation, which treats both statistics the same way, attention predicts accuracy
+with correlation $0.90$ and the variance ratio with $0.33$, and under last-layer aggregation the values are
+$0.91$ and $0.22$.
 The property we identified from the mechanics of retrieval is the one that predicts the behavior.
 
 \begin{figure}[H]
@@ -291,7 +305,7 @@ behavior.
 
 The attention-output variance collapses with length in every baseline.
 Figure~\ref{fig:var} shows the variance of the deepest-collapsing layer, normalized to the training
-length, and the ratio at $50\times$ lies between $0.20$ and $0.49$ (Table~\ref{tab:main}).
+length, and the baseline ratio at $50\times$ lies between $0.27$ and $0.48$ (Table~\ref{tab:main}).
 This statistic is a plausible candidate, since a distribution shift of this size affects every downstream
 component.
 
@@ -335,6 +349,9 @@ Every cell masters the training length with exact-match $1.00$ and degrades as l
 (Figure~\ref{fig:acc}).
 On the two order-invariant tasks the intervention lies at or below the baseline at every length.
 The paired per-seed effect at the $50\times$ break point is at most zero in every cell (Table~\ref{tab:main}).
+Aggregated across the sixteen order-invariant cell-seed pairs the effect is negative in fifteen, with a
+mean of $-0.047$ and a bootstrap $95\%$ interval of $[-0.062,-0.031]$, and a two-sided sign test rejects no
+effect ($p<0.001$).
 
 \begin{figure}[H]
 \centering
@@ -422,6 +439,20 @@ The variance-stabilizing intervention raises per-token accuracy by $0.047$ under
 stays at $0$, which shows a graded metric reading as progress where no sequence is solved.
 Under RoPE the intervention is neutral.
 No configuration recovers usable length generalization on addition, which marks the boundary of the account.
+
+\subsection{The result holds at larger scale}
+\label{sec:res-scale}
+
+We repeat the full comparison at eight layers and width $512$, roughly eight times the parameters, and the
+three findings reproduce.
+Attention-output variance still collapses with length, with deep-layer ratios from $0.14$ to $0.47$, and the
+normalization still holds the downstream variance constant.
+Attention on the correct source still predicts accuracy with within-cell correlation $0.97$, against $0.60$
+for the variance ratio, and the ranking again holds under mean-over-layers and last-layer aggregation.
+The variance-stabilizing intervention still gives no benefit, with a paired per-seed effect at $50\times$ of
+$-0.039$ and $-0.021$ under NoPE and $-0.034$ and $-0.079$ under RoPE on argmax and flag retrieval, negative
+in thirteen of the sixteen pairs (sign test $p=0.02$).
+The account is present at this larger scale and is not an artifact of the smallest model.
 
 \section{Why attention concentration and variance separate}
 \label{sec:analysis}
@@ -538,14 +569,51 @@ A full recovery of short-length accuracy would need more than one inference-time
 The interventional result confirms the direction of the account, that attention selection is the operative
 lever, and it leaves the size of the achievable rescue to stronger concentration methods.
 
+\subsection{A direct manipulation}
+\label{sec:patch}
+
+The sharpening intervention changes the attention logits, so it is an indirect test.
+We also manipulate the operative variable directly.
+At the answer-query position we overwrite the attention distribution to place a chosen mass on the correct
+source, holding the trained weights fixed, and read the accuracy.
+The construction and the pre-registration are released with the paper.
+
+Forcing attention onto the correct source restores accuracy (Figure~\ref{fig:patch}, top).
+At $50\times$ the training length, where the baseline sits at $0.59$ per token, patching the attention to
+attend fully to the source raises accuracy to $0.99$, and the effect is monotone in the forced attention.
+Fifteen of the sixteen cells reach near $1.0$, and the one exception is argmax under RoPE, the cell that
+also resisted sharpening.
+Accuracy rises with the forced attention on the source across the sweep at a held attention norm, with
+correlation $0.89$ (Figure~\ref{fig:patch}, bottom).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_patch.pdf}
+\caption{Direct manipulation of the operative variable, pooled over the sixteen models at $50\times$.
+Top: patching the answer-query attention to place mass on the correct source restores accuracy from the
+baseline (dotted) to near $1.0$, monotone in the forced attention.
+Bottom: with the attention norm held by construction, accuracy rises with attention on the correct source
+(correlation $0.89$).}
+\label{fig:patch}
+\end{figure}
+
+We state the limits of this manipulation.
+It shows that attention on the correct source is sufficient to drive the readout, since forcing it restores
+accuracy and starving it returns accuracy to chance.
+It does not hold the attention-output variance exactly constant, because the source value vector is not
+exchangeable with the others, so the measured variance still drifts as the attention concentrates.
+The manipulation therefore demonstrates the sufficiency of selection, and we do not read it as a proof that
+the variance is causally inert.
+
 \section{Limitations}
 \label{sec:limitations}
 
-The models are small, with four layers and width $256$.
-We run the comparison where the variance collapse is strongest, and we do not establish the same behavior
-at frontier scale.
-We do not observe a length-generalization improvement from holding the variance constant in any cell, and
-we cannot exclude that a different scale or task construction behaves differently.
+The models are small.
+We report at four layers and width $256$, and we replicate the full result at eight layers and width $512$
+(Section~\ref{sec:res-scale}), which is roughly eight times the parameters, and we do not reach frontier
+scale.
+We do not observe a length-generalization improvement from holding the variance constant at either size,
+and we cannot exclude that a much larger model or a different task construction behaves differently.
 
 Our identification of attention on the correct source as the operative variable rests on a direct
 correlation and a matched intervention.
@@ -555,6 +623,8 @@ The tracking correlation is measured over four cells, which makes it suggestive 
 A stronger concentration method would test how far the rescue can go.
 The account is stated for retrieval, and the order-dependent contrast shows it does not extend to tasks
 whose answer draws on many positions at once.
+The tasks are synthetic and chosen for control, so they isolate the mechanism and are not a measure of
+end-task benchmark performance.
 Our accuracy is measured with teacher forcing per token, an upper bound on free generation.
 Dictionary lookup did not reach our competence gate at this scale and is reported as untrained.
 
@@ -571,6 +641,8 @@ less well, and does not transfer to the behavior when an intervention holds it c
 rotary position embeddings.
 Raising attention on the correct source by inference-time sharpening raises accuracy in proportion, and the
 accuracy gain tracks the attention gain across cells, while stabilizing the scale raises neither.
+Patching the attention directly onto the correct source restores accuracy from $0.59$ to near $1.0$, which
+shows the selection is sufficient to drive the behavior.
 A convex-combination argument explains the difference, since variance collapse follows from dispersion for
 any selection while concentration on the correct source controls the outcome.
 An internal statistic that co-varies with a failure is worth measuring against the property the task

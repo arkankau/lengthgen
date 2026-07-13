@@ -150,6 +150,34 @@ class Cfg:
     pad: int = 53
 
 
+# -------- eval-time attention patching (default OFF; used by colab/patch_experiment.py) -----------------
+# Set PATCH = {"layer": int, "p": float, "k": int|None} to overwrite the answer-query attention row with a
+# target distribution: mass p on the correct source token, the rest spread uniformly over k nearest valid
+# keys (k=None spreads over all valid keys). Lets us MOVE attention-on-source causally, holding the model
+# fixed. With PATCH=None this code never runs, so all other experiments are unaffected.
+PATCH = None
+
+
+def _apply_attn_patch(attn, aq, tgt):
+    b, _, t, _ = attn.shape
+    p = float(PATCH["p"]); k = PATCH.get("k", None)
+    attn = attn.clone()
+    for i in range(b):
+        q = int(aq[i]); j = int(tgt[i])
+        if q < 0 or j < 0 or j > q:
+            continue
+        valid = [x for x in range(q + 1) if x != j]   # causal keys 0..q excluding the source j
+        if k is not None and 0 < k < len(valid):
+            valid = valid[-k:]                         # the k keys nearest the query
+        row = torch.zeros(t, device=attn.device, dtype=attn.dtype)
+        if valid:
+            row[j] = p; row[valid] = (1.0 - p) / len(valid)
+        else:
+            row[j] = 1.0
+        attn[i, :, q, :] = row
+    return attn
+
+
 def sample_batch(rng, n, lo, hi, cfg):
     make = TASKS[cfg.task]["make"]
     seqs, masks, aqs, tgts, maxlen = [], [], [], [], 0
@@ -210,6 +238,7 @@ def build_model(cfg):
             self.attn_tgt = None           # attention mass on the ground-truth source token (max over heads)
             self.attn_ent = None           # normalized attention entropy at the answer-query position
             self.attn_max = None           # max attention weight (sharpness) at the answer-query position
+            self.z_aq_var = None           # variance of z at the answer-query position (for the patch experiment)
 
         def forward(self, h, rope, aq=None, tgt=None):
             b, t, _ = h.shape
@@ -229,6 +258,8 @@ def build_model(cfg):
                     scores = scores * float(cfg.attn_scale[5:])
             causal = torch.triu(torch.full((t, t), float("-inf"), device=h.device), diagonal=1)
             attn = torch.softmax(scores + causal, dim=-1)
+            if PATCH is not None and getattr(self, "layer_idx", -1) == PATCH.get("layer") and aq is not None:
+                attn = _apply_attn_patch(attn, aq, tgt)   # force attention-on-source at the query (eval only)
             if aq is not None:  # capture attention observables at the answer-query position (eval only)
                 idx = torch.arange(b, device=h.device)
                 rows = attn[idx, :, aq, :]                         # (b, heads, t): attn FROM aq to all keys
@@ -244,6 +275,8 @@ def build_model(cfg):
                     self.attn_tgt = self.attn_ent = self.attn_max = float("nan")
             z = (attn @ v).transpose(1, 2).reshape(b, t, cfg.d_model)
             z = self.W_O(z)
+            if aq is not None:  # variance of the attention output AT the answer-query position (patch experiment)
+                self.z_aq_var = float(z[torch.arange(b, device=z.device), aq, :].detach().float().var(dim=-1).mean().cpu())
             self.attn_out_var = float(z.detach().float().var(dim=-1).mean().cpu())  # BEFORE the fix
             z = self.post_ln(z)
             self.attn_out_var_post = float(z.detach().float().var(dim=-1).mean().cpu())  # AFTER the fix
@@ -258,6 +291,8 @@ def build_model(cfg):
             self.learned_pos = (nn.Parameter(torch.randn(cfg.max_ctx, cfg.d_model, generator=gen) * 0.02)
                                 if cfg.pe == "learned" else None)
             self.blocks = nn.ModuleList([Block() for _ in range(cfg.n_layers)])
+            for i, blk in enumerate(self.blocks):
+                blk.layer_idx = i   # so the patch hook can target a specific layer
             self.ln_f = nn.LayerNorm(cfg.d_model)
             self.unembed = nn.Linear(cfg.d_model, cfg.vocab, bias=False)
 
