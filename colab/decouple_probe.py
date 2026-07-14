@@ -23,6 +23,7 @@ Usage (Colab GPU):
 """
 from __future__ import annotations
 import argparse, json, os
+os.environ.setdefault("HF_HUB_DISABLE_XET", "1")  # Xet CAS backend 401s on unauth Colab; use classic download
 import numpy as np
 import torch
 import real_model_probe as R   # reuse pool / task / head calibration / attention row
@@ -99,7 +100,7 @@ def main():
         dt = {"fp32": torch.float32, "fp16": torch.float16, "bf16": torch.bfloat16}[a.dtype]
     print(f"device={device} dtype={dt} model={a.model}")
     tok = AutoTokenizer.from_pretrained(a.model)
-    model = AutoModelForCausalLM.from_pretrained(a.model, torch_dtype=dt, attn_implementation="eager").to(device).eval()
+    model = AutoModelForCausalLM.from_pretrained(a.model, dtype=dt, attn_implementation="eager").to(device).eval()
     norm, head = get_norm_and_head(model)
     print(f"logit-lens final-norm found: {norm is not None}")
     colon = tok.encode(":", add_special_tokens=False); nl = tok.encode("\n", add_special_tokens=False)
