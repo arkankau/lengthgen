@@ -56,3 +56,25 @@ interpolated in ln-length.
 `python colab/predict_break.py --tasks argmax,flagret --pes nope,rope --scales none,loglen --seeds 0,1
 --steps 12000 --outdir /content/drive/MyDrive/lengthgen_break` -> break_results.json.
 Analyze: `python scripts/analyze_break.py results/lengthgen/break_results.json`.
+
+## INTERIM OUTCOME (2026-07-14, 9 of 16 configs; run disconnected mid-flagret)
+Data results/lengthgen/break_results.json (9 configs); figure fig_break.pdf. PARTIAL, reported honestly.
+- **H-B1 (gap declines): SUPPORTED, clean.** Every baseline has fitted slope < 0 (argmax nope -2.4/-0.8,
+  argmax rope -3.7/-2.5, flagret nope -2.9), and within EVERY config a_pred=sigmoid(Delta) tracks em closely.
+  This is a direct quantitative confirmation of Prop 2's mechanism.
+- **H-B2 (calibrated prediction): FAILS the pre-registered bar.** corr(log n*_pred, log n*_obs) = +0.68
+  (passes the >=0.6 rank bar) BUT median ratio n*_pred/n*_obs = 4.4 (FAILS the [0.3,3] calibration bar). The
+  short-length linear-in-ln(n) fit OVERPREDICTS the break, systematically and PE-dependently: under NoPE the
+  gap is ~log-linear so the fit is well-calibrated (argmax pred65/obs84; flagret pred19/obs35), but under RoPE
+  the gap is FLAT-then-CRASH (Delta 14->12->8 at L<=20, then -12 at L=50), so the short fit sails past the
+  cliff and overshoots (argmax rope pred 245-410 / obs ~55). The pre-registered linearity assumption is wrong
+  for RoPE. Verdict: qualitative, PE-dependent predictor -- NOT a calibrated one.
+- **H-B3 (sharpening flattens the gap): SUPPORTED, clean.** loglen makes the slope less negative
+  (argmax nope -1.6->-0.8; argmax rope -3.1->-1.3), the sharpened gap crosses zero later, and em is sustained
+  to longer lengths. A mechanistic account of the sharpening intervention already in the paper.
+DECISION: per the pre-registered "H-B2 partial" branch, report honestly as a mechanism result (the logit gap
+is the order parameter; sigmoid(gap) tracks accuracy; sharpening flattens the gap), NOT as break-point
+forecasting. Do not feature the calibrated-prediction claim. The staging draft
+paper_lengthgen_aaai/draft_break_section.tex currently oversells "predict the break" and must be rewritten to
+the honest mechanism framing before any integration. Remaining 7 flagret configs would firm up the numbers but
+are not expected to change the partial verdict (the RoPE non-linearity is the root cause).
