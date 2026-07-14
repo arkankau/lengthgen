@@ -239,6 +239,7 @@ def build_model(cfg):
             self.attn_ent = None           # normalized attention entropy at the answer-query position
             self.attn_max = None           # max attention weight (sharpness) at the answer-query position
             self.z_aq_var = None           # variance of z at the answer-query position (for the patch experiment)
+            self.z_aq_scores = None        # (b,heads,t) effective attention logits at the answer query (break-length law)
 
         def forward(self, h, rope, aq=None, tgt=None):
             b, t, _ = h.shape
@@ -263,6 +264,7 @@ def build_model(cfg):
             if aq is not None:  # capture attention observables at the answer-query position (eval only)
                 idx = torch.arange(b, device=h.device)
                 rows = attn[idx, :, aq, :]                         # (b, heads, t): attn FROM aq to all keys
+                self.z_aq_scores = scores[idx, :, aq, :].detach()  # (b, heads, t): effective logits at the query
                 valid = tgt >= 0
                 if valid.any():
                     tmass = rows[idx, :, tgt.clamp(min=0)].max(dim=1).values  # (b,) mass on target, best head
