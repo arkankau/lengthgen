@@ -78,3 +78,22 @@ forecasting. Do not feature the calibrated-prediction claim. The staging draft
 paper_lengthgen_aaai/draft_break_section.tex currently oversells "predict the break" and must be rewritten to
 the honest mechanism framing before any integration. Remaining 7 flagret configs would firm up the numbers but
 are not expected to change the partial verdict (the RoPE non-linearity is the root cause).
+
+## FINAL OUTCOME (2026-07-14, all 16 configs complete)
+The interim call was WRONG about the direction the extra data would move things. With all 8 baselines:
+- **H-B1: SUPPORTED, clean** (gap declines in every config; sigmoid(gap) tracks em within every config).
+- **H-B2: SUPPORTED by the pre-registered bar.** corr(log n*_pred, log n*_obs) = +0.79 (>=0.6) AND median
+  ratio n*_pred/n*_obs = 0.65 (within [0.3,3]). The 4 flagret baselines are all well-predicted (pred ~18 /
+  obs ~34-44, ratio ~0.5) and pulled the median into range (it was 4.4 at the 9-config interim). HONEST
+  caveats to state in the paper: calibration is heterogeneous, not per-config precise -- flagret underpredicts
+  (~0.5x), argmax-RoPE overpredicts (4-7x, the flat-then-crash gap), and one argmax-NoPE seed is a wild
+  outlier (pred 7156 / obs 93) because its short-length slope was near flat and the extrapolation explodes.
+  The robust claim is the RANK correlation (0.79) plus median-within-1.5x, NOT per-config point accuracy.
+- **H-B3: SUPPORTED with a consistency bonus.** Sharpening flattens the gap slope where it helps (argmax
+  nope -1.6->-0.8, rope -3.1->-1.3) and leaves it ~unchanged where it does not help (flagret ~-2.9 both),
+  matching that flagret accuracy is unmoved by sharpening. The gap-slope tracks the intervention's effect.
+DECISION (final): feature B honestly as a PREDICTIVE result -- the gap forecasts the break across configs
+(corr 0.79) -- with the calibration caveats stated plainly (heterogeneous point calibration; robust as a rank
+predictor and to ~1.5x in the median; one near-flat-slope outlier). Rewrite draft_break_section.tex to this
+honest framing (fill the FILL slots with: N=8, corr=0.79, ratio=0.65; sharpening slopes argmax nope
+-1.6->-0.8, rope -3.1->-1.3), then integrate after the theory section.
