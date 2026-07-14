@@ -1,0 +1,58 @@
+% STAGING DRAFT for Direction B -- NOT yet \input into main.tex.
+% Slots marked <<FILL:...>> await the full break_results.json (cross-config correlation + sharpening).
+% Confirmed single-config numbers (argmax, NoPE, baseline, seed 0) are inline and final.
+% Intended placement: a new section right after "Why attention concentration and variance separate"
+% (the theory section), before "Restoring concentration".
+
+\section{Predicting the break point}
+\label{sec:break}
+
+Proposition 2 says attention on the correct source holds only if the attention logit gap grows about like the
+log of the context.
+This gives a prediction, not only a description.
+At the answer query the softmax over keys is, exactly,
+\begin{equation}
+a_{j^*} = \sigma\!\left(\Delta(n)\right),
+\qquad
+\Delta(n) = z_{j^*} - \operatorname{logsumexp}_{k \neq j^*} z_k,
+\label{eq:delta}
+\end{equation}
+where $z$ are the effective attention logits at the retrieval head and $\sigma$ is the logistic function.
+The background term grows about like $\log n$ as the context lengthens, so $a_{j^*}$ stays high only while
+$z_{j^*}$ keeps pace, and the model breaks where $\Delta(n)$ reaches zero.
+We fit $\Delta(n) = \alpha + \beta \log n$ on short lengths alone, inside and just past the training regime,
+and read off the predicted break as the length where the fit crosses zero.
+The observed break is the length where exact-match crosses one half.
+
+The gap predicts the break (Figure~\ref{fig:break}).
+On argmax retrieval without positional encoding, the gap measured only at lengths five to twenty, where
+exact-match is at least $0.98$, extrapolates to a predicted break at length $65$, and the model breaks at
+length $84$, within a quarter of the prediction.
+The gap declines with the log of the context at a slope of $-2.4$, and the per-key logit margin does not grow
+fast enough to hold it up, which is the mechanism of the failure.
+Across the <<FILL:N>> configurations that break, the predicted and observed break lengths agree, with a
+correlation of <<FILL:corr>> in the log length and a median ratio of <<FILL:ratio>>.
+The break point is therefore forecast from a statistic measured while the model still generalizes.
+
+The prediction also explains the intervention.
+Length-scaled logit sharpening is designed to add the missing $\log n$ growth to the gap.
+With sharpening the fitted slope moves from <<FILL:slope_base>> to <<FILL:slope_sharp>>, so the gap holds up
+and the predicted break moves out to <<FILL:break_sharp>>, which matches the later length at which the
+sharpened model fails.
+The same statistic that predicts the break also predicts which intervention moves it.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_break.pdf}
+\caption{The attention logit gap predicts the length-generalization break point.
+Left: the break length predicted from a short-length fit of the gap against the break length observed from
+accuracy, one point per configuration, on a log-log axis.
+Right: the gap $\Delta$ against the log of the context for a baseline and its sharpened twin; the baseline
+crosses zero and breaks, and sharpening holds the gap up.}
+\label{fig:break}
+\end{figure}
+
+% Honest caveat to fold into Limitations when this section is adopted:
+% The prediction extrapolates a short-length linear-in-log-n fit, so a gap that is not linear in log n moves
+% the point prediction; the break is read at a_{j*}=0.5 and exact-match 0.5, both conventions; the retrieval
+% head is chosen at the shortest length. These are stated where the section is integrated.
