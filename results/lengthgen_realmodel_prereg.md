@@ -50,3 +50,32 @@ token, from the attention weights alone (attn_implementation='eager'):
 `python colab/real_model_probe.py --model EleutherAI/pythia-1.4b --lengths 5,10,20,40,80,160 --n 150
 --outdir /content/drive/MyDrive/lengthgen_realmodel` -> realmodel_results.json.
 Analyze: scripts/analyze_real_model.py. Runbook: colab/README_realmodel.md.
+
+---
+
+## AMENDMENT 1 -- v2 redesign (2026-07-13, after the v1 run was inconclusive)
+
+The v1 run on pythia-1.4b was INCONCLUSIVE for two reasons, both anticipated by the caveats above:
+(a) the raw interleaved format gave the model almost no task competence (acc 0.25 at N=5), and (b) the
+attention-on-source measurement (max over 384 head-layers) SATURATED at ~0.9 at every length, so it had no
+variance to correlate with (restricted range). So v1 neither supported nor cleanly refuted the account.
+
+v2 fixes both, and is re-pre-registered here BEFORE the v2 GPU run:
+1. **Natural format.** Each pair is rendered in token space as `key : value \n` (pool tokens carry a leading
+   space, decoding to " apple: banana\n"); the query line is `kq :`. On a CPU smoke this took pythia-70m from
+   acc 0.00 (v1 raw format) to acc 0.75 at short N -- real task competence and dynamic range.
+2. **Retrieval-head measurement.** We identify the retrieval heads ONCE, correctness-independently, as the
+   top-K (default 8) layer-head pairs by mean query->source attention at the SHORTEST length, then measure
+   THOSE heads across the sweep (mean attention-on-source, mean ||a||^2, mean entropy). This replaces the
+   saturating max-over-all-heads. We also keep max-over-all-heads (a_js_max) for reference.
+
+Re-pre-registered hypotheses (unchanged in spirit):
+- **H-R1:** accuracy AND retrieval-head attention-on-source both fall with N.
+- **H-R2 (WITHIN length):** retrieval-head attention-on-source predicts correctness, better than the
+  retrieval-head ||a||^2 variance proxy and than -entropy.
+
+Honest notes: identifying heads at the shortest length then testing at longer lengths limits circularity
+(selection is correctness-independent and out-of-distribution from the tested lengths); we report a_js_max
+alongside so readers see the saturation. If pythia-1.4b's accuracy ceiling is still low, escalate the model
+(pythia-2.8b/6.9b) before interpreting. CPU smoke (pythia-70m): pooled corr(acc, retrieval-head a_j*)=+0.66
+vs ||a||^2 +0.47 -- promising, but the real verdict is the 1.4b run analyzed WITHIN length.
