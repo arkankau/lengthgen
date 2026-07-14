@@ -58,7 +58,8 @@ gain tracking each other across the four cells (correlation $1.0$), while stabil
 neither.
 Attention concentration on the correct source is the operative variable that supports length
 generalization.
-The findings reproduce at eight layers and width $512$.
+The findings reproduce at eight layers and width $512$, and the same pattern appears in a pretrained
+language model, Pythia-1.4B, on in-context retrieval.
 We release the code, the result files, and the pre-registration.
 \end{abstract}
 
@@ -605,6 +606,41 @@ exchangeable with the others, so the measured variance still drifts as the atten
 The manipulation therefore demonstrates the sufficiency of selection, and we do not read it as a proof that
 the variance is causally inert.
 
+\section{Generalization to a pretrained language model}
+\label{sec:realmodel}
+
+The results so far are on small transformers trained from scratch.
+We ask whether the operative variable appears in a real pretrained model.
+We probe Pythia-1.4B on in-context key-value recall: the prompt lists key-value pairs in the form
+\texttt{key: value}, a query repeats one key, and the model should produce the paired value.
+The value's position is known, so we read attention on the correct source, and we vary the number of pairs
+as the context length.
+A large model routes retrieval through specific heads, so we identify the retrieval heads once as the eight
+heads with the highest attention from the query to the source at the shortest length, and measure those
+heads across the sweep.
+
+The account appears in the real model (Figure~\ref{fig:realmodel}).
+Accuracy and attention on the correct source both fall with context length, from $0.68$ to $0.19$ and from
+$0.48$ to $0.22$ over five to $160$ pairs.
+Within a fixed length, attention on the correct source predicts which examples are correct, with a mean
+point-biserial correlation of $0.19$, above the participation ratio $\lVert a\rVert_2^2$ at $0.12$ and the
+attention entropy at $0.10$.
+The per-example effect is modest, as expected in a model with many interacting heads, and the ranking
+matches the account, since attention on the correct source is the best of the candidates.
+The same quantity taken over all heads stays high across length, from $0.88$ to $0.67$, and tracks the
+failure poorly, which is why the retrieval heads are the place to read it.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_realmodel.pdf}
+\caption{Pythia-1.4B on in-context key-value recall.
+Top: accuracy and retrieval-head attention on the correct source both fall as the context grows from five to
+$160$ pairs.
+Bottom: pooled over examples, the probability of a correct answer rises with attention on the correct
+source.}
+\label{fig:realmodel}
+\end{figure}
+
 \section{Limitations}
 \label{sec:limitations}
 
@@ -625,6 +661,8 @@ The account is stated for retrieval, and the order-dependent contrast shows it d
 whose answer draws on many positions at once.
 The tasks are synthetic and chosen for control, so they isolate the mechanism and are not a measure of
 end-task benchmark performance.
+The pretrained-model probe is one model on one retrieval task, and its within-example effect is modest, so
+it shows the account appears in a real model without measuring how large the effect is in general.
 Our accuracy is measured with teacher forcing per token, an upper bound on free generation.
 Dictionary lookup did not reach our competence gate at this scale and is reported as untrained.
 
@@ -643,6 +681,8 @@ Raising attention on the correct source by inference-time sharpening raises accu
 accuracy gain tracks the attention gain across cells, while stabilizing the scale raises neither.
 Patching the attention directly onto the correct source restores accuracy from $0.59$ to near $1.0$, which
 shows the selection is sufficient to drive the behavior.
+The same pattern appears in a pretrained language model, where retrieval accuracy and attention on the
+correct source fall together with context length.
 A convex-combination argument explains the difference, since variance collapse follows from dispersion for
 any selection while concentration on the correct source controls the outcome.
 An internal statistic that co-varies with a failure is worth measuring against the property the task

@@ -79,3 +79,16 @@ Honest notes: identifying heads at the shortest length then testing at longer le
 alongside so readers see the saturation. If pythia-1.4b's accuracy ceiling is still low, escalate the model
 (pythia-2.8b/6.9b) before interpreting. CPU smoke (pythia-70m): pooled corr(acc, retrieval-head a_j*)=+0.66
 vs ||a||^2 +0.47 -- promising, but the real verdict is the 1.4b run analyzed WITHIN length.
+
+## OUTCOME (2026-07-13, v2 run complete: pythia-1.4b, 900 examples, 6 lengths, 8 retrieval heads)
+Data results/lengthgen/realmodel_results.json; figure results/lengthgen/fig_realmodel.pdf. GENERALIZES.
+- **H-R1 (co-decline): SUPPORTED, clean.** accuracy 0.68->0.19 and retrieval-head attention-on-source
+  0.48->0.22 fall in lockstep over N=5..160. (max-over-ALL-heads stays high 0.88->0.67 and tracks the
+  failure poorly -- vindicates measuring the retrieval heads, and explains why v1 was inconclusive.)
+- **H-R2 (within-length predictor): SUPPORTED, modest, correct ranking.** within-length mean point-biserial
+  corr(correct, .): attention-on-source +0.19 > ||a||^2 variance proxy +0.12 > -entropy +0.10. Per-example
+  effect modest (expected in a 384-head model) but attention-on-source is the best candidate, matching the
+  account. Pooled (length-confounded) corr = +0.42, reported for reference only.
+VERDICT: the operative-variable account GENERALIZES to a real pretrained LM. INTEGRATED into the paper as
+a new section "Generalization to a pretrained language model" + fig_realmodel, abstract/conclusion clauses,
+and an honest Limitations note (one model, one task, modest within-example effect).
