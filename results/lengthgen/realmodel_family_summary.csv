@@ -1,0 +1,2 @@
+path,model,heads,n_examples,lengths,acc_first,acc_last,acc_drop,attn_first,attn_last,attn_drop,all_head_attn_first,all_head_attn_last,within_lengths,within_corr_attn,within_corr_normsq,within_corr_neg_entropy,winner
+results\lengthgen\realmodel_results.json,EleutherAI/pythia-1.4b,8,900,"5,10,20,40,80,160",0.68,0.18666666666666668,0.4933333333333334,0.47800601959228517,0.21894105831782024,0.25906496127446493,0.8748697916666667,0.6685546875,6,0.1939440403531714,0.1219518804077182,0.09991581978555913,attn
