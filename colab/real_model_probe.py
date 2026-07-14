@@ -24,7 +24,6 @@ Usage (Colab GPU):
 """
 from __future__ import annotations
 import argparse, json, math, os
-os.environ.setdefault("HF_HUB_DISABLE_XET", "1")  # Xet CAS backend 401s on unauth Colab; use classic download
 import numpy as np
 import torch
 
