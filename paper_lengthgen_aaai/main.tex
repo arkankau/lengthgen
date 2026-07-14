@@ -59,7 +59,8 @@ neither.
 Attention concentration on the correct source is the operative variable that supports length
 generalization.
 The findings reproduce at eight layers and width $512$, and the same pattern appears in a pretrained
-language model, Pythia-1.4B, on in-context retrieval.
+language model, Pythia-1.4B, on in-context retrieval, where a logit-lens decomposition splits the failure
+into an attention locus and a downstream readout locus.
 We release the code, the result files, and the pre-registration.
 \end{abstract}
 
@@ -641,6 +642,43 @@ source.}
 \label{fig:realmodel}
 \end{figure}
 
+\subsection{Decomposing the failure: attention and readout}
+\label{sec:decouple}
+
+The co-decline localizes part of the failure to attention, and attention on the source is still non-trivial
+where accuracy is low, so we ask whether attention is the whole story.
+At the query token we read three things: whether attention reached the source (retrieval-head attention on the
+correct source), whether the value was retrieved into the residual stream (the correct value appears in the
+top ten of a logit lens at some layer, using the model's own final norm and unembedding), and whether the
+value was output (the answer is correct).
+Among the failures at each length we separate two loci.
+A failure is attention-limited when the value is absent from the residual and attention on the source is low.
+A failure is readout-limited when the value is present in the residual yet the model does not output it, so a
+competing token wins after a successful retrieval.
+
+The failure is not attention alone (Figure~\ref{fig:decouple}).
+At moderate length the failures are predominantly readout-limited, from $0.95$ of failures at ten pairs to
+$0.58$ at eighty, where the model retrieves the value and then loses it to a distractor.
+Attention-limited failures grow with length, from $0.05$ to $0.60$ over the same range, and become the
+majority only at the longest context.
+The two loci cross near the longest length we test.
+Attention on the correct source is therefore the dominant failure at the largest contexts, in agreement with
+the operative-variable account at the tail, while a downstream readout locus carries most of the failure at
+moderate length.
+The split is robust to the thresholds, with the readout share at the longest length between $0.34$ and $0.50$
+across the ranges we tried, and the logit lens counts a value as present leniently, so the readout share is a
+lower bound.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_decouple.pdf}
+\caption{Where in-context recall fails in Pythia-1.4B, by locus, among the failures at each length.
+Readout-limited failures, where the correct value is in the residual yet not output, dominate at moderate
+length; attention-limited failures, where attention never reaches the source, grow with length and become the
+majority at the longest context. Dashed line: accuracy.}
+\label{fig:decouple}
+\end{figure}
+
 \section{Limitations}
 \label{sec:limitations}
 
@@ -663,6 +701,9 @@ The tasks are synthetic and chosen for control, so they isolate the mechanism an
 end-task benchmark performance.
 The pretrained-model probe is one model on one retrieval task, and its within-example effect is modest, so
 it shows the account appears in a real model without measuring how large the effect is in general.
+The failure decomposition uses a logit lens, which reads intermediate residuals imperfectly and counts a
+value as present leniently, so the readout locus is a lower bound and the split is a characterization of this
+model and task.
 Our accuracy is measured with teacher forcing per token, an upper bound on free generation.
 Dictionary lookup did not reach our competence gate at this scale and is reported as untrained.
 
@@ -682,7 +723,9 @@ accuracy gain tracks the attention gain across cells, while stabilizing the scal
 Patching the attention directly onto the correct source restores accuracy from $0.59$ to near $1.0$, which
 shows the selection is sufficient to drive the behavior.
 The same pattern appears in a pretrained language model, where retrieval accuracy and attention on the
-correct source fall together with context length.
+correct source fall together with context length, and a logit-lens decomposition there separates the failure
+into an attention locus that dominates at the longest contexts and a downstream readout locus that carries
+most of the failure at moderate length.
 A convex-combination argument explains the difference, since variance collapse follows from dispersion for
 any selection while concentration on the correct source controls the outcome.
 An internal statistic that co-varies with a failure is worth measuring against the property the task

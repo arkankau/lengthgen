@@ -66,3 +66,23 @@ V_THR = 10. Robustness reported over V_THR in {5,10,20} and A_THR in {0.5x, 1x}.
 `python colab/decouple_probe.py --model EleutherAI/pythia-1.4b --lengths 10,20,40,80,160 --n 150
 --outdir /content/drive/MyDrive/lengthgen_decouple` -> decouple_results.json.
 Analyze: `python scripts/analyze_decouple.py results/lengthgen/decouple_results.json`.
+
+## OUTCOME (2026-07-13, run complete: pythia-1.4b, 750 examples, 5 lengths, 8 retrieval heads)
+Data results/lengthgen/decouple_results.json; figure results/lengthgen/fig_decouple.pdf. OUTCOME (b): a
+SECOND locus is present, and the two loci cross over with length.
+- **H-D1 (instrument valid): PASSED.** among CORRECT examples, value-present (logit-lens top-10) = 1.00 at
+  every length and a_js is high. The lens reads the value on every case the model gets right.
+- **H-D2 / H-D3: two loci, crossover.** Among failures, readout-limited share = 0.95, 0.80, 0.74, 0.58, 0.40
+  at N=10,20,40,80,160; attention-limited share = 0.05, 0.16, 0.25, 0.42, 0.60; copy-limited ~= 0 throughout.
+  So at short/moderate length the model RETRIEVES the value into the residual then loses it to a distractor
+  (readout-limited dominates); attention dispersion becomes the majority failure only at the longest context.
+  The loci cross near N=160.
+- **Robustness:** readout share at N=160 is 0.34-0.50 across V_THR in {5,10,20} x A_THR in {0.5x,1x}, always
+  above the pre-registered 0.25 bar. Logit lens under-reads intermediate residuals, so readout is a LOWER
+  bound.
+INTERPRETATION (honest): does NOT overturn the thesis. Attention-on-source is still the dominant failure at
+the tail (60% at N=160), consistent with the toy patching-sufficiency result; but a real LM's recall failure
+is richer, with a downstream readout locus dominating at moderate length. Reported as a refinement, not a
+reversal. INTEGRATED into the paper: new subsection "Decomposing the failure: attention and readout" under the
+real-model section + fig_decouple, abstract/conclusion clauses, and an honest Limitations note (logit lens is
+a lower bound; one model/one task).
