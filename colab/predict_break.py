@@ -142,12 +142,22 @@ def main():
     print(f"device={G.DEVICE} steps={steps} lengths={lengths}")
     os.makedirs(a.outdir, exist_ok=True)
     path = os.path.join(a.outdir, "break_results.json")
-    results = []
+    results, done = [], set()
+    if os.path.exists(path):  # resume: skip configs already saved (Colab-disconnect safe)
+        try:
+            results = json.load(open(path))
+            done = {(r["cfg"]["task"], r["cfg"]["pe"], r["cfg"]["scale"], r["cfg"]["seed"]) for r in results}
+            print(f"resuming: {len(done)} configs already done, skipping them")
+        except Exception:
+            results, done = [], set()
     for task in tasks:
         tk = G.TASKS[task]
         for pe in pes:
             for scale in scales:
                 for seed in seeds:
+                    if (task, pe, scale, seed) in done:
+                        print(f"skip (done): task={task} pe={pe} scale={scale} seed={seed}", flush=True)
+                        continue
                     cfg = G.Cfg(task=task, pe=pe, seed=seed, steps=steps, l_train=L,
                                 attn_scale=scale, vocab=tk["vocab"], pad=tk["pad"])
                     if a.smoke:  # tiny model so the plumbing check runs on CPU in seconds
