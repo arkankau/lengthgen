@@ -1,0 +1,79 @@
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage[submission]{aaai2027}  % DO NOT CHANGE THIS
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{natbib}  % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{caption} % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\frenchspacing  % DO NOT CHANGE THIS
+\usepackage{float}
+
+% Supplementary figures are numbered S1, S2, ... so they do not collide with the main paper.
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\pdfinfo{
+/TemplateVersion (2027.1)
+}
+
+\title{Supplementary Material:\\ Attention Concentration Supports Transformer Length Generalization}
+\author{}
+\nocopyright
+
+\begin{document}
+\maketitle
+
+This supplement collects the supporting figures for the co-varying variance statistic and the
+variance-stabilizing intervention. Every numerical claim these figures illustrate is stated in the main
+paper; the figures are provided here for completeness. Section and table references point to the main paper.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_variance_collapse.pdf}
+\caption{A co-varying statistic (main paper, Section~4.2).
+Baseline attention-output variance in the deepest-collapsing layer, normalized to the training length,
+falls with length on every task.}
+\label{fig:var}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_prepost_var.pdf}
+\caption{The intervention holds the statistic constant (main paper, Section~4.3).
+For the intervention runs, the deep-layer variance before the normalization (solid) still collapses, while
+the variance after it (dashed) is held near constant across length.}
+\label{fig:prepost}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_accuracy_vs_length.pdf}
+\caption{Per-token accuracy against length on a log axis, out to $50\times$ the training length (main paper,
+Section~4.3).
+Baseline is solid and the variance-stabilizing intervention is dashed, averaged over four seeds for the
+retrieval tasks with min-to-max bands.
+The intervention lies at or below the baseline in every retrieval panel.
+Addition (bottom) fails from a short length in both conditions.}
+\label{fig:acc}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_benefit_vs_length.pdf}
+\caption{The intervention's per-token effect (intervention minus baseline) against length (main paper,
+Section~4.3).
+It is at most zero and becomes more negative with length, with the largest cost under RoPE.}
+\label{fig:benefit}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_attn_base_vs_fix.pdf}
+\caption{The behavior follows the operative variable (main paper, Section~4.4).
+Attention on the correct source with the intervention off (solid) and on (dashed).
+The intervention does not restore the attention, and under RoPE it lowers it, which matches the accuracy in
+Table~1 of the main paper.}
+\label{fig:attnfix}
+\end{figure}
+
+\end{document}

@@ -306,19 +306,11 @@ behavior.
 \label{sec:res-variance}
 
 The attention-output variance collapses with length in every baseline.
-Figure~\ref{fig:var} shows the variance of the deepest-collapsing layer, normalized to the training
-length, and the baseline ratio at $50\times$ lies between $0.27$ and $0.48$ (Table~\ref{tab:main}).
+The variance of the deepest-collapsing layer, normalized to the training length, falls with length on every
+task, and the baseline ratio at $50\times$ lies between $0.27$ and $0.48$ (Table~\ref{tab:main}, and
+Figure~S1 in the supplement).
 This statistic is a plausible candidate, since a distribution shift of this size affects every downstream
 component.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_variance_collapse.pdf}
-\caption{A co-varying statistic.
-Baseline attention-output variance in the deepest-collapsing layer, normalized to the training length,
-falls with length on every task.}
-\label{fig:var}
-\end{figure}
 
 The variance is a weaker predictor of accuracy than attention on the correct source.
 In the pooled scatter (Figure~\ref{fig:causal}, bottom) accuracy against the variance ratio has correlation
@@ -332,53 +324,27 @@ The variance moves with the failure and explains less of it.
 
 The variance candidate names a concrete intervention, so we can go past correlation and repair the
 statistic directly.
-Figure~\ref{fig:prepost} confirms the normalization works as intended.
+The normalization works as intended (Figure~S2 in the supplement).
 For the intervention runs the variance before the normalization still collapses, while the variance after
 it is held near constant across length, with a post-intervention ratio close to $1.0$ in every
 order-invariant cell (Table~\ref{tab:main}).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_prepost_var.pdf}
-\caption{The intervention holds the statistic constant.
-For the intervention runs, the deep-layer variance before the normalization (solid) still collapses, while
-the variance after it (dashed) is held near constant across length.}
-\label{fig:prepost}
-\end{figure}
-
 Holding the statistic constant does not change the behavior.
 Every cell masters the training length with exact-match $1.00$ and degrades as length grows
-(Figure~\ref{fig:acc}).
+(Figure~S3 in the supplement).
 On the two order-invariant tasks the intervention lies at or below the baseline at every length.
 The paired per-seed effect at the $50\times$ break point is at most zero in every cell (Table~\ref{tab:main}).
 Aggregated across the sixteen order-invariant cell-seed pairs the effect is negative in fifteen, with a
 mean of $-0.047$ and a bootstrap $95\%$ interval of $[-0.062,-0.031]$, and a two-sided sign test rejects no
 effect ($p<0.001$).
+The accuracy curves are in the supplement (Figure~S3), and the intervention lies at or below the baseline in
+every retrieval panel while addition fails from a short length in both conditions.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_accuracy_vs_length.pdf}
-\caption{Per-token accuracy against length on a log axis, out to $50\times$ the training length.
-Baseline is solid and the variance-stabilizing intervention is dashed, averaged over four seeds for the
-retrieval tasks with min-to-max bands.
-The intervention lies at or below the baseline in every retrieval panel.
-Addition (bottom) fails from a short length in both conditions.}
-\label{fig:acc}
-\end{figure}
-
-Figure~\ref{fig:benefit} shows the sign and the trend directly.
+The supplement shows the sign and the trend directly (Figure~S4).
 The intervention's per-token effect starts near zero at short length and moves downward as length grows,
 and the downward trend is steepest under RoPE.
 Repairing the co-varying statistic does not transfer to the behavior, and under RoPE it costs accuracy at
 the lengths where it was expected to help.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_benefit_vs_length.pdf}
-\caption{The intervention's per-token effect (intervention minus baseline) against length.
-It is at most zero and becomes more negative with length, with the largest cost under RoPE.}
-\label{fig:benefit}
-\end{figure}
 
 \begin{table*}[t]
 \centering\small
@@ -413,28 +379,18 @@ flagret & NoPE, off & 1.00 & 0.94 & 0.67 & 0.60 & $0.47,\ 0.47$ & \\
 Our account predicts the sign of the intervention's effect through the operative variable.
 An intervention that helps should raise attention on the correct source, and one that costs accuracy should
 lower it.
-Figure~\ref{fig:attnfix} compares attention on the correct source with the intervention off and on.
+The supplement compares attention on the correct source with the intervention off and on (Figure~S5).
 The intervention does not restore the attention at long length in any cell.
 Under RoPE it lowers the attention further, from $0.25$ to $0.07$ on argmax and from $0.016$ to $0.010$ on
 flag retrieval at $50\times$.
 The behavior follows the operative variable, and the cost under RoPE is consistent with a component placed
 after attention disturbing the rotary frequency structure \citep{fope}.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_attn_base_vs_fix.pdf}
-\caption{The behavior follows the operative variable.
-Attention on the correct source with the intervention off (solid) and on (dashed).
-The intervention does not restore the attention, and under RoPE it lowers it, which matches the accuracy in
-Table~\ref{tab:main}.}
-\label{fig:attnfix}
-\end{figure}
-
 \subsection{The order-dependent contrast}
 \label{sec:res-addition}
 
 Reversed addition is mastered at the training length and then fails at every extrapolation length, with
-exact-match $0$ throughout (Figure~\ref{fig:acc}, bottom row).
+exact-match $0$ throughout (Figure~S3 in the supplement, bottom row).
 Its failure does not reduce to dispersion off a single source, because the answer draws on many positions
 at once, so the retrieval account does not extend to it and we do not expect the same treatment to apply.
 The variance-stabilizing intervention raises per-token accuracy by $0.047$ under NoPE while exact-match
@@ -525,7 +481,7 @@ variance ratio predicts it less well, and holding the variance constant leaves t
 The same structure explains the sign under RoPE.
 The normalization is a component placed after attention, and such components interact with the rotary
 frequency structure in ways that reduce attention concentration \citep{fope}.
-In our setting that interaction lowers attention on the correct source (Figure~\ref{fig:attnfix}), which is
+In our setting that interaction lowers attention on the correct source (Figure~S5 in the supplement), which is
 why the intervention moves from neutral under NoPE to a cost under RoPE.
 This refines the observation that a post-attention normalization can sharpen attention \citep{postnorm},
 since under RoPE in our setting the effect on concentration reverses.
@@ -734,6 +690,10 @@ actually requires, because the two can move together and only one of them suppor
 \section*{Reproducibility}
 The code, the full result files, the analysis scripts, and the pre-registration written before the outcomes
 are released with the paper.
+The transformers are trained in PyTorch on a single GPU, and the pretrained-model probe runs Pythia-1.4B
+through the Hugging Face Transformers library with eager attention on one GPU.
+Every run uses a fixed seed, the retrieval tasks use four seeds, and the tables report bootstrap intervals
+and a sign test.
 
 \bibliographystyle{aaai2027}
 \bibliography{references}
