@@ -55,7 +55,9 @@ def probe_length(model, device, pool, N, n_ex, batch, colon, nl, heads, norm, he
             seqs.append(ids); srcs.append(src); vans.append(v)
         x = torch.tensor(seqs, device=device)
         out = model(x, output_attentions=True, output_hidden_states=True)
-        row = torch.stack(out.attentions, 0).float()[:, :, :, -1, :]     # (L,B,H,S)
+        # slice the query row PER LAYER before stacking/casting, else we materialize the full
+        # (L,B,H,S,S) float tensor and OOM at long S.
+        row = torch.stack([a[:, :, -1, :] for a in out.attentions], 0).float()   # (L,B,H,S)
         pred = out.logits[:, -1, :].argmax(-1)
         van = torch.tensor(vans, device=device)
         # logit-lens best rank of vq at the query token, min over layers
@@ -112,7 +114,8 @@ def main():
     path = os.path.join(a.outdir, "decouple_results.json")
     recs = []
     for N in lengths:
-        r = probe_length(model, device, pool, N, n_ex, a.batch, colon, nl, heads, norm, head, rng)
+        b_eff = a.batch if N < 100 else max(2, a.batch // 2)   # shrink batch at long S to fit memory
+        r = probe_length(model, device, pool, N, n_ex, b_eff, colon, nl, heads, norm, head, rng)
         recs += r
         acc = np.mean([x["correct"] for x in r])
         fails = [x for x in r if not x["correct"]]

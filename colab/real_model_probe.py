@@ -60,8 +60,9 @@ def build_example(pool, N, colon, nl, rng):
 def final_row(model, x):
     """attention FROM the last token to all keys: (L, B, H, S)."""
     out = model(x, output_attentions=True)
-    att = torch.stack(out.attentions, 0).float()          # (L, B, H, S, S)
-    return att[:, :, :, -1, :], out.logits[:, -1, :]
+    # slice the query row per layer before stacking/casting to avoid a full (L,B,H,S,S) float tensor
+    row = torch.stack([a[:, :, -1, :] for a in out.attentions], 0).float()   # (L, B, H, S)
+    return row, out.logits[:, -1, :]
 
 
 @torch.no_grad()
