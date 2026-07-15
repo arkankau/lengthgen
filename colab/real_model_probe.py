@@ -29,16 +29,29 @@ import torch
 
 
 def single_token_pool(tok, want=1600):
-    pool = []
+    # GPT-style BPEs decode word-start tokens with a literal leading space.
+    # SentencePiece-family tokenizers may decode an equivalent standalone token
+    # without exposing that marker, so retain stable lowercase word tokens as a
+    # portable fallback. The strict pool stays first to preserve prior runs.
+    strict = []
+    portable = []
     for i in range(tok.vocab_size):
-        s = tok.decode([i])
-        if len(s) >= 4 and s[0] == " " and s[1:].isalpha() and s.islower():
-            if tok.encode(s, add_special_tokens=False) == [i]:
-                pool.append(i)
-        if len(pool) >= want:
+        s = tok.decode([i], clean_up_tokenization_spaces=False)
+        word = s.strip()
+        stable = tok.encode(s, add_special_tokens=False) == [i]
+        if stable and len(word) >= 3 and word.isalpha() and word.islower():
+            if s.startswith(" "):
+                strict.append(i)
+            elif not any(ch.isspace() for ch in s):
+                portable.append(i)
+        if len(strict) >= want:
             break
+    pool = (strict + portable)[:want]
     if len(pool) < 40:
-        raise RuntimeError("could not build a single-token pool for this tokenizer")
+        raise RuntimeError(
+            "could not build a single-token pool for this tokenizer "
+            f"(strict={len(strict)}, portable={len(portable)})"
+        )
     return pool
 
 
@@ -136,7 +149,8 @@ def main():
     colon = tok.encode(":", add_special_tokens=False)
     nl = tok.encode("\n", add_special_tokens=False)
     pool = single_token_pool(tok, want=max(1600, 3 * max(lengths)))
-    print(f"single-token pool: {len(pool)}  colon={colon}  newline={nl}")
+    sample = [tok.decode([token], clean_up_tokenization_spaces=False) for token in pool[:5]]
+    print(f"single-token pool: {len(pool)}  sample={sample}  colon={colon}  newline={nl}")
     with torch.no_grad():
         r0, _ = final_row(model, torch.tensor([pool[:3]], device=device))
     nanfrac = float(torch.isnan(r0).float().mean())
