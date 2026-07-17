@@ -1,0 +1,405 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "expected_seeds": [
+    0,
+    1,
+    2
+  ],
+  "available_seeds": [
+    0,
+    2
+  ],
+  "passing_seeds": [
+    0,
+    2
+  ],
+  "passage_counts": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "frozen_at_passage_count": 4,
+  "trajectory": {
+    "4": {
+      "baseline_source_mass": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.0039355216340482,
+        "ci95": [
+          0.002338340926780802,
+          0.005762098176364815
+        ],
+        "seed_means": [
+          0.005305786951794289,
+          0.0025652563163021114
+        ]
+      },
+      "baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 9.41455078125,
+        "ci95": [
+          9.14697265625,
+          9.66064453125
+        ],
+        "seed_means": [
+          9.3525390625,
+          9.4765625
+        ]
+      },
+      "baseline_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "seed_means": [
+          1.0,
+          1.0
+        ]
+      },
+      "rescue_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.0517578125,
+        "ci95": [
+          -0.1943359375,
+          0.2929809570312498
+        ],
+        "seed_means": [
+          -0.0966796875,
+          0.2001953125
+        ]
+      },
+      "rescue_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "seed_means": [
+          0.0,
+          0.0
+        ]
+      },
+      "control_minus_baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.2236328125,
+        "ci95": [
+          -0.498046875,
+          0.06201171875
+        ],
+        "seed_means": [
+          -0.060546875,
+          -0.38671875
+        ]
+      }
+    },
+    "8": {
+      "baseline_source_mass": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.00378818843546469,
+        "ci95": [
+          0.0022701313078187014,
+          0.005444727246640468
+        ],
+        "seed_means": [
+          0.005048149530921364,
+          0.0025282273400080157
+        ]
+      },
+      "baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 8.796875,
+        "ci95": [
+          8.45849609375,
+          9.109375
+        ],
+        "seed_means": [
+          8.7294921875,
+          8.8642578125
+        ]
+      },
+      "baseline_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.98828125,
+        "ci95": [
+          0.97265625,
+          1.0
+        ],
+        "seed_means": [
+          0.984375,
+          0.9921875
+        ]
+      },
+      "rescue_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.03125,
+        "ci95": [
+          -0.18310546875,
+          0.11865234375
+        ],
+        "seed_means": [
+          -0.033203125,
+          -0.029296875
+        ]
+      },
+      "rescue_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.00390625,
+        "ci95": [
+          0.0,
+          0.015625
+        ],
+        "seed_means": [
+          0.0078125,
+          0.0
+        ]
+      },
+      "control_minus_baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.2177734375,
+        "ci95": [
+          -0.39453125,
+          -0.05810546875
+        ],
+        "seed_means": [
+          -0.2646484375,
+          -0.1708984375
+        ]
+      }
+    },
+    "16": {
+      "baseline_source_mass": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.0046194549122446915,
+        "ci95": [
+          0.002604997397747866,
+          0.006962262958268183
+        ],
+        "seed_means": [
+          0.006375613542331848,
+          0.0028632962821575347
+        ]
+      },
+      "baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 8.42919921875,
+        "ci95": [
+          8.06785888671875,
+          8.7763916015625
+        ],
+        "seed_means": [
+          8.3359375,
+          8.5224609375
+        ]
+      },
+      "baseline_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.9765625,
+        "ci95": [
+          0.953125,
+          0.99609375
+        ],
+        "seed_means": [
+          0.984375,
+          0.96875
+        ]
+      },
+      "rescue_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.26806640625,
+        "ci95": [
+          -0.40234375,
+          -0.14111328125
+        ],
+        "seed_means": [
+          -0.294921875,
+          -0.2412109375
+        ]
+      },
+      "rescue_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.00390625,
+        "ci95": [
+          -0.01953125,
+          0.01171875
+        ],
+        "seed_means": [
+          -0.0078125,
+          0.0
+        ]
+      },
+      "control_minus_baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.02685546875,
+        "ci95": [
+          -0.13331298828125,
+          0.1826171875
+        ],
+        "seed_means": [
+          0.001953125,
+          0.0517578125
+        ]
+      }
+    },
+    "32": {
+      "baseline_source_mass": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.004890341822829214,
+        "ci95": [
+          0.0026279482064410333,
+          0.007518622102770677
+        ],
+        "seed_means": [
+          0.006889452763061854,
+          0.002891230882596574
+        ]
+      },
+      "baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 8.37890625,
+        "ci95": [
+          7.87886962890625,
+          8.82960205078125
+        ],
+        "seed_means": [
+          8.1708984375,
+          8.5869140625
+        ]
+      },
+      "baseline_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.953125,
+        "ci95": [
+          0.92578125,
+          0.9765625
+        ],
+        "seed_means": [
+          0.953125,
+          0.953125
+        ]
+      },
+      "rescue_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.12744140625,
+        "ci95": [
+          -0.36085205078125,
+          0.1015625
+        ],
+        "seed_means": [
+          -0.279296875,
+          0.0244140625
+        ]
+      },
+      "rescue_accuracy": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "seed_means": [
+          0.0,
+          0.0
+        ]
+      },
+      "control_minus_baseline_margin": {
+        "n_seeds": 2,
+        "n_examples": 256,
+        "mean": -0.1650390625,
+        "ci95": [
+          -0.37939453125,
+          0.0380859375
+        ],
+        "seed_means": [
+          -0.056640625,
+          -0.2734375
+        ]
+      }
+    }
+  },
+  "longest_minus_shortest": {
+    "baseline_source_mass": {
+      "n_seeds": 2,
+      "n_examples": 256,
+      "mean": 0.0009548201887810137,
+      "ci95": [
+        0.00014089753506141278,
+        0.0020333499686785213
+      ],
+      "seed_means": [
+        0.001583665811267565,
+        0.0003259745662944624
+      ]
+    },
+    "baseline_margin": {
+      "n_seeds": 2,
+      "n_examples": 256,
+      "mean": -1.03564453125,
+      "ci95": [
+        -1.39698486328125,
+        -0.6982299804687502
+      ],
+      "seed_means": [
+        -1.181640625,
+        -0.8896484375
+      ]
+    },
+    "baseline_accuracy": {
+      "n_seeds": 2,
+      "n_examples": 256,
+      "mean": -0.046875,
+      "ci95": [
+        -0.07421875,
+        -0.0234375
+      ],
+      "seed_means": [
+        -0.046875,
+        -0.046875
+      ]
+    },
+    "rescue_amplification_margin": {
+      "n_seeds": 2,
+      "n_examples": 256,
+      "mean": -0.17919921875,
+      "ci95": [
+        -0.35206298828125,
+        -0.0048828125
+      ],
+      "seed_means": [
+        -0.1826171875,
+        -0.17578125
+      ]
+    }
+  },
+  "invariant_max_abs_error": 4.76837158203125e-07,
+  "full_size_seeds": [
+    0,
+    2
+  ],
+  "preregistered_success": false
+}

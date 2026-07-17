@@ -1,0 +1,479 @@
+{
+  "model": "EleutherAI/pythia-70m",
+  "dtype": "torch.float32",
+  "seed": 0,
+  "selection_length": 3,
+  "selected_layer": 3,
+  "selected_heads": [
+    6,
+    5
+  ],
+  "calibration_source_mass_by_layer_head": [
+    [
+      0.03815724700689316,
+      0.021764133125543594,
+      0.024627983570098877,
+      0.00014021604147274047,
+      0.0009555360302329063,
+      0.00173024064861238,
+      0.01332632452249527,
+      0.004954915028065443
+    ],
+    [
+      0.03716111183166504,
+      0.0037998640909790993,
+      0.0017208255594596267,
+      0.02772982232272625,
+      0.10775476694107056,
+      0.015253092162311077,
+      0.03253995254635811,
+      0.018719181418418884
+    ],
+    [
+      0.01565059833228588,
+      0.003628920763731003,
+      0.07108578085899353,
+      0.079563669860363,
+      0.02706008590757847,
+      0.050221994519233704,
+      0.00020104403665754944,
+      0.05114550143480301
+    ],
+    [
+      0.3786117434501648,
+      0.03279506787657738,
+      0.029488923028111458,
+      0.2180667668581009,
+      0.05312572047114372,
+      0.5663482546806335,
+      0.6040021777153015,
+      0.023205425590276718
+    ],
+    [
+      0.10380731523036957,
+      0.2924078106880188,
+      0.16223014891147614,
+      0.1431848406791687,
+      0.02927127480506897,
+      3.5399898479226977e-07,
+      0.11743781715631485,
+      0.1279781013727188
+    ],
+    [
+      1.9140811602369467e-08,
+      0.00019857953884638846,
+      7.607539828313747e-06,
+      2.334073147432225e-13,
+      1.7486924257055698e-15,
+      3.028061135168514e-10,
+      2.4477181180093243e-15,
+      1.2047560282724135e-08
+    ]
+  ],
+  "lengths": {
+    "3": {
+      "conditions": {
+        "baseline": {
+          "mode": "baseline",
+          "n_examples": 4,
+          "accuracy": 0.5,
+          "mean_margin": 0.281494140625,
+          "mean_source_mass": 0.6756784617900848,
+          "mean_entropy": 0.5711760744452477,
+          "mean_max_weight": 0.7985566705465317,
+          "invariant_max_abs_error": {},
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -1.10595703125,
+              "source_mass": 0.8769500851631165,
+              "entropy": 0.47973281145095825,
+              "max_weight": 0.8769500851631165
+            },
+            {
+              "correct": 0.0,
+              "margin": -0.388427734375,
+              "source_mass": 0.16556400060653687,
+              "entropy": 0.9027289152145386,
+              "max_weight": 0.6570768356323242
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.419677734375,
+              "source_mass": 0.8140040636062622,
+              "entropy": 0.4451030492782593,
+              "max_weight": 0.8140040636062622
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.20068359375,
+              "source_mass": 0.8461956977844238,
+              "entropy": 0.4571395218372345,
+              "max_weight": 0.8461956977844238
+            }
+          ]
+        },
+        "source_max": {
+          "mode": "source_max",
+          "n_examples": 4,
+          "accuracy": 0.75,
+          "mean_margin": 0.38726806640625,
+          "mean_source_mass": 0.7985566705465317,
+          "mean_entropy": 0.5711760744452477,
+          "mean_max_weight": 0.7985566705465317,
+          "invariant_max_abs_error": {
+            "sorted": 0.0,
+            "entropy": 0.0,
+            "l1": 5.960464477539063e-08,
+            "l2": 0.0,
+            "linf": 0.0
+          },
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -1.10595703125,
+              "source_mass": 0.8769500851631165,
+              "entropy": 0.47973281145095825,
+              "max_weight": 0.8769500851631165
+            },
+            {
+              "correct": 1.0,
+              "margin": 0.03466796875,
+              "source_mass": 0.6570768356323242,
+              "entropy": 0.9027289152145386,
+              "max_weight": 0.6570768356323242
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.419677734375,
+              "source_mass": 0.8140040636062622,
+              "entropy": 0.4451030492782593,
+              "max_weight": 0.8140040636062622
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.20068359375,
+              "source_mass": 0.8461956977844238,
+              "entropy": 0.4571395218372345,
+              "max_weight": 0.8461956977844238
+            }
+          ]
+        },
+        "source_min": {
+          "mode": "source_min",
+          "n_examples": 4,
+          "accuracy": 0.0,
+          "mean_margin": -1.503936767578125,
+          "mean_source_mass": 1.7847449540388943e-09,
+          "mean_entropy": 0.5711761191487312,
+          "mean_max_weight": 0.7985566705465317,
+          "invariant_max_abs_error": {
+            "sorted": 0.0,
+            "entropy": 1.1920928955078125e-07,
+            "l1": 1.1920928955078125e-07,
+            "l2": 0.0,
+            "linf": 0.0
+          },
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -2.6630859375,
+              "source_mass": 2.418980793450487e-09,
+              "entropy": 0.479732871055603,
+              "max_weight": 0.8769500851631165
+            },
+            {
+              "correct": 0.0,
+              "margin": -0.5545654296875,
+              "source_mass": 2.190496672938025e-09,
+              "entropy": 0.9027290344238281,
+              "max_weight": 0.6570768356323242
+            },
+            {
+              "correct": 0.0,
+              "margin": -1.7200927734375,
+              "source_mass": 6.239417836562122e-12,
+              "entropy": 0.4451030492782593,
+              "max_weight": 0.8140040636062622
+            },
+            {
+              "correct": 0.0,
+              "margin": -1.0780029296875,
+              "source_mass": 2.5232629319305033e-09,
+              "entropy": 0.4571395218372345,
+              "max_weight": 0.8461956977844238
+            }
+          ]
+        },
+        "distractor_control": {
+          "mode": "distractor_control",
+          "n_examples": 4,
+          "accuracy": 0.5,
+          "mean_margin": 0.302978515625,
+          "mean_source_mass": 0.6756784617900848,
+          "mean_entropy": 0.5711760967969894,
+          "mean_max_weight": 0.7985566705465317,
+          "invariant_max_abs_error": {
+            "sorted": 0.0,
+            "entropy": 1.1920928955078125e-07,
+            "l1": 5.960464477539063e-08,
+            "l2": 0.0,
+            "linf": 0.0
+          },
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -0.9693603515625,
+              "source_mass": 0.8769500851631165,
+              "entropy": 0.47973281145095825,
+              "max_weight": 0.8769500851631165
+            },
+            {
+              "correct": 0.0,
+              "margin": -0.0078125,
+              "source_mass": 0.16556400060653687,
+              "entropy": 0.9027290344238281,
+              "max_weight": 0.6570768356323242
+            },
+            {
+              "correct": 1.0,
+              "margin": 0.917724609375,
+              "source_mass": 0.8140040636062622,
+              "entropy": 0.4451030492782593,
+              "max_weight": 0.8140040636062622
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.2713623046875,
+              "source_mass": 0.8461956977844238,
+              "entropy": 0.4571394920349121,
+              "max_weight": 0.8461956977844238
+            }
+          ]
+        }
+      },
+      "contrasts_vs_baseline": [
+        {
+          "mode": "source_max",
+          "accuracy_delta": 0.25,
+          "margin_delta": 0.10577392578125,
+          "source_mass_delta": 0.12287820875644684
+        },
+        {
+          "mode": "source_min",
+          "accuracy_delta": -0.5,
+          "margin_delta": -1.785430908203125,
+          "source_mass_delta": -0.6756784600053399
+        },
+        {
+          "mode": "distractor_control",
+          "accuracy_delta": 0.0,
+          "margin_delta": 0.021484375,
+          "source_mass_delta": 0.0
+        }
+      ]
+    },
+    "6": {
+      "conditions": {
+        "baseline": {
+          "mode": "baseline",
+          "n_examples": 4,
+          "accuracy": 0.25,
+          "mean_margin": -1.917449951171875,
+          "mean_source_mass": 0.4703439846634865,
+          "mean_entropy": 0.7058084309101105,
+          "mean_max_weight": 0.7414159774780273,
+          "invariant_max_abs_error": {},
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -2.2880859375,
+              "source_mass": 0.18256911635398865,
+              "entropy": 0.7897806167602539,
+              "max_weight": 0.6716718673706055
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.672119140625,
+              "source_mass": 0.751251220703125,
+              "entropy": 0.6187431216239929,
+              "max_weight": 0.751251220703125
+            },
+            {
+              "correct": 0.0,
+              "margin": -0.06298828125,
+              "source_mass": 0.806824803352356,
+              "entropy": 0.5628318190574646,
+              "max_weight": 0.806824803352356
+            },
+            {
+              "correct": 0.0,
+              "margin": -6.9908447265625,
+              "source_mass": 0.14073079824447632,
+              "entropy": 0.8518781661987305,
+              "max_weight": 0.735916018486023
+            }
+          ]
+        },
+        "source_max": {
+          "mode": "source_max",
+          "n_examples": 4,
+          "accuracy": 0.25,
+          "mean_margin": -1.18096923828125,
+          "mean_source_mass": 0.7414159774780273,
+          "mean_entropy": 0.7058084309101105,
+          "mean_max_weight": 0.7414159774780273,
+          "invariant_max_abs_error": {
+            "sorted": 0.0,
+            "entropy": 1.1920928955078125e-07,
+            "l1": 1.1920928955078125e-07,
+            "l2": 5.960464477539063e-08,
+            "linf": 0.0
+          },
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -0.984375,
+              "source_mass": 0.6716718673706055,
+              "entropy": 0.7897806167602539,
+              "max_weight": 0.6716718673706055
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.672119140625,
+              "source_mass": 0.751251220703125,
+              "entropy": 0.6187431216239929,
+              "max_weight": 0.751251220703125
+            },
+            {
+              "correct": 0.0,
+              "margin": -0.06298828125,
+              "source_mass": 0.806824803352356,
+              "entropy": 0.5628318190574646,
+              "max_weight": 0.806824803352356
+            },
+            {
+              "correct": 0.0,
+              "margin": -5.3486328125,
+              "source_mass": 0.735916018486023,
+              "entropy": 0.8518781661987305,
+              "max_weight": 0.735916018486023
+            }
+          ]
+        },
+        "source_min": {
+          "mode": "source_min",
+          "n_examples": 4,
+          "accuracy": 0.0,
+          "mean_margin": -3.68853759765625,
+          "mean_source_mass": 3.0102306808517127e-10,
+          "mean_entropy": 0.7058084160089493,
+          "mean_max_weight": 0.7414159774780273,
+          "invariant_max_abs_error": {
+            "sorted": 0.0,
+            "entropy": 1.1920928955078125e-07,
+            "l1": 0.0,
+            "l2": 2.9802322387695312e-08,
+            "linf": 0.0
+          },
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -2.4796142578125,
+              "source_mass": 4.1856996384551093e-13,
+              "entropy": 0.7897805571556091,
+              "max_weight": 0.6716718673706055
+            },
+            {
+              "correct": 0.0,
+              "margin": -1.567626953125,
+              "source_mass": 4.403693243393292e-10,
+              "entropy": 0.6187431216239929,
+              "max_weight": 0.751251220703125
+            },
+            {
+              "correct": 0.0,
+              "margin": -3.361572265625,
+              "source_mass": 2.1834757613081734e-10,
+              "entropy": 0.5628318190574646,
+              "max_weight": 0.806824803352356
+            },
+            {
+              "correct": 0.0,
+              "margin": -7.3453369140625,
+              "source_mass": 5.44956801906693e-10,
+              "entropy": 0.8518781661987305,
+              "max_weight": 0.735916018486023
+            }
+          ]
+        },
+        "distractor_control": {
+          "mode": "distractor_control",
+          "n_examples": 4,
+          "accuracy": 0.25,
+          "mean_margin": -2.13690185546875,
+          "mean_source_mass": 0.4703439846634865,
+          "mean_entropy": 0.7058084160089493,
+          "mean_max_weight": 0.7414159774780273,
+          "invariant_max_abs_error": {
+            "sorted": 0.0,
+            "entropy": 1.1920928955078125e-07,
+            "l1": 1.1920928955078125e-07,
+            "l2": 0.0,
+            "linf": 0.0
+          },
+          "records": [
+            {
+              "correct": 0.0,
+              "margin": -2.8275146484375,
+              "source_mass": 0.18256911635398865,
+              "entropy": 0.7897805571556091,
+              "max_weight": 0.6716718673706055
+            },
+            {
+              "correct": 1.0,
+              "margin": 1.44580078125,
+              "source_mass": 0.751251220703125,
+              "entropy": 0.6187431812286377,
+              "max_weight": 0.751251220703125
+            },
+            {
+              "correct": 0.0,
+              "margin": -0.3741455078125,
+              "source_mass": 0.806824803352356,
+              "entropy": 0.5628317594528198,
+              "max_weight": 0.806824803352356
+            },
+            {
+              "correct": 0.0,
+              "margin": -6.791748046875,
+              "source_mass": 0.14073079824447632,
+              "entropy": 0.8518781661987305,
+              "max_weight": 0.735916018486023
+            }
+          ]
+        }
+      },
+      "contrasts_vs_baseline": [
+        {
+          "mode": "source_max",
+          "accuracy_delta": 0.0,
+          "margin_delta": 0.736480712890625,
+          "source_mass_delta": 0.27107199281454086
+        },
+        {
+          "mode": "source_min",
+          "accuracy_delta": -0.25,
+          "margin_delta": -1.771087646484375,
+          "source_mass_delta": -0.4703439843624634
+        },
+        {
+          "mode": "distractor_control",
+          "accuracy_delta": 0.0,
+          "margin_delta": -0.219451904296875,
+          "source_mass_delta": 0.0
+        }
+      ]
+    }
+  }
+}

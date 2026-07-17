@@ -1,0 +1,147 @@
+[
+  {
+    "cfg": {
+      "task": "argmax",
+      "pe": "nope",
+      "seed": 0,
+      "steps": 4000,
+      "layers": 4,
+      "width": 256,
+      "heads": 8,
+      "batch": 512
+    },
+    "train_length": {
+      "length": 5,
+      "em": 1.0,
+      "tok": 1.0
+    },
+    "lengths": {
+      "100": {
+        "retrieval_layer": 3,
+        "conditions": [
+          {
+            "mode": "baseline",
+            "em": 0.425781,
+            "tok": 0.712891,
+            "source_mass": 0.29022,
+            "entropy": 0.40092,
+            "max_weight": 0.42324,
+            "attention_output_var": 1.00796676,
+            "invariant_max_abs_error": {}
+          },
+          {
+            "mode": "source_max",
+            "em": 0.761719,
+            "tok": 0.880859,
+            "source_mass": 0.53579,
+            "entropy": 0.40092,
+            "max_weight": 0.42324,
+            "attention_output_var": 0.97803688,
+            "invariant_max_abs_error": {
+              "sorted": 0.0,
+              "entropy": 4.76837158203125e-07,
+              "l1": 2.384185791015625e-07,
+              "l2": 1.1920928955078125e-07,
+              "linf": 0.0
+            }
+          },
+          {
+            "mode": "source_min",
+            "em": 0.144531,
+            "tok": 0.572266,
+            "source_mass": 0.0,
+            "entropy": 0.40092,
+            "max_weight": 0.42324,
+            "attention_output_var": 0.68834621,
+            "invariant_max_abs_error": {
+              "sorted": 0.0,
+              "entropy": 4.76837158203125e-07,
+              "l1": 2.384185791015625e-07,
+              "l2": 1.1920928955078125e-07,
+              "linf": 0.0
+            }
+          },
+          {
+            "mode": "distractor_control",
+            "em": 0.492188,
+            "tok": 0.746094,
+            "source_mass": 0.29022,
+            "entropy": 0.40092,
+            "max_weight": 0.42324,
+            "attention_output_var": 0.46297821,
+            "invariant_max_abs_error": {
+              "sorted": 0.0,
+              "entropy": 4.76837158203125e-07,
+              "l1": 2.384185791015625e-07,
+              "l2": 1.1920928955078125e-07,
+              "linf": 0.0
+            }
+          }
+        ]
+      },
+      "250": {
+        "retrieval_layer": 3,
+        "conditions": [
+          {
+            "mode": "baseline",
+            "em": 0.253906,
+            "tok": 0.626953,
+            "source_mass": 0.13776,
+            "entropy": 0.51038,
+            "max_weight": 0.30225,
+            "attention_output_var": 0.90059793,
+            "invariant_max_abs_error": {}
+          },
+          {
+            "mode": "source_max",
+            "em": 0.574219,
+            "tok": 0.787109,
+            "source_mass": 0.39671,
+            "entropy": 0.51038,
+            "max_weight": 0.30225,
+            "attention_output_var": 0.8699801,
+            "invariant_max_abs_error": {
+              "sorted": 0.0,
+              "entropy": 9.5367431640625e-07,
+              "l1": 2.980232238769531e-07,
+              "l2": 2.384185791015625e-07,
+              "linf": 0.0
+            }
+          },
+          {
+            "mode": "source_min",
+            "em": 0.113281,
+            "tok": 0.556641,
+            "source_mass": 0.0,
+            "entropy": 0.51038,
+            "max_weight": 0.30225,
+            "attention_output_var": 0.71902853,
+            "invariant_max_abs_error": {
+              "sorted": 0.0,
+              "entropy": 9.5367431640625e-07,
+              "l1": 2.980232238769531e-07,
+              "l2": 1.1920928955078125e-07,
+              "linf": 0.0
+            }
+          },
+          {
+            "mode": "distractor_control",
+            "em": 0.28125,
+            "tok": 0.640625,
+            "source_mass": 0.13776,
+            "entropy": 0.51038,
+            "max_weight": 0.30225,
+            "attention_output_var": 0.46756428,
+            "invariant_max_abs_error": {
+              "sorted": 0.0,
+              "entropy": 9.5367431640625e-07,
+              "l1": 2.384185791015625e-07,
+              "l2": 1.1920928955078125e-07,
+              "linf": 0.0
+            }
+          }
+        ]
+      }
+    }
+  }
+]

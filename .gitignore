@@ -3,5 +3,11 @@ __pycache__/
 .pytest_cache/
 .venv/
 .data_cache/
+results/lengthgen/checkpoints/
+results/lengthgen/**/checkpoints/
+paper_lengthgen_aaai/*.aux
+paper_lengthgen_aaai/*.bbl
+paper_lengthgen_aaai/*.blg
+paper_lengthgen_aaai/*.log
 paper/authorkit/
 paper/*.zip

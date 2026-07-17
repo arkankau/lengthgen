@@ -1,0 +1,61 @@
+{
+  "registered_before_new_gpu_runs": "2026-07-15",
+  "scope": "Critical external-validity, mechanism, and robustness tests for the routing paper.",
+  "experiments": {
+    "format_replication": {
+      "model": "Qwen/Qwen2.5-1.5B",
+      "format": "equals_newline",
+      "lengths": [5, 20, 80],
+      "n_examples_per_length": 128,
+      "selected_heads": 4,
+      "seed": 0,
+      "primary_outcomes": [
+        "baseline_accuracy",
+        "source_max_minus_distractor_control_margin",
+        "source_min_minus_baseline_margin",
+        "permutation_invariant_max_error"
+      ],
+      "success_gate": "Baseline accuracy is at least 0.5 at one evaluated length; source-max minus control has positive mean margin at at least two lengths; source-min has negative mean margin at at least two lengths; invariant error is below 1e-6.",
+      "interpretation_if_failed": "Restrict the causal claim to the original colon-newline retrieval format."
+    },
+    "pretrained_utility_gap": {
+      "models": [
+        "Qwen/Qwen2.5-1.5B",
+        "EleutherAI/pythia-1.4b",
+        "google/gemma-2-2b"
+      ],
+      "lengths": [5, 20],
+      "n_examples_per_cell": 64,
+      "selected_heads": 4,
+      "seed": 0,
+      "calibration_split": "Independent RNG stream with seed 100000; evaluation uses seed 0.",
+      "primary_outcomes": [
+        "exact_fixed_competitor_margin_change",
+        "first_order_permutation_path_prediction",
+        "sign_agreement",
+        "first_order_exact_correlation",
+        "utility_gap_sign",
+        "curvature_residual"
+      ],
+      "success_gate": "The local first-order term has positive directional association with the exact swap effect in competent cells, while residuals explicitly quantify nonlinear failure. No mechanism-specific Gemma outcome is assumed in advance.",
+      "interpretation_if_failed": "Present the utility-gap law as a local decomposition only and remove predictive language."
+    },
+    "selection_robustness": {
+      "model": "Qwen/Qwen2.5-1.5B",
+      "length": 20,
+      "n_examples_per_cell": 64,
+      "seeds": [0, 1, 2],
+      "head_counts": [2, 4, 8],
+      "layer_controls": ["adjacent_minus", "adjacent_plus", "random_layer"],
+      "calibration_split": "Each seed has disjoint calibration and evaluation RNG streams.",
+      "primary_outcomes": [
+        "source_max_minus_distractor_control_accuracy",
+        "source_max_minus_distractor_control_margin",
+        "paired_95_percent_intervals",
+        "permutation_invariant_max_error"
+      ],
+      "success_gate": "Selected configurations retain the predicted margin direction across most seed-by-K cells and outperform random-layer controls on average; invariant error is below 1e-6.",
+      "interpretation_if_failed": "Describe selection as circuit-specific and report the unstable axes rather than claiming general head robustness."
+    }
+  }
+}

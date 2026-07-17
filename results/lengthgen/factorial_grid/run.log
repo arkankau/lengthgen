@@ -1,0 +1,82 @@
+device=cpu; models=16; output=results\lengthgen\factorial_grid\concentration_assignment_results.json
+[load] results\lengthgen\checkpoints\argmax_nope_s0_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=nope seed=0 layer=3 selection_mass=0.9633
+  L=100 b1:gap=+0.309,rescue=+0.168,max=0.423 | b2:gap=+0.400,rescue=+0.242,max=0.659 | b4:gap=+0.443,rescue=+0.277,max=0.824
+  L=250 b1:gap=+0.230,rescue=+0.160,max=0.302 | b2:gap=+0.367,rescue=+0.283,max=0.542 | b4:gap=+0.436,rescue=+0.336,max=0.732
+[saved 1/16] ('argmax', 'nope', 0, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_nope_s1_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=nope seed=1 layer=3 selection_mass=0.9587
+  L=100 b1:gap=+0.283,rescue=+0.223,max=0.672 | b2:gap=+0.354,rescue=+0.287,max=0.832 | b4:gap=+0.367,rescue=+0.301,max=0.917
+  L=250 b1:gap=+0.314,rescue=+0.295,max=0.610 | b2:gap=+0.398,rescue=+0.381,max=0.802 | b4:gap=+0.418,rescue=+0.398,max=0.903
+[saved 2/16] ('argmax', 'nope', 1, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_nope_s2_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=nope seed=2 layer=3 selection_mass=0.9563
+  L=100 b1:gap=+0.348,rescue=+0.303,max=0.783 | b2:gap=+0.385,rescue=+0.334,max=0.896 | b4:gap=+0.389,rescue=+0.336,max=0.951
+  L=250 b1:gap=+0.385,rescue=+0.363,max=0.757 | b2:gap=+0.412,rescue=+0.391,max=0.886 | b4:gap=+0.412,rescue=+0.393,max=0.946
+[saved 3/16] ('argmax', 'nope', 2, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_nope_s3_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=nope seed=3 layer=3 selection_mass=0.9633
+  L=100 b1:gap=+0.336,rescue=+0.186,max=0.438 | b2:gap=+0.412,rescue=+0.248,max=0.669 | b4:gap=+0.449,rescue=+0.271,max=0.827
+  L=250 b1:gap=+0.289,rescue=+0.215,max=0.321 | b2:gap=+0.387,rescue=+0.312,max=0.565 | b4:gap=+0.445,rescue=+0.361,max=0.757
+[saved 4/16] ('argmax', 'nope', 3, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_rope_s0_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=rope seed=0 layer=2 selection_mass=0.9856
+  L=100 b1:gap=+0.412,rescue=+0.322,max=0.833 | b2:gap=+0.414,rescue=+0.324,max=0.917 | b4:gap=+0.414,rescue=+0.326,max=0.959
+  L=250 b1:gap=+0.416,rescue=+0.398,max=0.676 | b2:gap=+0.461,rescue=+0.443,max=0.835 | b4:gap=+0.465,rescue=+0.445,max=0.917
+[saved 5/16] ('argmax', 'rope', 0, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_rope_s1_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=rope seed=1 layer=2 selection_mass=0.9868
+  L=100 b1:gap=+0.330,rescue=+0.285,max=0.711 | b2:gap=+0.363,rescue=+0.320,max=0.802 | b4:gap=+0.369,rescue=+0.328,max=0.868
+  L=250 b1:gap=+0.342,rescue=+0.309,max=0.710 | b2:gap=+0.375,rescue=+0.342,max=0.801 | b4:gap=+0.389,rescue=+0.357,max=0.872
+[saved 6/16] ('argmax', 'rope', 1, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_rope_s2_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=rope seed=2 layer=2 selection_mass=0.9859
+  L=100 b1:gap=+0.387,rescue=+0.262,max=0.831 | b2:gap=+0.393,rescue=+0.268,max=0.919 | b4:gap=+0.383,rescue=+0.268,max=0.961
+  L=250 b1:gap=+0.430,rescue=+0.404,max=0.788 | b2:gap=+0.434,rescue=+0.408,max=0.899 | b4:gap=+0.432,rescue=+0.408,max=0.952
+[saved 7/16] ('argmax', 'rope', 2, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\argmax_rope_s3_4L_256d_8h_b512_steps4000.pt
+[circuit] task=argmax pe=rope seed=3 layer=2 selection_mass=0.9813
+  L=100 b1:gap=+0.316,rescue=+0.260,max=0.822 | b2:gap=+0.334,rescue=+0.283,max=0.911 | b4:gap=+0.334,rescue=+0.283,max=0.954
+  L=250 b1:gap=+0.398,rescue=+0.391,max=0.830 | b2:gap=+0.418,rescue=+0.408,max=0.916 | b4:gap=+0.420,rescue=+0.408,max=0.959
+[saved 8/16] ('argmax', 'rope', 3, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_nope_s0_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=nope seed=0 layer=2 selection_mass=0.9909
+  L=100 b1:gap=+0.104,rescue=+0.094,max=0.150 | b2:gap=+0.395,rescue=+0.359,max=0.482 | b4:gap=+0.402,rescue=+0.387,max=0.873
+  L=250 b1:gap=+0.025,rescue=+0.018,max=0.056 | b2:gap=+0.363,rescue=+0.352,max=0.282 | b4:gap=+0.434,rescue=+0.424,max=0.798
+[saved 9/16] ('flagret', 'nope', 0, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_nope_s1_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=nope seed=1 layer=2 selection_mass=0.9921
+  L=100 b1:gap=+0.125,rescue=+0.078,max=0.149 | b2:gap=+0.371,rescue=+0.318,max=0.374 | b4:gap=+0.424,rescue=+0.359,max=0.731
+  L=250 b1:gap=+0.055,rescue=+0.039,max=0.055 | b2:gap=+0.240,rescue=+0.219,max=0.205 | b4:gap=+0.451,rescue=+0.420,max=0.630
+[saved 10/16] ('flagret', 'nope', 1, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_nope_s2_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=nope seed=2 layer=2 selection_mass=0.9944
+  L=100 b1:gap=+0.051,rescue=+0.000,max=0.128 | b2:gap=+0.100,rescue=+0.018,max=0.194 | b4:gap=+0.158,rescue=+0.070,max=0.322
+  L=250 b1:gap=+0.018,rescue=+0.000,max=0.042 | b2:gap=+0.045,rescue=+0.008,max=0.077 | b4:gap=+0.068,rescue=+0.023,max=0.152
+[saved 11/16] ('flagret', 'nope', 2, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_nope_s3_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=nope seed=3 layer=2 selection_mass=0.9931
+  L=100 b1:gap=+0.066,rescue=+0.018,max=0.138 | b2:gap=+0.084,rescue=+0.023,max=0.286 | b4:gap=+0.174,rescue=+0.107,max=0.499
+  L=250 b1:gap=+0.037,rescue=+0.018,max=0.054 | b2:gap=+0.037,rescue=+0.008,max=0.180 | b4:gap=+0.090,rescue=+0.049,max=0.347
+[saved 12/16] ('flagret', 'nope', 3, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_rope_s0_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=rope seed=0 layer=2 selection_mass=0.9912
+  L=100 b1:gap=+0.037,rescue=+0.012,max=0.046 | b2:gap=+0.088,rescue=+0.061,max=0.123 | b4:gap=+0.271,rescue=+0.230,max=0.285
+  L=250 b1:gap=+0.012,rescue=+0.006,max=0.017 | b2:gap=+0.033,rescue=+0.012,max=0.052 | b4:gap=+0.154,rescue=+0.129,max=0.166
+[saved 13/16] ('flagret', 'rope', 0, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_rope_s1_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=rope seed=1 layer=2 selection_mass=0.9901
+  L=100 b1:gap=+0.047,rescue=+0.014,max=0.047 | b2:gap=+0.145,rescue=+0.070,max=0.134 | b4:gap=+0.381,rescue=+0.285,max=0.326
+  L=250 b1:gap=+0.008,rescue=+0.002,max=0.020 | b2:gap=+0.041,rescue=+0.025,max=0.064 | b4:gap=+0.246,rescue=+0.219,max=0.213
+[saved 14/16] ('flagret', 'rope', 1, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_rope_s2_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=rope seed=2 layer=2 selection_mass=0.9932
+  L=100 b1:gap=+0.064,rescue=+0.016,max=0.053 | b2:gap=+0.133,rescue=+0.072,max=0.149 | b4:gap=+0.387,rescue=+0.311,max=0.357
+  L=250 b1:gap=+0.006,rescue=+0.004,max=0.022 | b2:gap=+0.055,rescue=+0.035,max=0.080 | b4:gap=+0.240,rescue=+0.215,max=0.248
+[saved 15/16] ('flagret', 'rope', 2, 4000, (1.0, 2.0, 4.0), (100, 250))
+[load] results\lengthgen\checkpoints\flagret_rope_s3_4L_256d_8h_b512_steps4000.pt
+[circuit] task=flagret pe=rope seed=3 layer=2 selection_mass=0.9929
+  L=100 b1:gap=+0.064,rescue=+0.021,max=0.077 | b2:gap=+0.160,rescue=+0.098,max=0.233 | b4:gap=+0.336,rescue=+0.264,max=0.409
+  L=250 b1:gap=+0.016,rescue=+0.008,max=0.029 | b2:gap=+0.059,rescue=+0.047,max=0.145 | b4:gap=+0.293,rescue=+0.275,max=0.298
+[saved 16/16] ('flagret', 'rope', 3, 4000, (1.0, 2.0, 4.0), (100, 250))
+saved: results\lengthgen\factorial_grid\concentration_assignment_results.json

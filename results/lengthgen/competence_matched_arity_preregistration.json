@@ -1,0 +1,35 @@
+{
+  "protocol": "competence_matched_arity_search_v1",
+  "status": "frozen_before_new_training",
+  "search_task": "quadadd",
+  "search_observables": [
+    "unmodified train-length exact match",
+    "unmodified train-length token accuracy"
+  ],
+  "forbidden_during_search": [
+    "source-max outcome",
+    "distractor-control outcome",
+    "any causal routing contrast"
+  ],
+  "positional_encodings": ["nope", "rope"],
+  "search_seeds": [0, 1],
+  "competence_threshold": 0.8,
+  "candidate_order": [
+    {"name": "c1", "layers": 4, "width": 256, "heads": 8, "mlp": 1024, "steps": 8000, "batch": 512},
+    {"name": "c2", "layers": 6, "width": 384, "heads": 8, "mlp": 1536, "steps": 8000, "batch": 256},
+    {"name": "c3", "layers": 8, "width": 512, "heads": 8, "mlp": 2048, "steps": 12000, "batch": 128}
+  ],
+  "freeze_rule": "Freeze the first candidate for which every quadadd positional-encoding/seed cell has train exact match at least 0.8.",
+  "futility_amendment_after_c1_nope_seed0": "Candidate c1 produced 0.184 exact match in its first required cell, below the 0.8 threshold. Because selection is an all-cell conjunction, that candidate can no longer pass. Subsequent candidates therefore stop at the first failed required cell. This cannot change candidate acceptance or the first-passing selection; it only skips cells whose outcomes are logically irrelevant. No intervention outcome was inspected.",
+  "runtime_resume_after_c2_nope_seed0": "The first runtime reached its maximum duration after c1 NoPE seed 0 scored 0.184 and c2 NoPE seed 0 scored 0.178, and just after c3 training began. Both candidates are irrevocably rejected by the frozen all-cell threshold. The search resumes at c3 on a fresh runtime; no rejected candidate is retrained and no causal outcome has been inspected.",
+  "confirmatory_run": {
+    "tasks": ["pairadd", "tripleadd", "quadadd"],
+    "positional_encodings": ["nope", "rope"],
+    "seeds": [0, 1],
+    "lengths": [100, 250],
+    "head_count": 8,
+    "primary_contrast": "source_max minus distractor_control exact match at length 250",
+    "success_rule": "All arities retain train exact match at least 0.8 and have a positive hierarchical 95% interval for the primary contrast."
+  },
+  "failure_rule": "If no candidate clears competence, report the arity experiment as capacity-limited and do not interpret its causal contrast."
+}

@@ -1,0 +1,24 @@
+{
+  "registered_before_intervention_outcomes": true,
+  "protocol": "natural_mcqa_v2_context_dependent",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "dataset": "SQuAD train",
+  "answer_mode": "unconstrained top-1 next token choosing among four visible option labels",
+  "split_sizes": {"candidate_pool_multiplier": 16, "calibration": 64, "evaluation": 128},
+  "seeds": [0, 1, 2],
+  "competence_gate": {
+    "example_rule": "full-context correct AND gold-only correct AND no-context incorrect",
+    "minimum_eligible_examples": 192
+  },
+  "success_rule": {
+    "minimum_competent_seeds": 2,
+    "utility_margin_hierarchical_ci_lower_gt": 0.0,
+    "free_generation_accuracy_hierarchical_ci_lower_gte": 0.0
+  },
+  "amendment": {
+    "date": "2026-07-16",
+    "timing": "after competence-only smoke tests and before any v2 intervention outcome",
+    "reason": "The v1 smoke set was answerable without context, so aggregate accuracy could not identify evidence routing. The frozen v2 rule conditions only on pre-intervention competence and context dependence. The train split replaces validation solely because validation contains too few one-token-source candidates for the preregistered pool. For efficiency, no-context is evaluated first and full/gold contexts are evaluated only for no-context failures; this is set-theoretically identical to applying the three-part rule to the whole pool."
+  },
+  "notes": "This is a distinct competence-first follow-up to the failed open-answer SQuAD protocol. The eligibility rule is frozen before causal intervention evaluation; no source-max or matched-control outcome is used to select examples."
+}

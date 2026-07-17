@@ -1,52 +1,73 @@
-# AAAI build: selection over scale in transformer length generalization
+# AAAI-27 submission package
 
-AAAI 2027 style (`aaai2027.sty` / `aaai2027.bst`), two-column, submission mode.
-Title: "Selection over Scale in Transformer Length Generalization".
+This directory contains a focused AAAI-27 submission and its technical supplement.
 
-**Framing (positive, ground-up).** The paper leads with its own thesis: the property that supports length
-generalization on retrieval is attention staying concentrated on the token holding the answer (predicts
-accuracy r=0.97). Attention-output variance is introduced neutrally as one *candidate* statistic we measured
-and found to be a symptom (predicts r=0.59; an intervention that holds it constant does not transfer to
-behavior and costs accuracy under RoPE). It never argues another paper is wrong; `\citep{vanishingvariance}`
-appears only as the source of the variance candidate and its intervention. No "versus / adjudicate / remedy
-/ two accounts / their fix" language.
+## Canonical files
 
-Prose follows the vibetest paper style: plain declarative sentences, one per source line, no em-dashes,
-no "X, not Y" / "X rather than Y" rhetorical constructions.
+- `main_submission.tex`: page-budgeted main paper.
+- `main_submission.pdf`: compiled anonymous submission.
+- `supplement_submission.tex`: proofs, complete protocols, extended results, and negative replications.
+- `supplement_submission.pdf`: compiled supplementary document.
+- `main.tex`: preserved full research manuscript and experiment record. It is not the submission file.
+- `references.bib`: shared bibliography.
+- `figures/`: generated paper figures.
+- `ReproducibilityChecklist.tex`: AAAI checklist source; complete it before submission.
 
-## Files
-- `main.tex` — the paper (AAAI format).
-- `references.bib` — 14 refs, all verified against arXiv abstract pages (title/authors/year/class), all
-  cited in the text, no `[VERIFY]` placeholders. Candidate correlates: vanishingvariance (2504.02827),
-  nopeentropy (2404.12224), ssmax (2501.19399), sparselong (2506.16640), zhai (2303.06296). Positional
-  encoding + downstream: rope (2104.09864), kazemnejad (2305.19466), fope (2412.17739), postnorm (2510.08341).
-  Length-gen task/overview: anil (2207.04901), mcleish (2405.17399).
-- `figures/` — 7 figures placed inline through the story (see map below).
-- `ReproducibilityChecklist.tex` — AAAI requires this; fill and include before submitting.
+## Framing
 
-## Compile
-No local LaTeX. Upload this folder to Overleaf and compile (pdfLaTeX + BibTeX + pdfLaTeX x2).
-`\usepackage[submission]{aaai2027}` is anonymous; switch to `[camera]`/remove for camera-ready per the kit.
+The main claim is the capacity--assignment--utility account of task-conditioned attention routing.
+The standard Gibbs/free-energy identity appears only as cited background explaining competition for evidence
+mass. Entropy, variance, norms, and related global quantities are controls or invariants, not independent
+thermodynamic contributions.
 
-## Figure placement (inline through the story, in the new positive order)
-The results lead with the thesis, then the co-varying statistic, then the intervention:
-1. `fig:attnlen` (attention on source predicts accuracy) — §4.1, the operative variable, LEAD.
-2. `fig:causal` (attention r=0.94 vs variance r=0.45 as predictors) — §4.1.
-3. `fig:var` (variance also collapses) — §4.2, the co-varying candidate.
-4. `fig:prepost` (intervention holds the statistic constant) — §4.3.
-5. `fig:acc` (accuracy vs length, all cells) — §4.3, next to the main table.
-6. `fig:benefit` (intervention effect ≤0, worse under RoPE) — §4.3.
-7. `fig:attnfix` (intervention lowers attention on source under RoPE) — §4.4.
+The paper makes three linked claims:
 
-All 7 are single-column `figure[t]` at `\columnwidth`, so they flow inline with the text in column order
-(no wide `figure*` floats, which in two-column can only sit at a page top and bunch away from their text).
-Only Table 1 is a wide `table*`. All figures are regenerated at column-friendly (portrait/compact) sizes by
-`scripts/make_lengthgen_paper_figures.py` (run with `.venv/Scripts/python.exe`; matplotlib lives in `.venv`).
+1. The sorted attention spectrum determines available selective capacity but cannot identify which token
+   receives it.
+2. Spectrum-preserving assignment changes the output only through the utility of the moved values and the
+   frozen downstream network.
+3. Matched interventions support this conditional routing law on controlled and pretrained models, while
+   saturation, circuit-selection, arity, and natural-length tests define its boundaries.
 
-## Before submitting
-- Citations already verified against arXiv (2026-07-13). Re-check only if entries are added.
-- Fill the ReproducibilityChecklist.
-- Check the page budget for the target track and trim if needed.
-- Anonymize a code/data snapshot.
+The four main figures follow one sequence: Figure 1 defines what changes, Figure 2 tests whether assignment
+matters, Figure 3 explains the capacity and utility mechanism, and Figure 4 maps transfer and boundary
+regimes. The main paper also includes seed, head-budget, layer, and cross-family identification audits.
 
-The `article`-style draft in `../paper_lengthgen/` is superseded by this AAAI version.
+## Build
+
+Run PDFLaTeX, BibTeX, and PDFLaTeX twice from this directory:
+
+```powershell
+pdflatex -interaction=nonstopmode -halt-on-error main_submission.tex
+bibtex main_submission
+pdflatex -interaction=nonstopmode -halt-on-error main_submission.tex
+pdflatex -interaction=nonstopmode -halt-on-error main_submission.tex
+```
+
+Repeat with `supplement_submission` for the supplement.
+
+Regenerate the submission figures from checked-in result artifacts with:
+
+```powershell
+python scripts/make_selection_overview_figures.py
+python scripts/make_main_result_figure.py
+python scripts/make_selection_over_scale_figures.py
+python scripts/make_pretrained_summary_figure.py
+python scripts/make_natural_length_figure.py
+python scripts/make_lengthgen_paper_figures.py
+python scripts/analyze_patch.py
+```
+
+The submission sources include the generated 600 dpi PNG copies. The PDF copies remain available as editable
+research artifacts, but raster inclusion prevents figure-font incompatibilities in the submitted PDFs.
+
+## Submission checks
+
+- The main PDF uses the official AAAI-27 two-column submission style.
+- The current main PDF has 7 technical-content pages plus 1 reference page.
+- No font, margin, or line-spacing compression is used.
+- Essential theorem statements, proof arguments, causal design, headline results, and boundaries remain in
+  the main paper.
+- The supplement contains full proofs, complete result tables, secondary figures, and negative replications.
+- Complete and include the reproducibility checklist before upload.
+- Anonymize the code and data package before submission.

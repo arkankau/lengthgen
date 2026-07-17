@@ -1,0 +1,53 @@
+{
+  "head_count": 8,
+  "arity_results": {
+    "2": {
+      "n_models": 4,
+      "train_competence_min": 1.0,
+      "source_max_minus_control_exact": 0.0087890625,
+      "ci95": [
+        0.0,
+        0.0283203125
+      ],
+      "model_means": [
+        0.0,
+        0.03515625,
+        0.0,
+        0.0
+      ]
+    },
+    "3": {
+      "n_models": 4,
+      "train_competence_min": 1.0,
+      "source_max_minus_control_exact": -0.0009765625,
+      "ci95": [
+        -0.0087890625,
+        0.0078125
+      ],
+      "model_means": [
+        0.0,
+        -0.0078125,
+        -0.00390625,
+        0.0078125
+      ]
+    },
+    "4": {
+      "n_models": 4,
+      "train_competence_min": 0.08984375,
+      "source_max_minus_control_exact": 0.0029296875,
+      "ci95": [
+        -0.0009765625,
+        0.009765625
+      ],
+      "model_means": [
+        0.0078125,
+        0.0,
+        0.0,
+        0.00390625
+      ]
+    }
+  },
+  "complete": true,
+  "all_train_competent": false,
+  "set_routing_generalizes_through_arity_four": false
+}

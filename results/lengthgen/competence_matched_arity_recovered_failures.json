@@ -1,0 +1,17 @@
+{
+  "protocol": "competence_matched_arity_search_v1",
+  "provenance": "Recovered verbatim from preserved Colab output after the first runtime reached its maximum duration.",
+  "threshold": 0.8,
+  "causal_outcomes_inspected": false,
+  "rejected_candidates": [
+    {
+      "name": "c1",
+      "failed_cell": {"task": "quadadd", "pe": "nope", "seed": 0, "exact_match": 0.184}
+    },
+    {
+      "name": "c2",
+      "failed_cell": {"task": "quadadd", "pe": "nope", "seed": 0, "exact_match": 0.178}
+    }
+  ],
+  "resume_at": "c3"
+}

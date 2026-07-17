@@ -1,0 +1,26 @@
+{
+  "status": "locked_before_outcome",
+  "date_locked": "2026-07-16",
+  "experiment": "SmolLM2 utility-gain circuit selection",
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "format": "colon_newline",
+  "seeds": [0, 1, 2],
+  "lengths": [5, 20, 80],
+  "examples_per_length_per_seed": 128,
+  "calibration_examples_per_seed": 64,
+  "selected_heads": 4,
+  "calibration_rule": "Within one layer, select the four heads with the largest mean first-order source-max gain: transferred source-max mass times the local source-versus-donor output-margin utility gap. Choose the layer with the largest top-four sum.",
+  "calibration_isolation": "Calibration uses RNG seed 100000 + seed. Evaluation uses RNG seed equal to seed. Evaluation outcomes are not used for circuit selection.",
+  "matched_baseline": "Repeat the same evaluation examples with the original natural-source-mass selector.",
+  "primary_estimand": "Utility-selected source-max minus spectrum-preserving distractor-control output-margin change.",
+  "selector_estimand": "The utility-selected source-max-minus-control effect minus the source-mass-selected source-max-minus-control effect on paired examples.",
+  "competence_gate": "A length is confirmatory only when mean untouched baseline exact-match accuracy across seeds is at least 0.50.",
+  "primary_success_rule": "At every confirmatory length, the pooled paired 95% interval for the primary estimand excludes zero on the positive side, and the pooled selector estimand is positive.",
+  "secondary_predictions": [
+    "Utility-selected source-min lowers the output margin at competent lengths.",
+    "Calibration mean predicted gain ranks intervention benefit better than natural source mass.",
+    "Length 80 is diagnostic if baseline competence remains below 0.50."
+  ],
+  "interpretation_if_pass": "Supports the theorem's conditional claim that attention assignment must be combined with downstream utility when selecting intervention circuits.",
+  "interpretation_if_fail": "Shows that the local first-order utility term is not sufficient as a cross-architecture intervention-selection rule; retain it as an explanatory local condition rather than a practical selector."
+}

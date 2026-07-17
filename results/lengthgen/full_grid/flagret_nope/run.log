@@ -1,0 +1,42 @@
+device=cpu; models=4; output=results\lengthgen\full_grid\flagret_nope\paired_head_count_results.json
+[train] flagret nope seed=0 steps=4000
+    step 1000/4000 loss=0.0000
+    step 2000/4000 loss=0.0000
+    step 3000/4000 loss=0.0000
+    step 4000/4000 loss=0.0000
+[checkpoint] results\lengthgen\checkpoints\flagret_nope_s0_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[7, 6, 5, 1, 4, 0, 2, 3] mass=[np.float64(0.991), np.float64(0.973), np.float64(0.962), np.float64(0.944), np.float64(0.942), np.float64(0.805), np.float64(0.408), np.float64(0.315)]
+  L=100 source_max token delta by k=1:+0.023, 2:+0.023, 4:+0.055, 8:+0.094
+  L=250 source_max token delta by k=1:+0.004, 2:+0.006, 4:+0.012, 8:+0.018
+[saved 1/4] ('flagret', 'nope', 0, 4000, (1, 2, 4, 8), (100, 250))
+[train] flagret nope seed=1 steps=4000
+    step 1000/4000 loss=0.0000
+    step 2000/4000 loss=0.0000
+    step 3000/4000 loss=0.0000
+    step 4000/4000 loss=0.0000
+[checkpoint] results\lengthgen\checkpoints\flagret_nope_s1_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[7, 4, 6, 1, 3, 2, 5, 0] mass=[np.float64(0.992), np.float64(0.982), np.float64(0.981), np.float64(0.976), np.float64(0.975), np.float64(0.971), np.float64(0.927), np.float64(0.921)]
+  L=100 source_max token delta by k=1:+0.004, 2:+0.004, 4:+0.039, 8:+0.078
+  L=250 source_max token delta by k=1:+0.002, 2:+0.002, 4:+0.023, 8:+0.039
+[saved 2/4] ('flagret', 'nope', 1, 4000, (1, 2, 4, 8), (100, 250))
+[train] flagret nope seed=2 steps=4000
+    step 1000/4000 loss=0.0000
+    step 2000/4000 loss=0.0000
+    step 3000/4000 loss=0.0000
+    step 4000/4000 loss=0.0000
+[checkpoint] results\lengthgen\checkpoints\flagret_nope_s2_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[7, 4, 6, 0, 2, 5, 3, 1] mass=[np.float64(0.994), np.float64(0.991), np.float64(0.988), np.float64(0.986), np.float64(0.986), np.float64(0.985), np.float64(0.984), np.float64(0.976)]
+  L=100 source_max token delta by k=1:+0.000, 2:+0.000, 4:+0.000, 8:+0.000
+  L=250 source_max token delta by k=1:+0.000, 2:+0.000, 4:+0.000, 8:+0.000
+[saved 3/4] ('flagret', 'nope', 2, 4000, (1, 2, 4, 8), (100, 250))
+[train] flagret nope seed=3 steps=4000
+    step 1000/4000 loss=0.0000
+    step 2000/4000 loss=0.0000
+    step 3000/4000 loss=0.0000
+    step 4000/4000 loss=0.0000
+[checkpoint] results\lengthgen\checkpoints\flagret_nope_s3_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[2, 7, 3, 1, 5, 4, 6, 0] mass=[np.float64(0.993), np.float64(0.987), np.float64(0.987), np.float64(0.987), np.float64(0.978), np.float64(0.686), np.float64(0.499), np.float64(0.025)]
+  L=100 source_max token delta by k=1:+0.000, 2:+0.002, 4:+0.002, 8:+0.018
+  L=250 source_max token delta by k=1:+0.004, 2:+0.006, 4:+0.006, 8:+0.018
+[saved 4/4] ('flagret', 'nope', 3, 4000, (1, 2, 4, 8), (100, 250))
+saved: results\lengthgen\full_grid\flagret_nope\paired_head_count_results.json

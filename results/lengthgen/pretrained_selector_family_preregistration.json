@@ -1,0 +1,23 @@
+{
+  "registered_before_outcomes": true,
+  "models": [
+    "Qwen/Qwen2.5-1.5B",
+    "EleutherAI/pythia-1.4b",
+    "google/gemma-2-2b",
+    "HuggingFaceTB/SmolLM2-1.7B"
+  ],
+  "seeds": [0, 1, 2],
+  "calibration_examples": 64,
+  "evaluation_examples": 128,
+  "head_budget": 4,
+  "selectors": [
+    "source_mass",
+    "transfer_mass",
+    "utility_gap",
+    "utility_gain",
+    "source_gradient",
+    "gradient_magnitude",
+    "random"
+  ],
+  "claim_rule": "A universal selector is supported only if at least three complete model families have the same top-ranked selector. Otherwise report heterogeneity."
+}

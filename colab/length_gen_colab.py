@@ -119,11 +119,80 @@ def make_argmax(rng, lo, hi):
     toks.append(int(vals[amax])); toks.append(ARG_EOS)
     return toks, answer_start, 2 * amax + 1   # value of the max-score item
 
+# pairadd = two-evidence computation. Two independently marked digits must both be routed and combined
+# modulo 10; copying either marked value alone is insufficient. Item order is irrelevant, but the answer
+# depends jointly on two known evidence positions.
+PAIR_MARK_A, PAIR_MARK_B, PAIR_EQ, PAIR_EOS, PAIR_PAD = 10, 11, 12, 13, 14
+
+def make_pairadd(rng, lo, hi):
+    n = max(2, int(rng.integers(lo, hi + 1)))
+    vals = rng.integers(0, 10, size=n)
+    marked = rng.choice(n, size=2, replace=False)
+    marker_for = {int(marked[0]): PAIR_MARK_A, int(marked[1]): PAIR_MARK_B}
+    toks = []
+    targets = []
+    for index, value in enumerate(vals):
+        if index in marker_for:
+            toks.append(marker_for[index])
+        toks.append(int(value))
+        if index in marker_for:
+            targets.append(len(toks) - 1)
+    toks.append(PAIR_EQ)
+    answer_start = len(toks)
+    answer = int((vals[marked[0]] + vals[marked[1]]) % 10)
+    toks += [answer, PAIR_EOS]
+    return toks, answer_start, targets
+
+
+def _make_marked_sum(rng, lo, hi, markers, eq_token, eos_token):
+    """Generate an order-invariant modular sum over a known evidence set."""
+    arity = len(markers)
+    n = max(arity, int(rng.integers(lo, hi + 1)))
+    vals = rng.integers(0, 10, size=n)
+    marked = rng.choice(n, size=arity, replace=False)
+    marker_for = {int(index): int(markers[offset]) for offset, index in enumerate(marked)}
+    toks = []
+    targets = []
+    for index, value in enumerate(vals):
+        if index in marker_for:
+            toks.append(marker_for[index])
+        toks.append(int(value))
+        if index in marker_for:
+            targets.append(len(toks) - 1)
+    toks.append(eq_token)
+    answer_start = len(toks)
+    answer = int(vals[marked].sum() % 10)
+    toks += [answer, eos_token]
+    return toks, answer_start, targets
+
+
+TRIPLE_MARKERS = (10, 11, 12)
+TRIPLE_EQ, TRIPLE_EOS, TRIPLE_PAD = 13, 14, 15
+
+
+def make_tripleadd(rng, lo, hi):
+    return _make_marked_sum(
+        rng, lo, hi, TRIPLE_MARKERS, TRIPLE_EQ, TRIPLE_EOS
+    )
+
+
+QUAD_MARKERS = (10, 11, 12, 13)
+QUAD_EQ, QUAD_EOS, QUAD_PAD = 14, 15, 16
+
+
+def make_quadadd(rng, lo, hi):
+    return _make_marked_sum(
+        rng, lo, hi, QUAD_MARKERS, QUAD_EQ, QUAD_EOS
+    )
+
 TASKS = {
     "addition": {"vocab": 14, "pad": ADD_PAD, "make": make_addition, "order": "dependent"},
     "flagret":  {"vocab": 14, "pad": FLAG_PAD, "make": make_flagret, "order": "invariant"},
     "recall":   {"vocab": 270, "pad": REC_PAD, "make": make_recall, "order": "invariant"},
     "argmax":   {"vocab": 269, "pad": ARG_PAD, "make": make_argmax, "order": "invariant"},
+    "pairadd":  {"vocab": 15, "pad": PAIR_PAD, "make": make_pairadd, "order": "multi-evidence"},
+    "tripleadd": {"vocab": 16, "pad": TRIPLE_PAD, "make": make_tripleadd, "order": "multi-evidence"},
+    "quadadd": {"vocab": 17, "pad": QUAD_PAD, "make": make_quadadd, "order": "multi-evidence"},
 }
 
 
@@ -152,29 +221,146 @@ class Cfg:
 
 # -------- eval-time attention patching (default OFF; used by colab/patch_experiment.py) -----------------
 # Set PATCH = {"layer": int, "p": float, "k": int|None} to overwrite the answer-query attention row with a
-# target distribution: mass p on the correct source token, the rest spread uniformly over k nearest valid
-# keys (k=None spreads over all valid keys). Lets us MOVE attention-on-source causally, holding the model
-# fixed. With PATCH=None this code never runs, so all other experiments are unaffected.
+# target distribution, or PATCH = {"layer": int, "head": int|None,
+# "mode": "source_max"|"source_min"|"distractor_control"} to permute the model's own weights. The optional
+# head restricts the permutation to one preselected head. The permutation modes preserve every task-agnostic
+# statistic of each attention row exactly while changing (or, for the control, preserving) source weight.
+# With PATCH=None this code never runs, so all other experiments are unaffected.
 PATCH = None
+
+
+def _target_indices(tgt, index):
+    raw = tgt[index]
+    if raw.ndim == 0:
+        return [int(raw)] if int(raw) >= 0 else []
+    return [int(value) for value in raw.reshape(-1) if int(value) >= 0]
 
 
 def _apply_attn_patch(attn, aq, tgt):
     b, _, t, _ = attn.shape
-    p = float(PATCH["p"]); k = PATCH.get("k", None)
     attn = attn.clone()
+    mode = PATCH.get("mode", "force")
+    before_rows = []
+    after_rows = []
     for i in range(b):
-        q = int(aq[i]); j = int(tgt[i])
-        if q < 0 or j < 0 or j > q:
+        q = int(aq[i]); sources = _target_indices(tgt, i)
+        if q < 0 or not sources or any(j > q for j in sources):
             continue
-        valid = [x for x in range(q + 1) if x != j]   # causal keys 0..q excluding the source j
-        if k is not None and 0 < k < len(valid):
-            valid = valid[-k:]                         # the k keys nearest the query
-        row = torch.zeros(t, device=attn.device, dtype=attn.dtype)
-        if valid:
-            row[j] = p; row[valid] = (1.0 - p) / len(valid)
+        if mode == "force":
+            p = float(PATCH["p"]); k = PATCH.get("k", None)
+            source_set = set(sources)
+            valid = [x for x in range(q + 1) if x not in source_set]
+            if k is not None and 0 < k < len(valid):
+                valid = valid[-k:]
+            row = torch.zeros(t, device=attn.device, dtype=attn.dtype)
+            if valid:
+                row[sources] = p / len(sources); row[valid] = (1.0 - p) / len(valid)
+            else:
+                row[sources] = 1.0 / len(sources)
+            attn[i, :, q, :] = row
+            continue
+
+        rows = attn[i, :, q, :]
+        selected_heads = PATCH.get("heads")
+        selected_head = PATCH.get("head")
+        if selected_heads is not None and selected_head is not None:
+            raise ValueError("set either attention patch head or heads, not both")
+        if selected_heads is not None:
+            heads = [int(value) for value in selected_heads]
+        elif selected_head is not None:
+            heads = [int(selected_head)]
         else:
-            row[j] = 1.0
-        attn[i, :, q, :] = row
+            heads = range(rows.shape[0])
+        if any(not 0 <= value < rows.shape[0] for value in heads):
+            raise ValueError(f"attention patch heads out of range: {list(heads)}")
+        heads = list(heads)
+        beta = float(PATCH.get("beta", 1.0))
+        if beta <= 0:
+            raise ValueError(f"attention sharpening beta must be positive: {beta}")
+        if beta != 1.0:
+            for h in heads:
+                sharpened = rows[h, :q + 1].pow(beta)
+                rows[h, :q + 1] = sharpened / sharpened.sum().clamp_min(1e-12)
+        before_rows.append(rows.clone())
+        if mode == "identity":
+            pass
+        elif mode in {"source_max", "source_min"}:
+            original_rows = rows.clone()
+            target_rows = rows.clone()
+            valid_rows = rows[:, :q + 1]
+            if len(sources) == 1:
+                j = sources[0]
+                chosen = (valid_rows.argmax(dim=-1) if mode == "source_max"
+                          else valid_rows.argmin(dim=-1))
+                for h in heads:
+                    c = int(chosen[h])
+                    if c == j:
+                        continue
+                    source_weight = target_rows[h, j].clone()
+                    target_rows[h, j] = target_rows[h, c]
+                    target_rows[h, c] = source_weight
+            else:
+                source_set = set(sources)
+                for h in heads:
+                    order = torch.argsort(valid_rows[h], descending=(mode == "source_max"))
+                    chosen = [int(index) for index in order[:len(sources)]]
+                    chosen_set = set(chosen)
+                    recipients = [index for index in sources if index not in chosen_set]
+                    donors = [index for index in chosen if index not in source_set]
+                    for recipient, donor in zip(recipients, donors):
+                        source_weight = target_rows[h, recipient].clone()
+                        target_rows[h, recipient] = target_rows[h, donor]
+                        target_rows[h, donor] = source_weight
+            alpha = PATCH.get("alpha")
+            if alpha is None:
+                rows.copy_(target_rows)
+            else:
+                if alpha.ndim == 1:
+                    alpha_row = alpha
+                elif alpha.ndim == 2 and alpha.shape[0] == b:
+                    alpha_row = alpha[i]
+                else:
+                    raise ValueError(
+                        "attention interpolation alpha must have shape (heads,) or (batch, heads)"
+                    )
+                blended = original_rows.clone()
+                for h in heads:
+                    blended[h] = original_rows[h] + alpha_row[h] * (
+                        target_rows[h] - original_rows[h]
+                    )
+                rows.copy_(blended)
+        elif mode == "distractor_control":
+            source_set = set(sources)
+            distractors = [x for x in range(q + 1) if x not in source_set]
+            if len(distractors) >= 2:
+                d = torch.tensor(distractors, device=attn.device)
+                drows = rows[:, d]
+                hi = d[drows.argmax(dim=-1)]
+                lo = d[drows.argmin(dim=-1)]
+                for h in heads:
+                    hidx, lidx = int(hi[h]), int(lo[h])
+                    high_weight = rows[h, hidx].clone()
+                    rows[h, hidx] = rows[h, lidx]
+                    rows[h, lidx] = high_weight
+        else:
+            raise ValueError(f"unknown attention patch mode: {mode}")
+        after_rows.append(rows.clone())
+
+    if before_rows:
+        before = torch.cat(before_rows, dim=0).float()
+        after = torch.cat(after_rows, dim=0).float()
+        eps = 1e-12
+        errors = {
+            "sorted": (before.sort(dim=-1).values - after.sort(dim=-1).values).abs().max(),
+            "entropy": (-(before * (before + eps).log()).sum(-1)
+                        + (after * (after + eps).log()).sum(-1)).abs().max(),
+            "l1": (before.abs().sum(-1) - after.abs().sum(-1)).abs().max(),
+            "l2": (before.square().sum(-1) - after.square().sum(-1)).abs().max(),
+            "linf": (before.abs().max(-1).values - after.abs().max(-1).values).abs().max(),
+        }
+        diag = PATCH.setdefault("diagnostics", {})
+        for name, error in errors.items():
+            diag[name] = max(diag.get(name, 0.0), float(error.detach().cpu()))
     return attn
 
 
@@ -193,7 +379,7 @@ def sample_batch(rng, n, lo, hi, cfg):
         for i in range(ans, len(toks)):
             m[i] = 1
         seqs.append(toks); masks.append(m); maxlen = max(maxlen, len(toks))
-        aqs.append(ans - 1); tgts.append(tgt)   # answer-query position; ground-truth source position
+        aqs.append(ans - 1); tgts.append(tgt)   # answer-query position; ground-truth source position(s)
     xs, ys, ms = [], [], []
     for toks, m in zip(seqs, masks):
         pad = maxlen - len(toks)
@@ -204,7 +390,15 @@ def sample_batch(rng, n, lo, hi, cfg):
     y = torch.tensor(ys, device=DEVICE)
     mask = torch.tensor(ms, dtype=torch.float32, device=DEVICE)
     aq = torch.tensor(aqs, dtype=torch.long, device=DEVICE)
-    tgt = torch.tensor(tgts, dtype=torch.long, device=DEVICE)
+    if all(np.isscalar(value) for value in tgts):
+        tgt = torch.tensor(tgts, dtype=torch.long, device=DEVICE)
+    else:
+        width = max(len(value) if not np.isscalar(value) else 1 for value in tgts)
+        padded_targets = []
+        for value in tgts:
+            row = [int(value)] if np.isscalar(value) else [int(item) for item in value]
+            padded_targets.append(row + [-1] * (width - len(row)))
+        tgt = torch.tensor(padded_targets, dtype=torch.long, device=DEVICE)
     return x, y, mask, aq, tgt
 
 
@@ -236,6 +430,7 @@ def build_model(cfg):
             self.attn_out_var = None       # variance of the attention output BEFORE the fix
             self.attn_out_var_post = None  # variance AFTER the fix (== pre when fix is off / Identity)
             self.attn_tgt = None           # attention mass on the ground-truth source token (max over heads)
+            self.attn_tgt_heads = None     # mean source mass for each head (used to lock a retrieval circuit)
             self.attn_ent = None           # normalized attention entropy at the answer-query position
             self.attn_max = None           # max attention weight (sharpness) at the answer-query position
             self.z_aq_var = None           # variance of z at the answer-query position (for the patch experiment)
@@ -264,17 +459,29 @@ def build_model(cfg):
             if aq is not None:  # capture attention observables at the answer-query position (eval only)
                 idx = torch.arange(b, device=h.device)
                 rows = attn[idx, :, aq, :]                         # (b, heads, t): attn FROM aq to all keys
+                self.aq_attn_rows = rows
                 self.z_aq_scores = scores[idx, :, aq, :].detach()  # (b, heads, t): effective logits at the query
-                valid = tgt >= 0
+                valid = (tgt >= 0) if tgt.ndim == 1 else (tgt >= 0).all(dim=1)
                 if valid.any():
-                    tmass = rows[idx, :, tgt.clamp(min=0)].max(dim=1).values  # (b,) mass on target, best head
+                    if tgt.ndim == 1:
+                        target_by_head = rows[idx, :, tgt.clamp(min=0)]      # (b, heads)
+                    else:
+                        gather_index = tgt.clamp(min=0)[:, None, :].expand(-1, rows.shape[1], -1)
+                        target_weights = rows.gather(dim=2, index=gather_index)
+                        target_weights = target_weights * (tgt[:, None, :] >= 0)
+                        target_by_head = target_weights.sum(dim=-1)          # group mass: (b, heads)
+                    tmass = target_by_head.max(dim=1).values                 # (b,) mass on target, best head
                     ent = -(rows * (rows + 1e-12).log()).sum(-1).mean(1) / math.log(max(t, 2))  # (b,)
                     sharp = rows.max(-1).values.mean(1)              # (b,) mean over heads of max weight
-                    self.attn_tgt = float(tmass[valid].mean().cpu())
-                    self.attn_ent = float(ent[valid].mean().cpu())
-                    self.attn_max = float(sharp[valid].mean().cpu())
+                    self.attn_tgt = float(tmass[valid].mean().detach().cpu())
+                    self.attn_tgt_heads = [
+                        float(value) for value in target_by_head[valid].mean(dim=0).detach().cpu()
+                    ]
+                    self.attn_ent = float(ent[valid].mean().detach().cpu())
+                    self.attn_max = float(sharp[valid].mean().detach().cpu())
                 else:
                     self.attn_tgt = self.attn_ent = self.attn_max = float("nan")
+                    self.attn_tgt_heads = [float("nan")] * cfg.n_heads
             z = (attn @ v).transpose(1, 2).reshape(b, t, cfg.d_model)
             z = self.W_O(z)
             if aq is not None:  # variance of the attention output AT the answer-query position (patch experiment)
@@ -318,6 +525,9 @@ def build_model(cfg):
             return ([blk.attn_tgt for blk in self.blocks],
                     [blk.attn_ent for blk in self.blocks],
                     [blk.attn_max for blk in self.blocks])
+
+        def attn_source_by_head(self):
+            return [blk.attn_tgt_heads for blk in self.blocks]
 
     return Model().to(DEVICE)
 

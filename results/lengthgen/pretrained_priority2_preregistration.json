@@ -1,0 +1,58 @@
+{
+  "registered_before_priority2_gpu_runs": "2026-07-16",
+  "scope": "Complete the runtime-limited format cell, obtain held-out task-format validity, replicate the pretrained utility audit across seeds, and test a Llama architecture.",
+  "experiments": {
+    "equals_format_completion": {
+      "model": "Qwen/Qwen2.5-1.5B",
+      "format": "equals_newline",
+      "length": 80,
+      "n_examples": 128,
+      "purpose": "Complete the previously preregistered cell. The format has already failed its competence gate, so this cell cannot reverse that verdict."
+    },
+    "heldout_format_selection": {
+      "model": "Qwen/Qwen2.5-1.5B",
+      "reference_format": "colon_newline",
+      "candidate_formats": ["colon_semicolon", "arrow_newline", "is_newline"],
+      "pilot_lengths": [5, 20],
+      "pilot_examples_per_cell": 64,
+      "pilot_seed": 31415,
+      "competence_gate": "A candidate must have baseline accuracy at least 0.40 at five pairs and 0.25 at 20 pairs.",
+      "selection_rule": "Among passing candidates, select the highest mean baseline accuracy across the two pilot lengths, then the highest worst-length accuracy, then candidate-list order.",
+      "outcome_blinding": "The pilot reads only natural baseline accuracy and margin. It does not run or inspect causal interventions.",
+      "full_evaluation": {
+        "lengths": [5, 20, 80],
+        "n_examples_per_length": 128,
+        "seed": 0,
+        "selected_heads": 4,
+        "success_gate": "The selected format remains naturally competent at a completed length, source-max minus distractor control has positive mean margin at at least two lengths, source-min has negative mean margin at at least two lengths, and invariant error is below 1e-6."
+      }
+    },
+    "utility_seed_replication": {
+      "models": [
+        "Qwen/Qwen2.5-1.5B",
+        "EleutherAI/pythia-1.4b",
+        "google/gemma-2-2b"
+      ],
+      "new_seeds": [1, 2],
+      "lengths": [5, 20],
+      "n_examples_per_cell": 64,
+      "selected_heads": 4,
+      "success_gate": "For each model, the pooled source-max first-order term has positive rank association with the exact effect and the mean exact source-max effect retains its prior direction. Model, length, seed, and nonlinear residuals remain visible."
+    },
+    "llama_family_replication": {
+      "primary_model": "HuggingFaceTB/SmolLM2-1.7B",
+      "fallback_model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "architecture_requirement": "LlamaForCausalLM",
+      "format": "colon_newline",
+      "smoke_gate": "The backend has finite logits and attentions and the model has baseline accuracy at least 0.25 at five pairs in a 32-example competence pilot.",
+      "full_evaluation": {
+        "lengths": [5, 20, 80],
+        "n_examples_per_length": 128,
+        "selected_heads": 4,
+        "seed": 0,
+        "success_gate": "Source-max minus distractor control has positive mean margin at at least two lengths, source-min has negative mean margin where baseline competence is nontrivial, and invariant error is below 1e-6."
+      },
+      "fallback_rule": "Use TinyLlama only if SmolLM2 fails backend compatibility or the locked competence gate."
+    }
+  }
+}

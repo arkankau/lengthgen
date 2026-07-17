@@ -10,15 +10,20 @@ Usage: .venv/Scripts/python.exe scripts/analyze_patch.py results/lengthgen/patch
 """
 from __future__ import annotations
 import json, sys, argparse
+import shutil
 from collections import defaultdict
+from pathlib import Path
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-matplotlib.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7,
-                            "xtick.labelsize": 6, "ytick.labelsize": 6, "legend.fontsize": 6, "figure.dpi": 150})
+matplotlib.rcParams.update({"font.size": 10.0, "axes.titlesize": 10.2, "axes.labelsize": 10.0,
+                            "xtick.labelsize": 9.8, "ytick.labelsize": 9.8, "legend.fontsize": 9.8,
+                            "figure.dpi": 150, "pdf.fonttype": 42, "ps.fonttype": 42})
 OUT = "results/lengthgen"
+PAPER = Path("paper_lengthgen_aaai/figures")
+PAPER.mkdir(parents=True, exist_ok=True)
 
 
 def collect(data, L, sweep, xkey, ykey):
@@ -68,12 +73,17 @@ def main():
     ax[0].plot(pax, pay, "-o", ms=3, color="#1f77b4")
     ax[0].axhline(base_tok, color="gray", ls=":", lw=1, label=f"unpatched baseline ({base_tok:.2f})")
     ax[0].set_xlabel("forced attention on source $a_{j^\\star}$"); ax[0].set_ylabel("per-token acc")
-    ax[0].set_title("Force selection: patch attention onto the source"); ax[0].legend(fontsize=5.5); ax[0].grid(alpha=0.25)
+    ax[0].set_title("Force selection onto the source"); ax[0].legend(); ax[0].grid(alpha=0.25)
     ax[1].plot(fvx, fvy, "-o", ms=3, color="#d62728")
     ax[1].set_xlabel("attention on source $a_{j^\\star}$ (constructed $\\|a\\|^2$ held)"); ax[1].set_ylabel("per-token acc")
     ax[1].set_title(f"Selection drives accuracy  (r={r_sel:+.2f})"); ax[1].grid(alpha=0.25)
     fig.tight_layout(pad=0.5)
-    fig.savefig(f"{OUT}/fig_patch.pdf"); fig.savefig(f"{OUT}/fig_patch.png", dpi=150)
+    pdf = Path(OUT) / "fig_patch.pdf"
+    png = Path(OUT) / "fig_patch.png"
+    fig.savefig(pdf)
+    fig.savefig(png, dpi=600)
+    shutil.copy2(pdf, PAPER / pdf.name)
+    shutil.copy2(png, PAPER / png.name)
 
     print(f"# Attention-patching causal test  (L={L}, {nmodels} models)\n")
     print(f"- baseline per-token acc at L={L}: {base_tok:.3f}")

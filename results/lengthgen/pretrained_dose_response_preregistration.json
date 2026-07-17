@@ -1,0 +1,16 @@
+{
+  "status": "locked_before_outcome",
+  "date_locked": "2026-07-16",
+  "experiment": "Utility-selected interpolation and displacement-matched control",
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "length": 5,
+  "seeds": [0, 1, 2, 3, 4],
+  "alphas": [0.0, 0.25, 0.5, 0.75, 1.0],
+  "calibration_examples_per_seed": 64,
+  "evaluation_examples_per_seed": 128,
+  "selection": "Frozen first-order utility-gain selector with four heads in one layer.",
+  "matched_control": "At each attention row, swap the pair of distractor weights whose absolute gap is closest to the source-max transferred mass; apply the same interpolation alpha.",
+  "primary_estimand": "Source interpolation minus displacement-matched distractor interpolation output-margin effect at each alpha.",
+  "success_rule": "The hierarchical interval is positive at alpha 1, mean source-minus-control effect is nondecreasing over alpha, and alpha 0 is numerically zero. Alpha 0.25 is the preregistered near-natural diagnostic and is not required to pass.",
+  "interpretation_if_fail": "Restrict the causal claim to the full fixed-spectrum endpoint and acknowledge that local paths do not support a smooth natural-failure account."
+}

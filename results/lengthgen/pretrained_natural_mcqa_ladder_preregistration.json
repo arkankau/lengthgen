@@ -1,0 +1,38 @@
+{
+  "protocol": "natural_mcqa_nested_length_ladder_v1",
+  "status": "frozen_before_outcome_inspection",
+  "models": [
+    "Qwen/Qwen2.5-1.5B-Instruct",
+    "HuggingFaceTB/SmolLM2-1.7B-Instruct"
+  ],
+  "passage_counts": [4, 8, 16, 32],
+  "structural_control": "The gold slot, answer choices, and existing passages remain fixed; unrelated passages are appended.",
+  "resource_amendment_before_16_or_32_passage_outcomes": "Each unrelated passage is the first 16 whitespace-delimited words of its first natural SQuAD sentence. Prompt token lengths are reported. This bounds eager-attention cost without changing the gold passage, answer choices, nesting, circuit, conditions, or endpoints.",
+  "implementation_optimization_before_16_or_32_passage_outcomes": "During intervention evaluation, only the frozen selected layer materializes attention weights; non-selected layers use PyTorch scaled-dot-product attention. Plain competence screening uses scaled-dot-product attention throughout. The selected-layer distribution, permutation, diagnostics, examples, and endpoints are unchanged.",
+  "dataset_split_amendment_before_full_outcomes": "SQuAD validation yielded only about 760 constructible single-token candidates, below the frozen 1536-candidate pool. Full runs therefore use the SQuAD train split; calibration and evaluation IDs remain disjoint within every seed. The failed validation attempts ended before competence screening and produced no full outcomes.",
+  "candidate_pool_amendment_before_full_causal_outcomes": "The first train-split seed yielded 158 eligible examples from an 8x pool, below the frozen 192 required. Full runs therefore use a 12x candidate pool while retaining exactly 64 calibration and 128 evaluation examples. The failed attempt stopped at the competence gate before calibration or intervention.",
+  "matched_control_optimization_after_seed0": "Seed 0 used the exact quadratic closest-gap search. Before seeds 1 and 2, it was replaced by an exact sort-plus-two-pointer closest-gap search to remove quadratic work at 32 passages. Both optimize the same absolute gap error; matched-control source mass and the complete sorted attention spectrum remain invariant. Unit tests compare the optimized result with exhaustive search. Seed-0 outcomes were not rerun or altered.",
+  "competence_rule": "At four passages: full-context correct, gold-only correct, and no-context incorrect.",
+  "selection_rule": "Select four heads by calibration utility gain at four passages, then freeze layer and heads at every longer context.",
+  "conditions": [
+    "baseline",
+    "source_max",
+    "matched_distractor_control"
+  ],
+  "primary_endpoints": [
+    "baseline source mass at 32 minus 4 passages",
+    "baseline answer margin at 32 minus 4 passages",
+    "source_max minus matched-control answer margin at 32 passages"
+  ],
+  "secondary_endpoints": [
+    "baseline accuracy trajectory",
+    "source-max rescue amplification from 4 to 32 passages"
+  ],
+  "success_rule": "At least two full-size competent seeds; upper 95% hierarchical CI below zero for long-minus-short source mass and margin; lower 95% CI above zero for source-max minus matched-control margin at 32 passages; maximum spectrum-invariant error at most 1e-5.",
+  "full_size": {
+    "calibration_examples": 64,
+    "evaluation_examples": 128,
+    "seeds": [0, 1, 2]
+  },
+  "second_model_rule": "Run SmolLM2 unchanged. A competence-gate failure is reported as a scope boundary and is not replaced after inspecting causal outcomes."
+}

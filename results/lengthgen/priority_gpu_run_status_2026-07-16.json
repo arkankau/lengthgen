@@ -1,0 +1,77 @@
+{
+  "date_started": "2026-07-16",
+  "date_completed": "2026-07-17",
+  "status": "completed",
+  "natural_qa_length_ladder": {
+    "protocol": "natural_mcqa_nested_length_ladder_v1",
+    "qwen_model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "qwen_full_seeds": [0, 2],
+    "qwen_gate_failures": {
+      "seed_1": {
+        "eligible": 187,
+        "required": 192
+      }
+    },
+    "qwen_longest_minus_shortest": {
+      "baseline_source_mass": {
+        "mean": 0.0009548201887810137,
+        "ci95": [0.00014089753506141278, 0.0020333499686785213]
+      },
+      "baseline_margin": {
+        "mean": -1.03564453125,
+        "ci95": [-1.39698486328125, -0.6982299804687502]
+      },
+      "baseline_accuracy": {
+        "mean": -0.046875,
+        "ci95": [-0.07421875, -0.0234375]
+      },
+      "rescue_amplification_margin": {
+        "mean": -0.17919921875,
+        "ci95": [-0.35206298828125, -0.0048828125]
+      }
+    },
+    "qwen_spectrum_invariant_max_abs_error": 4.76837158203125e-07,
+    "second_model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    "second_model_full_seeds": [0],
+    "second_model_longest_minus_shortest": {
+      "baseline_source_mass": {
+        "mean": -0.00007362116322484624,
+        "ci95": [-0.00009893466900117165, -0.000051917230392939384]
+      },
+      "baseline_margin": {
+        "mean": -0.19287109375,
+        "ci95": [-0.3203125, -0.06640625]
+      },
+      "baseline_accuracy": {
+        "mean": -0.1015625,
+        "ci95": [-0.15625, -0.0546875]
+      },
+      "rescue_amplification_margin": {
+        "mean": 0.01806640625,
+        "ci95": [-0.02734375, 0.06640625]
+      }
+    },
+    "second_model_spectrum_invariant_max_abs_error": 2.384185791015625e-07,
+    "preregistered_success": false,
+    "conclusion": "Natural context length reliably lowers answer margin and accuracy, but the proposed source-mass-loss and increasing routing-rescue mechanism does not generalize. Qwen source mass rises with length and rescue amplification is negative; SmolLM2 source mass falls but rescue amplification is indistinguishable from zero.",
+    "artifacts": [
+      "results/lengthgen/pretrained_natural_mcqa_ladder/qwen_two_seed_summary.json",
+      "results/lengthgen/pretrained_natural_mcqa_ladder/qwen_two_seed_summary.md",
+      "results/lengthgen/pretrained_natural_mcqa_ladder/smollm2_seed0_summary.json",
+      "results/lengthgen/pretrained_natural_mcqa_ladder/smollm2_seed0_summary.md"
+    ]
+  },
+  "competence_matched_arity": {
+    "protocol": "competence_matched_arity_search_v1",
+    "threshold": 0.8,
+    "c1_nope_seed0_exact_match": 0.184,
+    "c2_nope_seed0_exact_match": 0.178,
+    "c3_nope_seed0_exact_match": 0.748046875,
+    "c3_nope_seed0_token_accuracy": 0.8740234375,
+    "c3_training_steps": 12000,
+    "frozen_config": null,
+    "causal_interventions_inspected": false,
+    "conclusion": "No preregistered candidate cleared four-evidence competence. The arity experiment is capacity-limited, and no causal arity contrast is interpreted.",
+    "artifact": "results/lengthgen/competence_matched_arity_c3/competence_matched_arity_search.json"
+  }
+}
