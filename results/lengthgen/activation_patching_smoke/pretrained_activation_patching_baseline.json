@@ -1,0 +1,29 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B",
+  "seed": 0,
+  "selected_layer": 16,
+  "selected_heads": [
+    2
+  ],
+  "summary": {
+    "n_examples": 2,
+    "swap_margin_delta": 0.0,
+    "swap_margin_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "activation_patch_margin_delta": 0.0,
+    "activation_patch_margin_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "swap_minus_activation_patch": 0.0,
+    "swap_minus_activation_patch_ci95": [
+      0.0,
+      0.0
+    ],
+    "swap_mean_l1_displacement": 0.0,
+    "activation_patch_rms_magnitude": 0.4274947941303253,
+    "swap_spectrum_max_abs_error": 0.0
+  }
+}

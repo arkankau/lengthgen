@@ -1,0 +1,32 @@
+{
+  "status": "locked_before_outcome",
+  "date_locked": "2026-07-16",
+  "experiment": "Context-grounded natural-language QA routing",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "dataset": "rajpurkar/squad validation",
+  "seeds": [0, 1, 2],
+  "pilot_examples_per_seed": 64,
+  "calibration_examples_per_seed": 64,
+  "evaluation_examples_per_seed": 128,
+  "prompt": "One gold answer-containing sentence, two unrelated natural-language distractor sentences, a natural question, and an answer-only instruction.",
+  "structural_filter": "The gold answer is one tokenizer token, maps to exactly one gold-context token with the same id, and the complete prompt is at most 256 tokens.",
+  "split_isolation": "Structurally eligible examples are shuffled with seed 300000 + seed and partitioned into disjoint pilot, calibration, and evaluation sets before any intervention.",
+  "competence_gate": "Pilot distractor-context exact next-token accuracy is at least 0.50, exceeds no-context accuracy by at least 0.10, and is no more than 0.05 above gold-only accuracy.",
+  "selection": "Use the frozen source-mass and first-order utility-gain rules with four heads in one layer.",
+  "primary_estimand": "Utility-selected source-max minus displacement-matched distractor-control output-margin effect on held-out evaluation examples.",
+  "success_rule": "At least two seeds pass the untouched competence gate; the hierarchical 95% interval for the primary estimand is positive; and the utility-gain mean effect exceeds source-mass selection.",
+  "multi_evidence_trigger": "Run the multi-evidence natural-language extension only if this single-evidence gate passes."
+  ,
+  "feasibility_amendment": {
+    "date": "2026-07-16",
+    "timing": "After an eight-example smoke test returned zero accuracy in main, gold-only, and no-context conditions; before any confirmatory seed was run.",
+    "change": "Render the same locked user prompt with the model tokenizer's official chat template and score a one-token answer at the assistant generation position. The answer source remains a separately identified one-token context span and need not share the output token id.",
+    "reason": "The plain-text prompt tested instruction-format compliance instead of context-grounded answer competence. No thresholds, data splits, selectors, interventions, or success rules changed."
+  },
+  "assistant_boundary_amendment": {
+    "date": "2026-07-16",
+    "timing": "After backend parity debugging and before any confirmatory natural-QA run passed the competence gate.",
+    "change": "Score a lowercase one-token gold answer in its deterministic sentence-initial form at the assistant generation boundary (for example, three becomes Three). Preserve already-capitalized and nonalphabetic answers. Require both the original context span and the scored answer form to be one tokenizer token.",
+    "reason": "The official chat-template pilot showed sentence-initial capitalization while preserving the correct answer semantics. A single deterministic target keeps exact next-token margins and avoids a post-hoc set-valued acceptance rule. No data split, gate threshold, selector, intervention, or success criterion changed."
+  }
+}

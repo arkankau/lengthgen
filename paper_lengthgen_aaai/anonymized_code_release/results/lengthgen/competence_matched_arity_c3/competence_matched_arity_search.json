@@ -1,0 +1,38 @@
+{
+  "protocol": "competence_matched_arity_search_v1",
+  "outcome_blinding": "baseline train-length exact match only; no attention intervention",
+  "search_task": "quadadd",
+  "positional_encodings": [
+    "nope",
+    "rope"
+  ],
+  "seeds": [
+    0,
+    1
+  ],
+  "threshold": 0.8,
+  "candidates": [
+    {
+      "name": "c3",
+      "layers": 8,
+      "width": 512,
+      "heads": 8,
+      "mlp": 2048,
+      "steps": 12000,
+      "batch": 128,
+      "cells": [
+        {
+          "pe": "nope",
+          "seed": 0,
+          "exact_match": 0.748046875,
+          "token_accuracy": 0.8740234375,
+          "checkpoint": "/content/checkpoints/competence_arity/quadadd_nope_s0_8L_512d_8h_b128_steps12000.pt"
+        }
+      ],
+      "passed": false,
+      "rejected_early": true
+    }
+  ],
+  "frozen_config": null,
+  "start_at": "c3"
+}

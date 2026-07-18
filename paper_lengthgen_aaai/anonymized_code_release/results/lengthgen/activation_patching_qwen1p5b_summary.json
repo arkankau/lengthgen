@@ -1,0 +1,132 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B",
+  "n_seeds": 3,
+  "examples_per_seed": [
+    128,
+    128,
+    128
+  ],
+  "selected_layers": [
+    14,
+    14,
+    14
+  ],
+  "selected_heads": [
+    [
+      3,
+      0,
+      4,
+      1
+    ],
+    [
+      3,
+      4,
+      0,
+      1
+    ],
+    [
+      3,
+      0,
+      4,
+      1
+    ]
+  ],
+  "aggregates": {
+    "fixed_spectrum_swap_margin_delta": {
+      "label": "Fixed-spectrum swap",
+      "mean": 0.020835675299167633,
+      "seed_range": [
+        0.011861369013786316,
+        0.029617629945278168
+      ],
+      "seed_values": [
+        0.011861369013786316,
+        0.029617629945278168,
+        0.021028026938438416
+      ]
+    },
+    "source_value_corruption_margin_delta": {
+      "label": "Source-value corruption",
+      "mean": -7.663934975862503,
+      "seed_range": [
+        -7.779308505356312,
+        -7.486076138913631
+      ],
+      "seed_values": [
+        -7.726420283317566,
+        -7.486076138913631,
+        -7.779308505356312
+      ]
+    },
+    "clean_to_corrupt_activation_patch_rescue": {
+      "label": "Activation-patch rescue",
+      "mean": 0.3083144488433997,
+      "seed_range": [
+        0.2753845043480396,
+        0.36931532621383667
+      ],
+      "seed_values": [
+        0.36931532621383667,
+        0.2753845043480396,
+        0.28024351596832275
+      ]
+    },
+    "median_fraction_of_corruption_damage_recovered": {
+      "label": "Median damage recovered",
+      "mean": 0.028151327123244602,
+      "seed_range": [
+        0.025453580543398857,
+        0.03319598734378815
+      ],
+      "seed_values": [
+        0.03319598734378815,
+        0.025804413482546806,
+        0.025453580543398857
+      ]
+    },
+    "fixed_spectrum_mean_l1_displacement": {
+      "label": "Swap L1 displacement",
+      "mean": 0.11418475719013561,
+      "seed_range": [
+        0.10131060134153813,
+        0.12182480772025883
+      ],
+      "seed_values": [
+        0.10131060134153813,
+        0.12182480772025883,
+        0.11941886250860989
+      ]
+    },
+    "activation_patch_rms_displacement": {
+      "label": "Activation RMS displacement",
+      "mean": 0.1175878729360799,
+      "seed_range": [
+        0.11492763250134885,
+        0.11915148328989744
+      ],
+      "seed_values": [
+        0.11492763250134885,
+        0.11915148328989744,
+        0.1186845030169934
+      ]
+    },
+    "fixed_spectrum_max_abs_invariant_error": {
+      "label": "Invariant error",
+      "mean": 2.384185791015625e-07,
+      "seed_range": [
+        2.384185791015625e-07,
+        2.384185791015625e-07
+      ],
+      "seed_values": [
+        2.384185791015625e-07,
+        2.384185791015625e-07,
+        2.384185791015625e-07
+      ]
+    }
+  },
+  "source_files": [
+    "results\\lengthgen\\activation_patching_qwen1p5b_s0\\pretrained_activation_patching_baseline.json",
+    "results\\lengthgen\\activation_patching_qwen1p5b_s1\\pretrained_activation_patching_baseline.json",
+    "results\\lengthgen\\activation_patching_qwen1p5b_s2\\pretrained_activation_patching_baseline.json"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "status": "locked_before_outcome",
+  "date_locked": "2026-07-16",
+  "experiment": "Equal-budget SmolLM2 selector ablation",
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "length": 5,
+  "seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  "calibration_examples_per_seed": 64,
+  "evaluation_examples_per_seed": 128,
+  "heads_per_selector": 4,
+  "selectors": [
+    "source_mass",
+    "transfer_mass",
+    "utility_gap",
+    "utility_gain",
+    "source_gradient",
+    "gradient_magnitude",
+    "random"
+  ],
+  "calibration_isolation": "All selectors use RNG seed 100000 + seed and are frozen before evaluation on RNG seed equal to seed.",
+  "equal_budget_rule": "Every selector chooses four heads in one layer and receives the same source-max and spectrum-preserving distractor-control evaluations.",
+  "primary_estimand": "Utility-gain source-max-minus-control margin effect, with a hierarchical bootstrap over calibration seeds and examples.",
+  "specificity_estimands": "Paired utility-gain effect minus each non-random component or generic-gradient selector effect.",
+  "success_rule": "The hierarchical 95% interval for utility gain is positive; utility gain ranks first by mean effect; and its paired mean advantage is positive over source mass, transfer mass, utility gap, source gradient, and gradient magnitude. Pairwise intervals are reported without a universal superiority claim unless all five exclude zero.",
+  "interpretation_if_fail": "Treat utility selection as supervised gradient search rather than evidence that the theorem-specific product is uniquely predictive."
+}

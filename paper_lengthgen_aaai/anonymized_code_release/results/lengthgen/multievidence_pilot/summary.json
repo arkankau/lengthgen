@@ -1,0 +1,141 @@
+{
+  "models": 1,
+  "competence_threshold": 0.8,
+  "min_train_exact": 1.0,
+  "all_models_competent": true,
+  "max_invariant_error": 4.76837158203125e-07,
+  "by_length": {
+    "10": {
+      "models": 1,
+      "mean_baseline_exact": 0.8828125,
+      "mean_baseline_token": 0.94140625,
+      "mean_baseline_mass": 0.8484816253185272,
+      "mean_source_max_exact": 0.8671875,
+      "mean_source_max_token": 0.93359375,
+      "mean_source_max_mass": 0.9625406265258789,
+      "mean_source_min_exact": 0.65625,
+      "mean_source_min_token": 0.828125,
+      "mean_source_min_mass": 2.4269067466775596e-07,
+      "mean_distractor_control_exact": 0.921875,
+      "mean_distractor_control_token": 0.9609375,
+      "mean_distractor_control_mass": 0.8484816253185272,
+      "mean_source_max_exact_delta": -0.015625,
+      "source_max_exact_delta_ci95": [
+        -0.015625,
+        -0.015625
+      ],
+      "source_max_exact_delta_positive_models": 0,
+      "mean_source_min_exact_delta": -0.2265625,
+      "source_min_exact_delta_ci95": [
+        -0.2265625,
+        -0.2265625
+      ],
+      "source_min_exact_delta_positive_models": 0,
+      "mean_distractor_control_exact_delta": 0.0390625,
+      "distractor_control_exact_delta_ci95": [
+        0.0390625,
+        0.0390625
+      ],
+      "distractor_control_exact_delta_positive_models": 1,
+      "mean_max_minus_min_exact": 0.2109375,
+      "max_minus_min_exact_ci95": [
+        0.2109375,
+        0.2109375
+      ],
+      "max_minus_min_exact_positive_models": 1
+    },
+    "25": {
+      "models": 1,
+      "mean_baseline_exact": 0.3671875,
+      "mean_baseline_token": 0.68359375,
+      "mean_baseline_mass": 0.4464827626943588,
+      "mean_source_max_exact": 0.421875,
+      "mean_source_max_token": 0.7109375,
+      "mean_source_max_mass": 0.6222469806671143,
+      "mean_source_min_exact": 0.1953125,
+      "mean_source_min_token": 0.59765625,
+      "mean_source_min_mass": 5.151892310095718e-06,
+      "mean_distractor_control_exact": 0.359375,
+      "mean_distractor_control_token": 0.6796875,
+      "mean_distractor_control_mass": 0.4464827626943588,
+      "mean_source_max_exact_delta": 0.0546875,
+      "source_max_exact_delta_ci95": [
+        0.0546875,
+        0.0546875
+      ],
+      "source_max_exact_delta_positive_models": 1,
+      "mean_source_min_exact_delta": -0.171875,
+      "source_min_exact_delta_ci95": [
+        -0.171875,
+        -0.171875
+      ],
+      "source_min_exact_delta_positive_models": 0,
+      "mean_distractor_control_exact_delta": -0.0078125,
+      "distractor_control_exact_delta_ci95": [
+        -0.0078125,
+        -0.0078125
+      ],
+      "distractor_control_exact_delta_positive_models": 0,
+      "mean_max_minus_min_exact": 0.2265625,
+      "max_minus_min_exact_ci95": [
+        0.2265625,
+        0.2265625
+      ],
+      "max_minus_min_exact_positive_models": 1
+    }
+  },
+  "rows": [
+    {
+      "task": "pairadd",
+      "pe": "nope",
+      "seed": 0,
+      "length": 10,
+      "train_exact": 1.0,
+      "baseline_exact": 0.8828125,
+      "baseline_token": 0.94140625,
+      "baseline_mass": 0.8484816253185272,
+      "source_max_exact": 0.8671875,
+      "source_max_token": 0.93359375,
+      "source_max_mass": 0.9625406265258789,
+      "source_min_exact": 0.65625,
+      "source_min_token": 0.828125,
+      "source_min_mass": 2.4269067466775596e-07,
+      "distractor_control_exact": 0.921875,
+      "distractor_control_token": 0.9609375,
+      "distractor_control_mass": 0.8484816253185272,
+      "source_max_exact_delta": -0.015625,
+      "source_max_token_delta": -0.0078125,
+      "source_min_exact_delta": -0.2265625,
+      "source_min_token_delta": -0.11328125,
+      "distractor_control_exact_delta": 0.0390625,
+      "distractor_control_token_delta": 0.01953125,
+      "max_minus_min_exact": 0.2109375
+    },
+    {
+      "task": "pairadd",
+      "pe": "nope",
+      "seed": 0,
+      "length": 25,
+      "train_exact": 1.0,
+      "baseline_exact": 0.3671875,
+      "baseline_token": 0.68359375,
+      "baseline_mass": 0.4464827626943588,
+      "source_max_exact": 0.421875,
+      "source_max_token": 0.7109375,
+      "source_max_mass": 0.6222469806671143,
+      "source_min_exact": 0.1953125,
+      "source_min_token": 0.59765625,
+      "source_min_mass": 5.151892310095718e-06,
+      "distractor_control_exact": 0.359375,
+      "distractor_control_token": 0.6796875,
+      "distractor_control_mass": 0.4464827626943588,
+      "source_max_exact_delta": 0.0546875,
+      "source_max_token_delta": 0.02734375,
+      "source_min_exact_delta": -0.171875,
+      "source_min_token_delta": -0.0859375,
+      "distractor_control_exact_delta": -0.0078125,
+      "distractor_control_token_delta": -0.00390625,
+      "max_minus_min_exact": 0.2265625
+    }
+  ]
+}

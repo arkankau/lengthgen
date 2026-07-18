@@ -1,0 +1,147 @@
+{
+  "protocol": "endogenous_distractor_order_assignment",
+  "expected_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "available_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "missing_seeds": [],
+  "seeds": [
+    {
+      "seed": 0,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "eligible_pairs": 256,
+      "mean_margin_delta": -0.001953125,
+      "positive_margin_fraction": 0.484375,
+      "mean_source_coefficient": 0.9392689532770955,
+      "median_spectrum_l1": 0.12262825667858124,
+      "median_source_gap": 0.023284912109375
+    },
+    {
+      "seed": 1,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "eligible_pairs": 256,
+      "mean_margin_delta": -0.02001953125,
+      "positive_margin_fraction": 0.44921875,
+      "mean_source_coefficient": 1.0870545818591393,
+      "median_spectrum_l1": 0.12437966838479042,
+      "median_source_gap": 0.02182769775390625
+    },
+    {
+      "seed": 2,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "eligible_pairs": 256,
+      "mean_margin_delta": 0.0693359375,
+      "positive_margin_fraction": 0.515625,
+      "mean_source_coefficient": 1.3601356201617276,
+      "median_spectrum_l1": 0.12103600427508354,
+      "median_source_gap": 0.0233154296875
+    },
+    {
+      "seed": 3,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "eligible_pairs": 256,
+      "mean_margin_delta": 0.07470703125,
+      "positive_margin_fraction": 0.53515625,
+      "mean_source_coefficient": 1.4420885482876087,
+      "median_spectrum_l1": 0.12300891801714897,
+      "median_source_gap": 0.022626876831054688
+    },
+    {
+      "seed": 4,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        4,
+        0,
+        1
+      ],
+      "eligible_pairs": 256,
+      "mean_margin_delta": 0.037841796875,
+      "positive_margin_fraction": 0.484375,
+      "mean_source_coefficient": 1.8568887793436648,
+      "median_spectrum_l1": 0.12016136571764946,
+      "median_source_gap": 0.02088165283203125
+    },
+    {
+      "seed": 5,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "eligible_pairs": 256,
+      "mean_margin_delta": -0.001220703125,
+      "positive_margin_fraction": 0.46875,
+      "mean_source_coefficient": 0.8154880202169683,
+      "median_spectrum_l1": 0.12155908718705177,
+      "median_source_gap": 0.02294921875
+    }
+  ],
+  "matched_margin": {
+    "mean": 0.026448567708333332,
+    "hierarchical_ci95": [
+      -0.0169677734375,
+      0.07014973958333333
+    ],
+    "seed_means": [
+      -0.001953125,
+      -0.02001953125,
+      0.0693359375,
+      0.07470703125,
+      0.037841796875,
+      -0.001220703125
+    ],
+    "exact_seed_sign_flip_p": 0.25
+  },
+  "fixed_effects_source_coefficient": {
+    "mean": 1.2501540838577005,
+    "seed_values": [
+      0.9392689532770955,
+      1.0870545818591393,
+      1.3601356201617276,
+      1.4420885482876087,
+      1.8568887793436648,
+      0.8154880202169683
+    ],
+    "exact_seed_sign_flip_p": 0.03125
+  },
+  "prospective_success": false
+}

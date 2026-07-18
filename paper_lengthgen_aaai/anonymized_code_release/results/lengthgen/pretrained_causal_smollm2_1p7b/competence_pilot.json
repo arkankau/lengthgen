@@ -1,0 +1,568 @@
+{
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "dtype": "torch.bfloat16",
+  "seed": 27182,
+  "reference_format": "colon_semicolon",
+  "candidate_formats": [
+    "colon_newline"
+  ],
+  "lengths": [
+    5,
+    20
+  ],
+  "n_examples_per_cell": 32,
+  "competence_gate": {
+    "min_short_accuracy": 0.25,
+    "min_intermediate_accuracy": 0.0
+  },
+  "formats": {
+    "colon_semicolon": {
+      "5": {
+        "n_examples": 32,
+        "accuracy": 0.5,
+        "mean_margin": -0.095703125,
+        "records": [
+          {
+            "correct": 0.0,
+            "margin": -0.875
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.625
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.0
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.0
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.0
+          },
+          {
+            "correct": 0.0,
+            "margin": -3.5625
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.75
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.5
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.375
+          },
+          {
+            "correct": 0.0,
+            "margin": -2.0
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.375
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.5
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.375
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.75
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.625
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.875
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.625
+          },
+          {
+            "correct": 0.0,
+            "margin": 0.0
+          }
+        ]
+      },
+      "20": {
+        "n_examples": 32,
+        "accuracy": 0.5,
+        "mean_margin": -0.107421875,
+        "records": [
+          {
+            "correct": 0.0,
+            "margin": -1.6875
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.375
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.5
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.625
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.125
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.625
+          },
+          {
+            "correct": 0.0,
+            "margin": -2.25
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.625
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.25
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.375
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.0
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -3.0
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.625
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.125
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.0
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.0
+          }
+        ]
+      }
+    },
+    "colon_newline": {
+      "5": {
+        "n_examples": 32,
+        "accuracy": 0.59375,
+        "mean_margin": 0.1640625,
+        "records": [
+          {
+            "correct": 0.0,
+            "margin": -1.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -2.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.1875
+          },
+          {
+            "correct": 0.0,
+            "margin": -4.4375
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.125
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.0
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": 0.0
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.0625
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.375
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.625
+          },
+          {
+            "correct": 0.0,
+            "margin": -2.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.625
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.5
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.8125
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          }
+        ]
+      },
+      "20": {
+        "n_examples": 32,
+        "accuracy": 0.6875,
+        "mean_margin": 0.294921875,
+        "records": [
+          {
+            "correct": 1.0,
+            "margin": 0.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.25
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.125
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.75
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.8125
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.0
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.625
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.25
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.5
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.875
+          },
+          {
+            "correct": 0.0,
+            "margin": -1.125
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.0
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.25
+          },
+          {
+            "correct": 1.0,
+            "margin": 2.625
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.625
+          },
+          {
+            "correct": 0.0,
+            "margin": -0.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.75
+          },
+          {
+            "correct": 1.0,
+            "margin": 1.375
+          },
+          {
+            "correct": 1.0,
+            "margin": 0.5
+          },
+          {
+            "correct": 0.0,
+            "margin": -2.25
+          }
+        ]
+      }
+    }
+  },
+  "eligible_formats": [
+    "colon_newline"
+  ],
+  "selected_format": "colon_newline"
+}

@@ -1,0 +1,20 @@
+{
+  "registered_before_new_seed_outcomes": true,
+  "date": "2026-07-18",
+  "purpose": "Exact multi-seed replication of the headline Qwen fixed-spectrum result",
+  "original_observed_seed": 0,
+  "prospective_seeds": [1, 2, 3, 4, 5],
+  "model": "Qwen/Qwen2.5-1.5B",
+  "dtype": "bf16",
+  "format": "colon_newline",
+  "selection_length": 5,
+  "calibration_examples": 64,
+  "head_budget": 4,
+  "evaluation_lengths": [5, 20, 80, 160],
+  "evaluation_examples_per_length": 128,
+  "primary_contrast": "source_max minus distractor_control margin, averaged within seed over all four lengths",
+  "inference_unit": "independent calibration and evaluation seed",
+  "test": "two-sided exact sign-flip test over six seed means",
+  "success_rule": "all six seed means positive and exact two-sided p < 0.05",
+  "notes": "Every seed reruns the same source-mass calibration rule. Layers and heads may differ because circuit selection is part of the frozen protocol; precision, prompt format, lengths, sample counts, and contrast are identical."
+}

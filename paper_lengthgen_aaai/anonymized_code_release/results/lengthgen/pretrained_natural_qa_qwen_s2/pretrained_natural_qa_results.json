@@ -1,0 +1,1449 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "dataset": "rajpurkar/squad",
+  "split": "validation",
+  "prompt_protocol": "tokenizer_chat_template",
+  "seed": 2,
+  "structural_seed": 300002,
+  "pilot": {
+    "main": {
+      "n_examples": 64,
+      "accuracy": 0.421875,
+      "mean_margin": 0.095703125,
+      "records": [
+        {
+          "correct": 0.0,
+          "margin": -1.0,
+          "prediction_id": 10303,
+          "target_id": 24187
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.0,
+          "prediction_id": 66755,
+          "target_id": 25411
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.75,
+          "prediction_id": 641,
+          "target_id": 29046
+        },
+        {
+          "correct": 1.0,
+          "margin": 7.875,
+          "prediction_id": 58903,
+          "target_id": 58903
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.125,
+          "prediction_id": 21409,
+          "target_id": 25207
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.875,
+          "prediction_id": 17,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.625,
+          "prediction_id": 19,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.0,
+          "prediction_id": 27856,
+          "target_id": 15972
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.875,
+          "prediction_id": 17,
+          "target_id": 19641
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.625,
+          "prediction_id": 39376,
+          "target_id": 39376
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.0,
+          "prediction_id": 41547,
+          "target_id": 41547
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 785,
+          "target_id": 76533
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.125,
+          "prediction_id": 15,
+          "target_id": 17999
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.25,
+          "prediction_id": 96871,
+          "target_id": 96871
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.0,
+          "prediction_id": 37020,
+          "target_id": 37020
+        },
+        {
+          "correct": 1.0,
+          "margin": 5.5,
+          "prediction_id": 85738,
+          "target_id": 85738
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.625,
+          "prediction_id": 41969,
+          "target_id": 41969
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.25,
+          "prediction_id": 785,
+          "target_id": 6202
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 76995,
+          "target_id": 75763
+        },
+        {
+          "correct": 0.0,
+          "margin": -8.5,
+          "prediction_id": 785,
+          "target_id": 14008
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.5,
+          "prediction_id": 92607,
+          "target_id": 88328
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.75,
+          "prediction_id": 11613,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.625,
+          "prediction_id": 9454,
+          "target_id": 3027
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.125,
+          "prediction_id": 66484,
+          "target_id": 25018
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.0,
+          "prediction_id": 60970,
+          "target_id": 25436
+        },
+        {
+          "correct": 0.0,
+          "margin": 0.0,
+          "prediction_id": 17,
+          "target_id": 11613
+        },
+        {
+          "correct": 1.0,
+          "margin": 4.125,
+          "prediction_id": 43,
+          "target_id": 43
+        },
+        {
+          "correct": 1.0,
+          "margin": 2.5,
+          "prediction_id": 35239,
+          "target_id": 35239
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.25,
+          "prediction_id": 40465,
+          "target_id": 95673
+        },
+        {
+          "correct": 0.0,
+          "margin": -6.5,
+          "prediction_id": 15,
+          "target_id": 17
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.5,
+          "prediction_id": 80185,
+          "target_id": 26972
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.875,
+          "prediction_id": 28253,
+          "target_id": 28253
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.75,
+          "prediction_id": 19641,
+          "target_id": 19641
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.375,
+          "prediction_id": 11613,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.625,
+          "prediction_id": 61895,
+          "target_id": 25221
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.875,
+          "prediction_id": 18,
+          "target_id": 19641
+        },
+        {
+          "correct": 1.0,
+          "margin": 7.25,
+          "prediction_id": 50225,
+          "target_id": 50225
+        },
+        {
+          "correct": 1.0,
+          "margin": 2.0,
+          "prediction_id": 83528,
+          "target_id": 83528
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.0,
+          "prediction_id": 785,
+          "target_id": 41738
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.875,
+          "prediction_id": 22574,
+          "target_id": 22574
+        },
+        {
+          "correct": 1.0,
+          "margin": 7.0,
+          "prediction_id": 72719,
+          "target_id": 72719
+        },
+        {
+          "correct": 1.0,
+          "margin": 8.625,
+          "prediction_id": 58903,
+          "target_id": 58903
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 1151,
+          "target_id": 6033
+        },
+        {
+          "correct": 1.0,
+          "margin": 8.375,
+          "prediction_id": 20,
+          "target_id": 20
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.5,
+          "prediction_id": 85877,
+          "target_id": 75787
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.0,
+          "prediction_id": 18,
+          "target_id": 19641
+        },
+        {
+          "correct": 1.0,
+          "margin": 6.5,
+          "prediction_id": 16,
+          "target_id": 16
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.125,
+          "prediction_id": 22,
+          "target_id": 59528
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.125,
+          "prediction_id": 54824,
+          "target_id": 54824
+        },
+        {
+          "correct": 1.0,
+          "margin": 7.375,
+          "prediction_id": 22574,
+          "target_id": 22574
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.125,
+          "prediction_id": 83112,
+          "target_id": 83112
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.25,
+          "prediction_id": 20,
+          "target_id": 37020
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.125,
+          "prediction_id": 30092,
+          "target_id": 30092
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.875,
+          "prediction_id": 32,
+          "target_id": 31557
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.25,
+          "prediction_id": 34164,
+          "target_id": 41969
+        },
+        {
+          "correct": 1.0,
+          "margin": 4.75,
+          "prediction_id": 76377,
+          "target_id": 76377
+        },
+        {
+          "correct": 1.0,
+          "margin": 8.375,
+          "prediction_id": 76377,
+          "target_id": 76377
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.75,
+          "prediction_id": 16,
+          "target_id": 9454
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.75,
+          "prediction_id": 785,
+          "target_id": 36975
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.625,
+          "prediction_id": 83560,
+          "target_id": 40979
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.375,
+          "prediction_id": 11613,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.75,
+          "prediction_id": 52006,
+          "target_id": 35090
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 20,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.5,
+          "prediction_id": 23,
+          "target_id": 59085
+        }
+      ]
+    },
+    "gold_only": {
+      "n_examples": 64,
+      "accuracy": 0.5,
+      "mean_margin": 0.083984375,
+      "records": [
+        {
+          "correct": 0.0,
+          "margin": -0.625,
+          "prediction_id": 10303,
+          "target_id": 24187
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.75,
+          "prediction_id": 39376,
+          "target_id": 25411
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.875,
+          "prediction_id": 641,
+          "target_id": 29046
+        },
+        {
+          "correct": 1.0,
+          "margin": 8.625,
+          "prediction_id": 58903,
+          "target_id": 58903
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 21409,
+          "target_id": 25207
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.5,
+          "prediction_id": 26972,
+          "target_id": 26972
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.375,
+          "prediction_id": 26972,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.5,
+          "prediction_id": 785,
+          "target_id": 15972
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.375,
+          "prediction_id": 18,
+          "target_id": 19641
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.0,
+          "prediction_id": 25411,
+          "target_id": 39376
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.625,
+          "prediction_id": 41547,
+          "target_id": 41547
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.125,
+          "prediction_id": 785,
+          "target_id": 76533
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.875,
+          "prediction_id": 15,
+          "target_id": 17999
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.0,
+          "prediction_id": 96871,
+          "target_id": 96871
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.625,
+          "prediction_id": 37020,
+          "target_id": 37020
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.875,
+          "prediction_id": 85738,
+          "target_id": 85738
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.25,
+          "prediction_id": 41969,
+          "target_id": 41969
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.875,
+          "prediction_id": 785,
+          "target_id": 6202
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.125,
+          "prediction_id": 75763,
+          "target_id": 75763
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.25,
+          "prediction_id": 785,
+          "target_id": 14008
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.375,
+          "prediction_id": 92607,
+          "target_id": 88328
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.75,
+          "prediction_id": 11613,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -8.5,
+          "prediction_id": 9454,
+          "target_id": 3027
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.25,
+          "prediction_id": 66484,
+          "target_id": 25018
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.375,
+          "prediction_id": 25436,
+          "target_id": 25436
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.25,
+          "prediction_id": 785,
+          "target_id": 11613
+        },
+        {
+          "correct": 1.0,
+          "margin": 7.75,
+          "prediction_id": 43,
+          "target_id": 43
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.75,
+          "prediction_id": 35239,
+          "target_id": 35239
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.375,
+          "prediction_id": 40465,
+          "target_id": 95673
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.375,
+          "prediction_id": 15,
+          "target_id": 17
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.75,
+          "prediction_id": 34024,
+          "target_id": 26972
+        },
+        {
+          "correct": 1.0,
+          "margin": 2.5,
+          "prediction_id": 28253,
+          "target_id": 28253
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.5,
+          "prediction_id": 19641,
+          "target_id": 19641
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 19789,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.5,
+          "prediction_id": 785,
+          "target_id": 25221
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.5,
+          "prediction_id": 19641,
+          "target_id": 19641
+        },
+        {
+          "correct": 1.0,
+          "margin": 6.25,
+          "prediction_id": 50225,
+          "target_id": 50225
+        },
+        {
+          "correct": 1.0,
+          "margin": 2.375,
+          "prediction_id": 83528,
+          "target_id": 83528
+        },
+        {
+          "correct": 0.0,
+          "margin": -9.375,
+          "prediction_id": 785,
+          "target_id": 41738
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.625,
+          "prediction_id": 22574,
+          "target_id": 22574
+        },
+        {
+          "correct": 1.0,
+          "margin": 7.5,
+          "prediction_id": 72719,
+          "target_id": 72719
+        },
+        {
+          "correct": 1.0,
+          "margin": 8.875,
+          "prediction_id": 58903,
+          "target_id": 58903
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.625,
+          "prediction_id": 1151,
+          "target_id": 6033
+        },
+        {
+          "correct": 1.0,
+          "margin": 6.25,
+          "prediction_id": 20,
+          "target_id": 20
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.875,
+          "prediction_id": 75787,
+          "target_id": 75787
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.875,
+          "prediction_id": 19641,
+          "target_id": 19641
+        },
+        {
+          "correct": 1.0,
+          "margin": 6.25,
+          "prediction_id": 16,
+          "target_id": 16
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.0,
+          "prediction_id": 80185,
+          "target_id": 59528
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.5,
+          "prediction_id": 30282,
+          "target_id": 54824
+        },
+        {
+          "correct": 1.0,
+          "margin": 2.875,
+          "prediction_id": 22574,
+          "target_id": 22574
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.875,
+          "prediction_id": 83112,
+          "target_id": 83112
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.75,
+          "prediction_id": 37020,
+          "target_id": 37020
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.0,
+          "prediction_id": 785,
+          "target_id": 30092
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.125,
+          "prediction_id": 32,
+          "target_id": 31557
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.875,
+          "prediction_id": 34164,
+          "target_id": 41969
+        },
+        {
+          "correct": 1.0,
+          "margin": 6.125,
+          "prediction_id": 76377,
+          "target_id": 76377
+        },
+        {
+          "correct": 1.0,
+          "margin": 5.5,
+          "prediction_id": 76377,
+          "target_id": 76377
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.375,
+          "prediction_id": 49898,
+          "target_id": 9454
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.875,
+          "prediction_id": 21396,
+          "target_id": 36975
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.125,
+          "prediction_id": 40979,
+          "target_id": 40979
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.625,
+          "prediction_id": 17,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -6.375,
+          "prediction_id": 52006,
+          "target_id": 35090
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.75,
+          "prediction_id": 37020,
+          "target_id": 26972
+        },
+        {
+          "correct": 1.0,
+          "margin": 0.0,
+          "prediction_id": 59085,
+          "target_id": 59085
+        }
+      ]
+    },
+    "no_context": {
+      "n_examples": 64,
+      "accuracy": 0.03125,
+      "mean_margin": -6.40625,
+      "records": [
+        {
+          "correct": 0.0,
+          "margin": -7.625,
+          "prediction_id": 16,
+          "target_id": 24187
+        },
+        {
+          "correct": 0.0,
+          "margin": -11.125,
+          "prediction_id": 66755,
+          "target_id": 25411
+        },
+        {
+          "correct": 0.0,
+          "margin": -19.875,
+          "prediction_id": 3564,
+          "target_id": 29046
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 25411,
+          "target_id": 58903
+        },
+        {
+          "correct": 0.0,
+          "margin": -11.125,
+          "prediction_id": 69123,
+          "target_id": 25207
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.125,
+          "prediction_id": 16,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.375,
+          "prediction_id": 17,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.5,
+          "prediction_id": 785,
+          "target_id": 15972
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.25,
+          "prediction_id": 20,
+          "target_id": 19641
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 1092,
+          "target_id": 39376
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.75,
+          "prediction_id": 22574,
+          "target_id": 41547
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.375,
+          "prediction_id": 785,
+          "target_id": 76533
+        },
+        {
+          "correct": 0.0,
+          "margin": -12.75,
+          "prediction_id": 18,
+          "target_id": 17999
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.5,
+          "prediction_id": 36,
+          "target_id": 96871
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.5,
+          "prediction_id": 17,
+          "target_id": 37020
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.3125,
+          "prediction_id": 785,
+          "target_id": 85738
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.0,
+          "prediction_id": 641,
+          "target_id": 41969
+        },
+        {
+          "correct": 0.0,
+          "margin": -11.1875,
+          "prediction_id": 785,
+          "target_id": 6202
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.75,
+          "prediction_id": 34415,
+          "target_id": 75763
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.625,
+          "prediction_id": 24187,
+          "target_id": 14008
+        },
+        {
+          "correct": 0.0,
+          "margin": -13.875,
+          "prediction_id": 40,
+          "target_id": 88328
+        },
+        {
+          "correct": 0.0,
+          "margin": -10.5625,
+          "prediction_id": 16,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -24.0625,
+          "prediction_id": 2753,
+          "target_id": 3027
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.75,
+          "prediction_id": 33648,
+          "target_id": 25018
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.0,
+          "prediction_id": 32003,
+          "target_id": 25436
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.375,
+          "prediction_id": 16,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -9.25,
+          "prediction_id": 785,
+          "target_id": 43
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.125,
+          "prediction_id": 32777,
+          "target_id": 35239
+        },
+        {
+          "correct": 0.0,
+          "margin": -8.125,
+          "prediction_id": 32,
+          "target_id": 95673
+        },
+        {
+          "correct": 0.0,
+          "margin": -6.875,
+          "prediction_id": 16,
+          "target_id": 17
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.0,
+          "prediction_id": 16,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.25,
+          "prediction_id": 45,
+          "target_id": 28253
+        },
+        {
+          "correct": 0.0,
+          "margin": -8.625,
+          "prediction_id": 16,
+          "target_id": 19641
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.75,
+          "prediction_id": 19641,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.125,
+          "prediction_id": 25018,
+          "target_id": 25221
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.25,
+          "prediction_id": 3862,
+          "target_id": 19641
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.75,
+          "prediction_id": 3564,
+          "target_id": 50225
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.75,
+          "prediction_id": 785,
+          "target_id": 83528
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.875,
+          "prediction_id": 785,
+          "target_id": 41738
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.375,
+          "prediction_id": 45,
+          "target_id": 22574
+        },
+        {
+          "correct": 1.0,
+          "margin": 3.625,
+          "prediction_id": 72719,
+          "target_id": 72719
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.6875,
+          "prediction_id": 24732,
+          "target_id": 58903
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.0,
+          "prediction_id": 3357,
+          "target_id": 6033
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.375,
+          "prediction_id": 16,
+          "target_id": 20
+        },
+        {
+          "correct": 0.0,
+          "margin": -14.4375,
+          "prediction_id": 785,
+          "target_id": 75787
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.25,
+          "prediction_id": 785,
+          "target_id": 19641
+        },
+        {
+          "correct": 0.0,
+          "margin": -1.875,
+          "prediction_id": 2101,
+          "target_id": 16
+        },
+        {
+          "correct": 0.0,
+          "margin": -12.0,
+          "prediction_id": 16,
+          "target_id": 59528
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.1875,
+          "prediction_id": 785,
+          "target_id": 54824
+        },
+        {
+          "correct": 0.0,
+          "margin": -2.25,
+          "prediction_id": 16787,
+          "target_id": 22574
+        },
+        {
+          "correct": 0.0,
+          "margin": -4.125,
+          "prediction_id": 484,
+          "target_id": 83112
+        },
+        {
+          "correct": 0.0,
+          "margin": -10.625,
+          "prediction_id": 17,
+          "target_id": 37020
+        },
+        {
+          "correct": 0.0,
+          "margin": -3.875,
+          "prediction_id": 8813,
+          "target_id": 30092
+        },
+        {
+          "correct": 0.0,
+          "margin": -8.9375,
+          "prediction_id": 3966,
+          "target_id": 31557
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.875,
+          "prediction_id": 14075,
+          "target_id": 41969
+        },
+        {
+          "correct": 1.0,
+          "margin": 1.875,
+          "prediction_id": 76377,
+          "target_id": 76377
+        },
+        {
+          "correct": 0.0,
+          "margin": -10.0625,
+          "prediction_id": 89657,
+          "target_id": 76377
+        },
+        {
+          "correct": 0.0,
+          "margin": -5.75,
+          "prediction_id": 32,
+          "target_id": 9454
+        },
+        {
+          "correct": 0.0,
+          "margin": -14.0625,
+          "prediction_id": 29596,
+          "target_id": 36975
+        },
+        {
+          "correct": 0.0,
+          "margin": -10.1875,
+          "prediction_id": 80956,
+          "target_id": 40979
+        },
+        {
+          "correct": 0.0,
+          "margin": -11.3125,
+          "prediction_id": 16,
+          "target_id": 11613
+        },
+        {
+          "correct": 0.0,
+          "margin": -11.625,
+          "prediction_id": 89441,
+          "target_id": 35090
+        },
+        {
+          "correct": 0.0,
+          "margin": -0.375,
+          "prediction_id": 89441,
+          "target_id": 26972
+        },
+        {
+          "correct": 0.0,
+          "margin": -7.375,
+          "prediction_id": 16,
+          "target_id": 59085
+        }
+      ]
+    },
+    "context_accuracy_gain": 0.390625,
+    "gate_pass": false
+  },
+  "example_ids": {
+    "pilot": [
+      "57290b21af94a219006a9fcf",
+      "57268739708984140094c8ef",
+      "56e11f83cd28a01900c67612",
+      "56d602631c85041400946ed8",
+      "572fc78d04bcaa1900d76d09",
+      "56d6f3500d65d21400198292",
+      "5729645b3f37b31900478325",
+      "56e76de800c9c71400d77126",
+      "5730cb8df6cb411900e244c3",
+      "57275743f1498d1400e8f682",
+      "56f8ca289b226e1400dd1008",
+      "570d28bdb3d812140066d4a7",
+      "56becaf93aeaaa14008c9482",
+      "57115bf350c2381900b54a94",
+      "572fbb04a23a5019007fc8f9",
+      "572885023acd2414000dfa84",
+      "5706111a52bb89140068984f",
+      "572fb059947a6a140053cb84",
+      "56e7560937bdd419002c3e8b",
+      "571cc6f85efbb31900334de5",
+      "56e10d2dcd28a01900c674d9",
+      "56beae423aeaaa14008c91f7",
+      "57267b65dd62a815002e86aa",
+      "571127a5a58dae1900cd6cc8",
+      "56bf38383aeaaa14008c956f",
+      "572fd1c4947a6a140053cd03",
+      "56e1f10ee3433e1400423222",
+      "56d9b4ebdc89441400fdb708",
+      "57266783f1498d1400e8de86",
+      "56d2045de7d4791d009025f5",
+      "5728510f4b864d1900164937",
+      "571166352419e314009555f1",
+      "5725d662ec44d21400f3d687",
+      "5711623e50c2381900b54ab9",
+      "572f5703a23a5019007fc573",
+      "57268b43dd62a815002e88f3",
+      "571097baa58dae1900cd6a9c",
+      "572fdbb004bcaa1900d76dda",
+      "57377c98c3c5551400e51efd",
+      "57274e145951b619008f87ea",
+      "5730bd00069b5314008322da",
+      "56beaf5e3aeaaa14008c91fd",
+      "5729714daf94a219006aa42e",
+      "57115bf350c2381900b54a95",
+      "572804522ca10214002d9b95",
+      "5730069004bcaa1900d77031",
+      "572953013f37b31900478251",
+      "56e775ec00c9c71400d7715e",
+      "57287fec4b864d1900164a3c",
+      "57274ca8dd62a815002e9aa8",
+      "57273d8bf1498d1400e8f502",
+      "5725b64d89a1e219009abd43",
+      "571cac5d5efbb31900334dd0",
+      "56e0cd33231d4119001ac3c2",
+      "56d9a637dc89441400fdb699",
+      "5737432bc3c5551400e51e99",
+      "56bf41013aeaaa14008c959c",
+      "56e190bce3433e1400422fcb",
+      "5705f7c875f01819005e77dc",
+      "570d529fb3d812140066d6bc",
+      "5726e942f1498d1400e8efa1",
+      "56e1239acd28a01900c67641",
+      "56dfa1d34a1a83140091ebd4",
+      "57283b91ff5b5019007d9fa8"
+    ],
+    "calibration": [
+      "572807802ca10214002d9bfc",
+      "57269698dd62a815002e8a6c",
+      "56e1075ae3433e1400422afc",
+      "5726e08e5951b619008f8111",
+      "5729f1283f37b319004785d7",
+      "571c3a685efbb31900334db5",
+      "570d2417fed7b91900d45c3e",
+      "57275409708984140094dc37",
+      "56e1b8f3e3433e14004230e8",
+      "5725c57a89a1e219009abe60",
+      "5730b255396df919000962b0",
+      "56e17a7ccd28a01900c679a4",
+      "572fd1c4947a6a140053cd04",
+      "56bebc383aeaaa14008c931f",
+      "571cda1bdd7acb1400e4c197",
+      "572864dd4b864d190016497a",
+      "571166352419e314009555f5",
+      "5726f4a0708984140094d6ed",
+      "56beca913aeaaa14008c9470",
+      "56beb4343aeaaa14008c925e",
+      "572944e03f37b319004781e4",
+      "5730bd00069b5314008322d9",
+      "5726c20fdd62a815002e8fa7",
+      "572872822ca10214002da378",
+      "56d98b33dc89441400fdb53e",
+      "5729da0faf94a219006aa678",
+      "57108198b654c5140001f93b",
+      "573060b48ab72b1400f9c4c6",
+      "572a20816aef0514001552e6",
+      "5726f0865951b619008f82e6",
+      "5729d878af94a219006aa66c",
+      "57300f8504bcaa1900d770d4",
+      "573062662461fd1900a9cdfb",
+      "56d601e41c85041400946ecf",
+      "573776eec3c5551400e51eea",
+      "57265642f1498d1400e8dc69",
+      "56e0c1617aa994140058e6d8",
+      "56bf301c3aeaaa14008c954d",
+      "56beae423aeaaa14008c91f4",
+      "56bf52483aeaaa14008c95c7",
+      "56e765ba00c9c71400d770a6",
+      "5705eb3375f01819005e7767",
+      "57277944f1498d1400e8f90c",
+      "5726bc505951b619008f7c7c",
+      "5725d403ec44d21400f3d65d",
+      "570d2af0fed7b91900d45c95",
+      "572825a92ca10214002d9efe",
+      "57094a79efce8f15003a7dc6",
+      "56dfa1d44a1a83140091ebd6",
+      "56d9cb47dc89441400fdb835",
+      "56bec9133aeaaa14008c9448",
+      "5729ea263f37b319004785be",
+      "56e0ff5dcd28a01900c673fe",
+      "5705eee952bb8914006896de",
+      "571c8eb9dd7acb1400e4c0f7",
+      "56beb3083aeaaa14008c9240",
+      "57113f83b654c5140001fc2b",
+      "56d9c455dc89441400fdb7c5",
+      "57108ee6a58dae1900cd6a1e",
+      "56e1b8f3e3433e14004230e9",
+      "5725f07f89a1e219009ac0c0",
+      "5727ee372ca10214002d99ee",
+      "56beca913aeaaa14008c946e",
+      "57302a3aa23a5019007fced0"
+    ],
+    "evaluation": [
+      "570d47b8b3d812140066d631",
+      "56dfa3c338dc421700152158",
+      "5725e547ec44d21400f3d723",
+      "57113c6da58dae1900cd6d32",
+      "571c3a685efbb31900334db2",
+      "572ff07304bcaa1900d76ef8",
+      "572fcc43b2c2fd140056847d",
+      "56be5333acb8001400a5030a",
+      "5729f1c13f37b319004785e7",
+      "56becaf93aeaaa14008c9485",
+      "5727f2714b864d1900164073",
+      "57114b1a2419e31400955577",
+      "5725c6dcec44d21400f3d533",
+      "57287f6a3acd2414000dfa53",
+      "5727efabff5b5019007d98e2",
+      "56bf1ae93aeaaa14008c951b",
+      "57277585708984140094de2d",
+      "5711669550c2381900b54ae3",
+      "5737958b1c456719005744c5",
+      "57377ec7c3c5551400e51f09",
+      "57115f0a50c2381900b54aaa",
+      "56e1011ecd28a01900c6740e",
+      "5730c810aca1c71400fe5aa8",
+      "56f802c6a6d7ea1400e1737b",
+      "57373d0cc3c5551400e51e87",
+      "57268ff9f1498d1400e8e3e6",
+      "57267ebfdd62a815002e872e",
+      "572fad30a23a5019007fc86d",
+      "56d6f3500d65d21400198293",
+      "56bf4e1b3aeaaa14008c95c0",
+      "56e120a1e3433e1400422c39",
+      "571cb27fdd7acb1400e4c133",
+      "57060df252bb891400689820",
+      "572fbea404bcaa1900d76c5e",
+      "572ffd9e04bcaa1900d76fcb",
+      "57275409708984140094dc36",
+      "572689385951b619008f761c",
+      "572f65e9b2c2fd14005680cc",
+      "572885023acd2414000dfa83",
+      "5737a0acc3c5551400e51f49",
+      "56bf159b3aeaaa14008c950a",
+      "572831512ca10214002da04b",
+      "57267ce7708984140094c7cc",
+      "572914f46aef051400154a48",
+      "5727f6723acd2414000df0ea",
+      "5728023a4b864d19001641f6",
+      "5725df1838643c19005ace16",
+      "5730eb5b497a881900248a43",
+      "57373a9fc3c5551400e51e7d",
+      "56e75e4500c9c71400d7702e",
+      "56e11afbcd28a01900c675c9",
+      "56de40da4396321400ee2709",
+      "5729e38daf94a219006aa6a1",
+      "571cd5b1dd7acb1400e4c17a",
+      "572989846aef051400154fc4",
+      "572756265951b619008f886e",
+      "56e1dc62cd28a01900c67bca",
+      "56bebde53aeaaa14008c9335",
+      "56bf17653aeaaa14008c9515",
+      "56bf57043aeaaa14008c95d9",
+      "56bf48cc3aeaaa14008c95af",
+      "572fc80b04bcaa1900d76d12",
+      "57113f83b654c5140001fc29",
+      "572fd6aa04bcaa1900d76d9f",
+      "56d9ccacdc89441400fdb842",
+      "57112686b654c5140001fbd6",
+      "56d98b33dc89441400fdb53b",
+      "56e11cedcd28a01900c675e7",
+      "573735e8c3c5551400e51e71",
+      "56d9bf70dc89441400fdb77c",
+      "5737804dc3c5551400e51f0f",
+      "57274971708984140094dbbe",
+      "5711541350c2381900b54a70",
+      "57378b141c456719005744a2",
+      "56f82454a6d7ea1400e173ff",
+      "56e1075ae3433e1400422afb",
+      "57287b322ca10214002da3c0",
+      "573093598ab72b1400f9c5b1",
+      "56d9cb47dc89441400fdb836",
+      "5726a299dd62a815002e8b9e",
+      "57283ce72ca10214002da14d",
+      "56e0ed557aa994140058e7e0",
+      "56bf21b43aeaaa14008c9525",
+      "572680865951b619008f74e9",
+      "56e10412e3433e1400422aba",
+      "56e190bce3433e1400422fcc",
+      "573750f61c4567190057446b",
+      "5730ac782461fd1900a9cf76",
+      "56bf38383aeaaa14008c956d",
+      "5705e63175f01819005e7720",
+      "572922206aef051400154a8a",
+      "5737432bc3c5551400e51e9b",
+      "573755afc3c5551400e51eb4",
+      "57094a79efce8f15003a7dc5",
+      "572fec30947a6a140053cdf4",
+      "57338255d058e614000b5c0d",
+      "57096c95200fba1400367fbf",
+      "57284b904b864d19001648e3",
+      "5725cfd0271a42140099d229",
+      "5737534ec3c5551400e51eae",
+      "573368044776f41900660a29",
+      "57302efe04bcaa1900d772f8",
+      "571136b8a58dae1900cd6d23",
+      "572855973acd2414000df927",
+      "573312fcd058e614000b56e9",
+      "5710e9f8a58dae1900cd6b33",
+      "572a06866aef0514001551c0",
+      "56f82b25a6d7ea1400e1745b",
+      "56e762fe00c9c71400d77076",
+      "572756265951b619008f886f",
+      "56d99179dc89441400fdb56d",
+      "57297547af94a219006aa45b",
+      "572973f76aef051400154f0a",
+      "5726581fdd62a815002e823d",
+      "572679c35951b619008f73dd",
+      "572ffce5a23a5019007fcc16",
+      "57293d6d1d046914007791b7",
+      "5711488ab654c5140001fc3f",
+      "57377c98c3c5551400e51efb",
+      "5730ca6eaca1c71400fe5ac2",
+      "5727cd7dff5b5019007d9590",
+      "56d9ccacdc89441400fdb846",
+      "5726769c708984140094c711",
+      "56e0d54a7aa994140058e76a",
+      "570d26efb3d812140066d490",
+      "5711619950c2381900b54ab1",
+      "5725ba5038643c19005acbe9",
+      "5726487b5951b619008f6ede"
+    ]
+  }
+}

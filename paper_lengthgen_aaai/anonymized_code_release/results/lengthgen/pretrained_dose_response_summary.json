@@ -1,0 +1,125 @@
+{
+  "expected_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "available_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "missing_seeds": [],
+  "alphas": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "dose_response": {
+    "0.0": {
+      "n_calibration_seeds": 5,
+      "n_examples": 640,
+      "mean": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "seed_means": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_source_l1_displacement": 0.0,
+      "mean_control_l1_displacement": 0.0,
+      "mean_absolute_l1_mismatch": 0.0
+    },
+    "0.25": {
+      "n_calibration_seeds": 5,
+      "n_examples": 640,
+      "mean": 0.44560546875,
+      "ci95": [
+        0.41503662109375,
+        0.475390625
+      ],
+      "seed_means": [
+        0.43603515625,
+        0.4775390625,
+        0.41357421875,
+        0.44287109375,
+        0.4580078125
+      ],
+      "mean_source_l1_displacement": 0.3841038804501295,
+      "mean_control_l1_displacement": 0.38735992796719076,
+      "mean_absolute_l1_mismatch": 0.0032560475170612334
+    },
+    "0.5": {
+      "n_calibration_seeds": 5,
+      "n_examples": 640,
+      "mean": 0.81669921875,
+      "ci95": [
+        0.76748046875,
+        0.8669921875
+      ],
+      "seed_means": [
+        0.77978515625,
+        0.8564453125,
+        0.78857421875,
+        0.80078125,
+        0.85791015625
+      ],
+      "mean_source_l1_displacement": 0.768082533404231,
+      "mean_control_l1_displacement": 0.7746432941406965,
+      "mean_absolute_l1_mismatch": 0.006560760736465454
+    },
+    "0.75": {
+      "n_calibration_seeds": 5,
+      "n_examples": 640,
+      "mean": 1.1275390625,
+      "ci95": [
+        1.05947265625,
+        1.19853759765625
+      ],
+      "seed_means": [
+        1.080078125,
+        1.21630859375,
+        1.0751953125,
+        1.11669921875,
+        1.1494140625
+      ],
+      "mean_source_l1_displacement": 1.1521102055907249,
+      "mean_control_l1_displacement": 1.1620838202536106,
+      "mean_absolute_l1_mismatch": 0.009973614662885665
+    },
+    "1.0": {
+      "n_calibration_seeds": 5,
+      "n_examples": 640,
+      "mean": 1.4173828125,
+      "ci95": [
+        1.331640625,
+        1.51376953125
+      ],
+      "seed_means": [
+        1.34814453125,
+        1.54736328125,
+        1.369140625,
+        1.39599609375,
+        1.42626953125
+      ],
+      "mean_source_l1_displacement": 1.5361117467284202,
+      "mean_control_l1_displacement": 1.5494313962757587,
+      "mean_absolute_l1_mismatch": 0.013319649547338486
+    }
+  },
+  "alpha_zero_numerically_zero": true,
+  "mean_effect_nondecreasing": true,
+  "alpha_one_interval_positive": true,
+  "preregistered_success": true
+}

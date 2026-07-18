@@ -1,0 +1,74 @@
+{
+  "input": "C:\\Users\\User\\Downloads\\thermo-safety\\results\\lengthgen\\utility_gap\\routing_utility_gap_results.json",
+  "n_examples": 1024,
+  "n_head_example_pairs": 8192,
+  "figure_point_regression": {
+    "n": 32,
+    "pearson": 0.978290044491271,
+    "slope": 1.3865075322119518,
+    "intercept": -0.10177842575643745,
+    "mae": 0.5012382962164037
+  },
+  "per_example_regression": {
+    "n": 1024,
+    "pearson": 0.9168542085432732,
+    "slope": 1.2670399987149594,
+    "intercept": 0.24224477197842562,
+    "mae": 1.1625474029995313
+  },
+  "per_head_transfer": {
+    "exact_source_argmax_fraction": 0.1849365234375,
+    "median": 0.024998530745506287,
+    "p90": 0.9297601222991944
+  },
+  "per_example_total_transfer": {
+    "median": 0.40965908439829946,
+    "p90": 6.5955368775874375,
+    "effect_by_quartile": [
+      {
+        "quantile": "Q1",
+        "n_examples": 256,
+        "transfer_interval": [
+          0.0,
+          0.1346850951667875
+        ],
+        "mean_total_transfer": 0.05205565782580379,
+        "mean_actual_margin_change": 0.08051555510610342,
+        "positive_effect_fraction": 0.6171875
+      },
+      {
+        "quantile": "Q2",
+        "n_examples": 256,
+        "transfer_interval": [
+          0.1346850951667875,
+          0.40965908439829946
+        ],
+        "mean_total_transfer": 0.2242167490921929,
+        "mean_actual_margin_change": 0.27747492026537657,
+        "positive_effect_fraction": 0.875
+      },
+      {
+        "quantile": "Q3",
+        "n_examples": 256,
+        "transfer_interval": [
+          0.40965908439829946,
+          3.693873377982527
+        ],
+        "mean_total_transfer": 1.280743330149562,
+        "mean_actual_margin_change": 2.436312931124121,
+        "positive_effect_fraction": 0.94921875
+      },
+      {
+        "quantile": "Q4",
+        "n_examples": 256,
+        "transfer_interval": [
+          3.693873377982527,
+          7.999915599822998
+        ],
+        "mean_total_transfer": 6.075001557477663,
+        "mean_actual_margin_change": 12.769139608368278,
+        "positive_effect_fraction": 0.9921875
+      }
+    ]
+  }
+}

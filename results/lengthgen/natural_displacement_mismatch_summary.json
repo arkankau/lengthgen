@@ -1,0 +1,7 @@
+{
+  "definition": "epsilon_i = mean-head source-max L1 displacement minus mean-head matched-control L1 displacement",
+  "n_rows": 1536,
+  "median_absolute_epsilon": 0.0002593994140625,
+  "p95_absolute_epsilon": 0.002315521240234375,
+  "max_absolute_epsilon": 0.04541015625
+}

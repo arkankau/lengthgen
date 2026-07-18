@@ -1,0 +1,10 @@
+{
+  "registered_before_outcomes": true,
+  "tasks": {"pairadd": 2, "tripleadd": 3, "quadadd": 4},
+  "positional_encodings": ["nope", "rope"],
+  "seeds": [0, 1, 2, 3],
+  "head_count": 8,
+  "train_competence_min": 0.8,
+  "primary_contrast": "source_max minus distractor_control exact match at the longest evaluated length",
+  "success_rule": "Every arity must pass train competence and have a positive hierarchical 95% interval."
+}

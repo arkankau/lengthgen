@@ -1,0 +1,42 @@
+device=cpu; models=4; output=results\lengthgen\full_grid\argmax_rope\paired_head_count_results.json
+[train] argmax rope seed=0 steps=4000
+    step 1000/4000 loss=0.0249
+    step 2000/4000 loss=0.0185
+    step 3000/4000 loss=0.0006
+    step 4000/4000 loss=0.0004
+[checkpoint] results\lengthgen\checkpoints\argmax_rope_s0_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[0, 7, 3, 1, 2, 4, 6, 5] mass=[np.float64(0.986), np.float64(0.984), np.float64(0.984), np.float64(0.983), np.float64(0.981), np.float64(0.981), np.float64(0.981), np.float64(0.98)]
+  L=100 source_max token delta by k=1:+0.008, 2:+0.031, 4:+0.203, 8:+0.322
+  L=250 source_max token delta by k=1:+0.018, 2:+0.045, 4:+0.188, 8:+0.398
+[saved 1/4] ('argmax', 'rope', 0, 4000, (1, 2, 4, 8), (100, 250))
+[train] argmax rope seed=1 steps=4000
+    step 1000/4000 loss=0.0259
+    step 2000/4000 loss=0.0103
+    step 3000/4000 loss=0.0011
+    step 4000/4000 loss=0.0001
+[checkpoint] results\lengthgen\checkpoints\argmax_rope_s1_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[4, 3, 6, 2, 5, 7, 1, 0] mass=[np.float64(0.987), np.float64(0.985), np.float64(0.981), np.float64(0.98), np.float64(0.98), np.float64(0.98), np.float64(0.979), np.float64(0.07)]
+  L=100 source_max token delta by k=1:+0.023, 2:+0.035, 4:+0.068, 8:+0.285
+  L=250 source_max token delta by k=1:+0.008, 2:+0.012, 4:+0.047, 8:+0.309
+[saved 2/4] ('argmax', 'rope', 1, 4000, (1, 2, 4, 8), (100, 250))
+[train] argmax rope seed=2 steps=4000
+    step 1000/4000 loss=0.0309
+    step 2000/4000 loss=0.0064
+    step 3000/4000 loss=0.0007
+    step 4000/4000 loss=0.0001
+[checkpoint] results\lengthgen\checkpoints\argmax_rope_s2_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[1, 3, 7, 2, 0, 4, 6, 5] mass=[np.float64(0.986), np.float64(0.985), np.float64(0.983), np.float64(0.983), np.float64(0.982), np.float64(0.981), np.float64(0.978), np.float64(0.967)]
+  L=100 source_max token delta by k=1:+0.016, 2:+0.031, 4:+0.145, 8:+0.262
+  L=250 source_max token delta by k=1:+0.020, 2:+0.043, 4:+0.191, 8:+0.404
+[saved 3/4] ('argmax', 'rope', 2, 4000, (1, 2, 4, 8), (100, 250))
+[train] argmax rope seed=3 steps=4000
+    step 1000/4000 loss=0.0252
+    step 2000/4000 loss=0.0107
+    step 3000/4000 loss=0.0034
+    step 4000/4000 loss=0.0006
+[checkpoint] results\lengthgen\checkpoints\argmax_rope_s3_4L_256d_8h_b512_steps4000.pt
+[circuit] L=5 layer=2 ranking=[3, 6, 4, 1, 5, 2, 0, 7] mass=[np.float64(0.981), np.float64(0.98), np.float64(0.978), np.float64(0.976), np.float64(0.976), np.float64(0.969), np.float64(0.968), np.float64(0.962)]
+  L=100 source_max token delta by k=1:+0.023, 2:+0.037, 4:+0.104, 8:+0.260
+  L=250 source_max token delta by k=1:+0.010, 2:+0.025, 4:+0.121, 8:+0.391
+[saved 4/4] ('argmax', 'rope', 3, 4000, (1, 2, 4, 8), (100, 250))
+saved: results\lengthgen\full_grid\argmax_rope\paired_head_count_results.json

@@ -1,0 +1,130 @@
+{
+  "primary_family": [
+    {
+      "claim": "source-max exceeds distractor control",
+      "unit": "trained model, averaged over evaluation lengths",
+      "n_clusters": 16,
+      "estimate": 0.141845703125,
+      "ci95": [
+        0.0804443359375,
+        0.20550689697265634
+      ],
+      "p_two_sided": 3.0517578125e-05,
+      "cluster_effects": [
+        0.140625,
+        0.2470703125,
+        0.3134765625,
+        0.1630859375,
+        0.3408203125,
+        0.26953125,
+        0.310546875,
+        0.294921875,
+        0.0654296875,
+        0.0556640625,
+        0.00390625,
+        0.0146484375,
+        0.009765625,
+        0.0068359375,
+        0.0146484375,
+        0.0185546875
+      ],
+      "p_holm": 9.1552734375e-05
+    },
+    {
+      "claim": "capacity increases the source-max minus source-min contrast",
+      "unit": "trained model, averaged over evaluation lengths",
+      "n_clusters": 16,
+      "estimate": 0.15045166015625,
+      "ci95": [
+        0.09381103515625,
+        0.20977783203125
+      ],
+      "p_two_sided": 6.103515625e-05,
+      "cluster_effects": [
+        0.169921875,
+        0.09375,
+        0.0341796875,
+        0.134765625,
+        0.025390625,
+        0.04296875,
+        -0.0009765625,
+        0.01953125,
+        0.353515625,
+        0.34765625,
+        0.0791015625,
+        0.080078125,
+        0.1884765625,
+        0.2861328125,
+        0.2783203125,
+        0.2744140625
+      ],
+      "p_holm": 0.0001220703125
+    },
+    {
+      "claim": "utility-selected source-max exceeds matched control on natural QA",
+      "unit": "independent calibration seed",
+      "n_clusters": 6,
+      "estimate": 0.37841796875,
+      "ci95": [
+        0.25325113932291665,
+        0.5201822916666666
+      ],
+      "p_two_sided": 0.03125,
+      "cluster_effects": [
+        0.404296875,
+        0.26171875,
+        0.3427734375,
+        0.603515625,
+        0.3076171875,
+        0.3505859375
+      ],
+      "p_holm": 0.03125
+    }
+  ],
+  "multiplicity": "two-sided exact cluster sign-flip tests with Holm adjustment across three claims",
+  "exploratory_intervals": "all other reported intervals are descriptive and unadjusted",
+  "vacuity": {
+    "n_examples": 1024,
+    "head_example_vacuous_fraction": 0.1849365234375,
+    "all_selected_heads_vacuous_count": 86,
+    "all_selected_heads_vacuous_fraction": 0.083984375,
+    "active_circuit_count": 938,
+    "all_rows_mean_margin_effect": 3.8908607537159696,
+    "active_circuit_mean_margin_effect": 4.247592123459651,
+    "active_circuit_ci95": [
+      3.8625106930224375,
+      4.639503233442937
+    ]
+  },
+  "ceiling_robust_association": {
+    "n_points": 384,
+    "ceiling_count": 151,
+    "ceiling_fraction": 0.3932291666666667,
+    "attention": {
+      "pearson": 0.9397226280122101,
+      "spearman": 0.8541284650582217,
+      "kendall_tau_b": 0.7132175054189618,
+      "non_ceiling_n": 233,
+      "non_ceiling_spearman": 0.9121670141226551,
+      "non_ceiling_kendall_tau_b": 0.7506996065594221,
+      "mean_within_cell_spearman": 0.9471915763002452,
+      "within_cell_spearman_range": [
+        0.8677830813411085,
+        0.9842483944032321
+      ]
+    },
+    "variance": {
+      "pearson": 0.45451264176254547,
+      "spearman": 0.4448798335382042,
+      "kendall_tau_b": 0.3379861431658808,
+      "non_ceiling_n": 233,
+      "non_ceiling_spearman": 0.543774964878052,
+      "non_ceiling_kendall_tau_b": 0.401606952207339,
+      "mean_within_cell_spearman": 0.7771811664855679,
+      "within_cell_spearman_range": [
+        0.20391035147369807,
+        0.9870941056179416
+      ]
+    }
+  }
+}

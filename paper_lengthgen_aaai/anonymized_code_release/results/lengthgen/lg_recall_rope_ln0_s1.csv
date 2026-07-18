@@ -1,0 +1,16 @@
+task,pe,post_attn_ln,length,exact_match,attn_var_L0,attn_var_L1
+recall,rope,0,1,1.0,0.1457,0.14468
+recall,rope,0,2,0.7344,0.15742,0.15779
+recall,rope,0,3,0.5,0.15416,0.16696
+recall,rope,0,4,0.375,0.14866,0.15617
+recall,rope,0,5,0.4062,0.13816,0.15639
+recall,rope,0,6,0.3594,0.13019,0.15128
+recall,rope,0,7,0.3125,0.12453,0.14421
+recall,rope,0,8,0.2812,0.11544,0.13774
+recall,rope,0,9,0.2266,0.11048,0.13439
+recall,rope,0,10,0.25,0.10112,0.13286
+recall,rope,0,11,0.1875,0.09762,0.12773
+recall,rope,0,12,0.2109,0.09459,0.12658
+recall,rope,0,13,0.2656,0.08993,0.12072
+recall,rope,0,14,0.2109,0.08573,0.11322
+recall,rope,0,15,0.1953,0.08262,0.11628

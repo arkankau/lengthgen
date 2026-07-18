@@ -1,0 +1,19 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B",
+  "seed": 1,
+  "selected_layer": 14,
+  "selected_heads": [3, 4, 0, 1],
+  "summary": {
+    "n_examples": 128,
+    "fixed_spectrum_swap_margin_delta": 0.029617629945278168,
+    "fixed_spectrum_swap_margin_delta_ci95": [-0.006268677301704884, 0.08485681824386118],
+    "source_value_corruption_margin_delta": -7.486076138913631,
+    "source_value_corruption_margin_delta_ci95": [-7.878167376294732, -7.104974780417979],
+    "clean_to_corrupt_activation_patch_rescue": 0.2753845043480396,
+    "clean_to_corrupt_activation_patch_rescue_ci95": [0.20452835252508522, 0.35146704679355023],
+    "median_fraction_of_corruption_damage_recovered": 0.025804413482546806,
+    "fixed_spectrum_mean_l1_displacement": 0.12182480772025883,
+    "activation_patch_rms_displacement": 0.11915148328989744,
+    "fixed_spectrum_max_abs_invariant_error": 2.384185791015625e-07
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "expected_seeds": [
+    0,
+    1,
+    2
+  ],
+  "available_seeds": [
+    0,
+    1,
+    2
+  ],
+  "missing_seeds": [],
+  "pilot": {
+    "0": {
+      "main_accuracy": 0.5,
+      "gold_only_accuracy": 0.5625,
+      "no_context_accuracy": 0.109375,
+      "context_accuracy_gain": 0.390625,
+      "gate_pass": true
+    },
+    "1": {
+      "main_accuracy": 0.453125,
+      "gold_only_accuracy": 0.46875,
+      "no_context_accuracy": 0.09375,
+      "context_accuracy_gain": 0.359375,
+      "gate_pass": false
+    },
+    "2": {
+      "main_accuracy": 0.421875,
+      "gold_only_accuracy": 0.5,
+      "no_context_accuracy": 0.03125,
+      "context_accuracy_gain": 0.390625,
+      "gate_pass": false
+    }
+  },
+  "passing_seeds": [
+    0
+  ],
+  "at_least_two_gates_pass": false,
+  "selectors": {
+    "source_mass": {
+      "n_calibration_seeds": 1,
+      "n_examples": 128,
+      "mean": 0.5556640625,
+      "ci95": [
+        0.33153076171875,
+        0.810546875
+      ],
+      "seed_means": [
+        0.5556640625
+      ],
+      "positive_fraction": 0.5859375
+    },
+    "utility_gain": {
+      "n_calibration_seeds": 1,
+      "n_examples": 128,
+      "mean": 2.212890625,
+      "ci95": [
+        1.79490966796875,
+        2.6308837890624996
+      ],
+      "seed_means": [
+        2.212890625
+      ],
+      "positive_fraction": 0.8359375
+    }
+  },
+  "utility_minus_source_mass": {
+    "n_calibration_seeds": 1,
+    "n_examples": 128,
+    "mean": 1.6572265625,
+    "ci95": [
+      1.2548583984375,
+      2.056640625
+    ],
+    "seed_means": [
+      1.6572265625
+    ],
+    "positive_fraction": 0.71875
+  },
+  "primary_interval_positive": false,
+  "utility_mean_exceeds_source_mass": false,
+  "preregistered_success": false,
+  "multi_evidence_triggered": false
+}

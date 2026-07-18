@@ -1,0 +1,10 @@
+numpy
+scipy
+torch
+transformers
+matplotlib
+pandas
+pytest
+datasets
+accelerate
+bitsandbytes

@@ -1,0 +1,30 @@
+{
+  "status": "seed_level_console_recovery",
+  "raw_record_status": "The ten raw per-example Drive files were unavailable in the local checkout; all seed means were recovered from the completed Colab log.",
+  "interval_type": "calibration-seed bootstrap over ten seed means",
+  "available_seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  "selectors": {
+    "source_gradient": {"mean": 0.750, "ci95": [0.682, 0.819]},
+    "utility_gain": {"mean": 0.600, "ci95": [0.482, 0.712]},
+    "utility_gap": {"mean": 0.296, "ci95": [0.232, 0.354]},
+    "random": {"mean": -0.019, "ci95": [-0.058, 0.020]},
+    "gradient_magnitude": {"mean": -0.033, "ci95": [-0.237, 0.190]},
+    "source_mass": {"mean": -0.040, "ci95": [-0.055, -0.024]},
+    "transfer_mass": {"mean": -0.089, "ci95": [-0.178, -0.006]}
+  },
+  "utility_gain_minus_source_gradient": {
+    "mean": -0.150,
+    "ci95": [-0.274, -0.026]
+  },
+  "ranking": [
+    "source_gradient",
+    "utility_gain",
+    "utility_gap",
+    "random",
+    "gradient_magnitude",
+    "source_mass",
+    "transfer_mass"
+  ],
+  "preregistered_utility_specificity_success": false,
+  "interpretation": "Output-conditioned selectors beat task-agnostic source-mass and transfer-mass selectors, but utility gain is not uniquely best."
+}

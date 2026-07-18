@@ -1,0 +1,49 @@
+{
+  "status": "console_recovery_only",
+  "date": "2026-07-18",
+  "warning": "Colab disconnected before the raw result directory was archived. Values below were parsed from the persisted notebook stdout, which prints metrics rounded to three decimals. Do not use this artifact for per-example intervals.",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "dtype": "bf16",
+  "lengths": [5, 20, 80, 160],
+  "primary_contrast": "source_max margin delta minus distractor_control margin delta",
+  "prospective_seeds": [
+    {
+      "seed": 1,
+      "selected_layer": 14,
+      "selected_heads": [3, 4, 0, 1],
+      "primary_margin_by_length": {"5": 0.056, "20": 0.064, "80": 0.030, "160": 0.013},
+      "mean_primary_margin": 0.04075
+    },
+    {
+      "seed": 2,
+      "selected_layer": 14,
+      "selected_heads": [3, 4, 0, 1],
+      "primary_margin_by_length": {"5": 0.053, "20": 0.041, "80": 0.023, "160": 0.026},
+      "mean_primary_margin": 0.03575
+    },
+    {
+      "seed": 3,
+      "selected_layer": 14,
+      "selected_heads": [3, 0, 4, 1],
+      "primary_margin_by_length": {"5": 0.079, "20": 0.064, "80": 0.028, "160": 0.040},
+      "mean_primary_margin": 0.05275
+    },
+    {
+      "seed": 4,
+      "selected_layer": 14,
+      "selected_heads": [3, 0, 4, 1],
+      "primary_margin_by_length": {"5": 0.065, "20": 0.048, "80": 0.027, "160": 0.016},
+      "mean_primary_margin": 0.039
+    },
+    {
+      "seed": 5,
+      "selected_layer": 14,
+      "selected_heads": [3, 0, 4, 1],
+      "primary_margin_by_length": {"5": 0.083, "20": 0.062, "80": 0.025, "160": 0.004},
+      "mean_primary_margin": 0.0435
+    }
+  ],
+  "prospective_mean": 0.04235,
+  "all_prospective_seed_means_positive": true,
+  "six_seed_exact_sign_flip_p_if_combined_with_observed_positive_seed_0": 0.03125
+}

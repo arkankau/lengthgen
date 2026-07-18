@@ -1,0 +1,301 @@
+{
+  "protocol": "exact_headline_qwen_replication",
+  "expected_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "available_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "missing_seeds": [],
+  "original_seed": 0,
+  "prospective_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "setup_match": {
+    "model": "Qwen/Qwen2.5-1.5B",
+    "dtype": "torch.bfloat16",
+    "selection_length": 5,
+    "lengths": [
+      5,
+      20,
+      80,
+      160
+    ],
+    "examples_per_length": 128,
+    "contrast": "source_max minus distractor_control"
+  },
+  "seeds": [
+    {
+      "seed": 0,
+      "dtype": "torch.bfloat16",
+      "selection_length": 5,
+      "selected_layer": 19,
+      "selected_heads": [
+        3,
+        1,
+        0,
+        2
+      ],
+      "lengths": {
+        "5": {
+          "n": 128,
+          "mean_margin": 0.879638671875,
+          "mean_accuracy": 0.1171875
+        },
+        "20": {
+          "n": 128,
+          "mean_margin": 2.1123046875,
+          "mean_accuracy": 0.1640625
+        },
+        "80": {
+          "n": 128,
+          "mean_margin": 2.40380859375,
+          "mean_accuracy": 0.109375
+        },
+        "160": {
+          "n": 128,
+          "mean_margin": 2.13134765625,
+          "mean_accuracy": 0.0625
+        }
+      },
+      "mean_margin": 1.88177490234375,
+      "mean_accuracy": 0.11328125
+    },
+    {
+      "seed": 1,
+      "dtype": "torch.bfloat16",
+      "selection_length": 5,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        4,
+        0,
+        1
+      ],
+      "lengths": {
+        "5": {
+          "n": 128,
+          "mean_margin": 0.0556640625,
+          "mean_accuracy": 0.0
+        },
+        "20": {
+          "n": 128,
+          "mean_margin": 0.064453125,
+          "mean_accuracy": 0.0078125
+        },
+        "80": {
+          "n": 128,
+          "mean_margin": 0.02978515625,
+          "mean_accuracy": 0.0
+        },
+        "160": {
+          "n": 128,
+          "mean_margin": 0.01220703125,
+          "mean_accuracy": 0.0
+        }
+      },
+      "mean_margin": 0.04052734375,
+      "mean_accuracy": 0.001953125
+    },
+    {
+      "seed": 2,
+      "dtype": "torch.bfloat16",
+      "selection_length": 5,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        4,
+        0,
+        1
+      ],
+      "lengths": {
+        "5": {
+          "n": 128,
+          "mean_margin": 0.05322265625,
+          "mean_accuracy": 0.03125
+        },
+        "20": {
+          "n": 128,
+          "mean_margin": 0.041015625,
+          "mean_accuracy": 0.015625
+        },
+        "80": {
+          "n": 128,
+          "mean_margin": 0.0234375,
+          "mean_accuracy": 0.0
+        },
+        "160": {
+          "n": 128,
+          "mean_margin": 0.02685546875,
+          "mean_accuracy": 0.0
+        }
+      },
+      "mean_margin": 0.0361328125,
+      "mean_accuracy": 0.01171875
+    },
+    {
+      "seed": 3,
+      "dtype": "torch.bfloat16",
+      "selection_length": 5,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "lengths": {
+        "5": {
+          "n": 128,
+          "mean_margin": 0.0791015625,
+          "mean_accuracy": 0.015625
+        },
+        "20": {
+          "n": 128,
+          "mean_margin": 0.06494140625,
+          "mean_accuracy": 0.0546875
+        },
+        "80": {
+          "n": 128,
+          "mean_margin": 0.0283203125,
+          "mean_accuracy": 0.0078125
+        },
+        "160": {
+          "n": 128,
+          "mean_margin": 0.0400390625,
+          "mean_accuracy": -0.0078125
+        }
+      },
+      "mean_margin": 0.0531005859375,
+      "mean_accuracy": 0.017578125
+    },
+    {
+      "seed": 4,
+      "dtype": "torch.bfloat16",
+      "selection_length": 5,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "lengths": {
+        "5": {
+          "n": 128,
+          "mean_margin": 0.0654296875,
+          "mean_accuracy": -0.0078125
+        },
+        "20": {
+          "n": 128,
+          "mean_margin": 0.0478515625,
+          "mean_accuracy": 0.015625
+        },
+        "80": {
+          "n": 128,
+          "mean_margin": 0.02685546875,
+          "mean_accuracy": 0.0
+        },
+        "160": {
+          "n": 128,
+          "mean_margin": 0.01611328125,
+          "mean_accuracy": 0.0
+        }
+      },
+      "mean_margin": 0.0390625,
+      "mean_accuracy": 0.001953125
+    },
+    {
+      "seed": 5,
+      "dtype": "torch.bfloat16",
+      "selection_length": 5,
+      "selected_layer": 14,
+      "selected_heads": [
+        3,
+        0,
+        4,
+        1
+      ],
+      "lengths": {
+        "5": {
+          "n": 128,
+          "mean_margin": 0.0830078125,
+          "mean_accuracy": 0.015625
+        },
+        "20": {
+          "n": 128,
+          "mean_margin": 0.06201171875,
+          "mean_accuracy": 0.0390625
+        },
+        "80": {
+          "n": 128,
+          "mean_margin": 0.02490234375,
+          "mean_accuracy": 0.015625
+        },
+        "160": {
+          "n": 128,
+          "mean_margin": 0.00439453125,
+          "mean_accuracy": 0.0
+        }
+      },
+      "mean_margin": 0.0435791015625,
+      "mean_accuracy": 0.017578125
+    }
+  ],
+  "margin": {
+    "mean": 0.349029541015625,
+    "hierarchical_ci95": [
+      0.0372314453125,
+      0.9816698710123697
+    ],
+    "seed_means": [
+      1.88177490234375,
+      0.04052734375,
+      0.0361328125,
+      0.0531005859375,
+      0.0390625,
+      0.0435791015625
+    ],
+    "exact_sign_flip_p": 0.03125
+  },
+  "original_result": {
+    "available": true,
+    "mean_margin": 1.88177490234375
+  },
+  "new_seed_replication": {
+    "complete": true,
+    "mean": 0.04248046875,
+    "seed_means": [
+      0.04052734375,
+      0.0361328125,
+      0.0531005859375,
+      0.0390625,
+      0.0435791015625
+    ],
+    "all_positive": true,
+    "exact_sign_flip_p": 0.0625,
+    "note": "With five prospective seeds, the smallest attainable two-sided exact sign-flip p-value is 0.0625."
+  },
+  "accuracy": {
+    "mean": 0.02734375,
+    "hierarchical_ci95": [
+      0.0048828125,
+      0.06380208333333333
+    ]
+  },
+  "prospective_success": true
+}

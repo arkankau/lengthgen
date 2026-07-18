@@ -1,0 +1,648 @@
+{
+  "expected_seeds_per_model": [
+    0,
+    1,
+    2
+  ],
+  "models": {
+    "EleutherAI/pythia-1.4b": {
+      "expected_seeds": [
+        0,
+        1,
+        2
+      ],
+      "available_seeds": [
+        0,
+        1,
+        2
+      ],
+      "missing_seeds": [],
+      "selectors": {
+        "source_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.00634765625,
+          "ci95": [
+            -0.056884765625,
+            0.07047729492187498
+          ],
+          "seed_means": [
+            -0.02490234375,
+            0.04150390625,
+            0.00244140625
+          ],
+          "positive_fraction": 0.4609375
+        },
+        "transfer_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": -0.3225911458333333,
+          "ci95": [
+            -0.3815104166666667,
+            -0.2654581705729167
+          ],
+          "seed_means": [
+            -0.339599609375,
+            -0.30517578125,
+            -0.322998046875
+          ],
+          "positive_fraction": 0.2421875
+        },
+        "utility_gap": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.3592936197916667,
+          "ci95": [
+            0.25178426106770835,
+            0.473309326171875
+          ],
+          "seed_means": [
+            0.299072265625,
+            0.30908203125,
+            0.4697265625
+          ],
+          "positive_fraction": 0.703125
+        },
+        "utility_gain": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.5193684895833334,
+          "ci95": [
+            0.4374979654947917,
+            0.6068623860677081
+          ],
+          "seed_means": [
+            0.596923828125,
+            0.4755859375,
+            0.485595703125
+          ],
+          "positive_fraction": 0.8098958333333334
+        },
+        "source_gradient": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.3904622395833333,
+          "ci95": [
+            0.2587809244791667,
+            0.49951171875
+          ],
+          "seed_means": [
+            0.26171875,
+            0.43994140625,
+            0.4697265625
+          ],
+          "positive_fraction": 0.7317708333333334
+        },
+        "gradient_magnitude": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.006917317708333333,
+          "ci95": [
+            -0.20093180338541666,
+            0.2954935709635416
+          ],
+          "seed_means": [
+            0.3125,
+            -0.182373046875,
+            -0.109375
+          ],
+          "positive_fraction": 0.4791666666666667
+        },
+        "random": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.11140950520833333,
+          "ci95": [
+            -0.09669392903645832,
+            0.2666035970052083
+          ],
+          "seed_means": [
+            -0.108642578125,
+            0.214111328125,
+            0.228759765625
+          ],
+          "positive_fraction": 0.5104166666666666
+        }
+      },
+      "ranking": [
+        "utility_gain",
+        "source_gradient",
+        "utility_gap",
+        "random",
+        "gradient_magnitude",
+        "source_mass",
+        "transfer_mass"
+      ],
+      "utility_gain_pairwise_advantage": {
+        "source_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.5130208333333334,
+          "ci95": [
+            0.3966451009114583,
+            0.6360697428385417
+          ],
+          "seed_means": [
+            0.621826171875,
+            0.43408203125,
+            0.483154296875
+          ],
+          "positive_fraction": 0.7265625
+        },
+        "transfer_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.8419596354166666,
+          "ci95": [
+            0.7301371256510416,
+            0.9596394856770832
+          ],
+          "seed_means": [
+            0.9365234375,
+            0.78076171875,
+            0.80859375
+          ],
+          "positive_fraction": 0.8359375
+        },
+        "utility_gap": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.16007486979166666,
+          "ci95": [
+            0.010819498697916671,
+            0.3139709472656249
+          ],
+          "seed_means": [
+            0.2978515625,
+            0.16650390625,
+            0.015869140625
+          ],
+          "positive_fraction": 0.5546875
+        },
+        "source_gradient": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.12890625,
+          "ci95": [
+            -0.026206461588541664,
+            0.3189310709635416
+          ],
+          "seed_means": [
+            0.335205078125,
+            0.03564453125,
+            0.015869140625
+          ],
+          "positive_fraction": 0.5546875
+        },
+        "gradient_magnitude": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.512451171875,
+          "ci95": [
+            0.29736328125,
+            0.69482421875
+          ],
+          "seed_means": [
+            0.284423828125,
+            0.657958984375,
+            0.594970703125
+          ],
+          "positive_fraction": 0.703125
+        }
+      },
+      "primary_interval_positive": true,
+      "utility_gain_ranks_first": true,
+      "all_preregistered_mean_advantages_positive": true,
+      "preregistered_success": true,
+      "universal_superiority_supported": false
+    },
+    "HuggingFaceTB/SmolLM2-1.7B": {
+      "expected_seeds": [
+        0,
+        1,
+        2
+      ],
+      "available_seeds": [
+        0,
+        1,
+        2
+      ],
+      "missing_seeds": [],
+      "selectors": {
+        "source_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.005859375,
+          "ci95": [
+            -0.039225260416666664,
+            0.042154947916666664
+          ],
+          "seed_means": [
+            0.0283203125,
+            0.0283203125,
+            -0.0390625
+          ],
+          "positive_fraction": 0.359375
+        },
+        "transfer_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": -0.001953125,
+          "ci95": [
+            -0.036946614583333336,
+            0.035319010416666664
+          ],
+          "seed_means": [
+            -0.00244140625,
+            -0.02294921875,
+            0.01953125
+          ],
+          "positive_fraction": 0.3802083333333333
+        },
+        "utility_gap": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.859375,
+          "ci95": [
+            0.75406494140625,
+            0.9679361979166666
+          ],
+          "seed_means": [
+            0.962890625,
+            0.83642578125,
+            0.77880859375
+          ],
+          "positive_fraction": 0.9140625
+        },
+        "utility_gain": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.2527669270833333,
+          "ci95": [
+            1.0944010416666667,
+            1.3947021484375
+          ],
+          "seed_means": [
+            1.09619140625,
+            1.306640625,
+            1.35546875
+          ],
+          "positive_fraction": 0.96875
+        },
+        "source_gradient": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.96826171875,
+          "ci95": [
+            0.89892578125,
+            1.0403645833333333
+          ],
+          "seed_means": [
+            0.962890625,
+            0.99072265625,
+            0.951171875
+          ],
+          "positive_fraction": 0.9427083333333334
+        },
+        "gradient_magnitude": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": -0.9798177083333334,
+          "ci95": [
+            -1.2690470377604166,
+            -0.7522786458333334
+          ],
+          "seed_means": [
+            -1.28515625,
+            -0.78173828125,
+            -0.87255859375
+          ],
+          "positive_fraction": 0.1171875
+        },
+        "random": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.012369791666666666,
+          "ci95": [
+            -0.012369791666666666,
+            0.041829427083333336
+          ],
+          "seed_means": [
+            0.00390625,
+            0.0,
+            0.033203125
+          ],
+          "positive_fraction": 0.4010416666666667
+        }
+      },
+      "ranking": [
+        "utility_gain",
+        "source_gradient",
+        "utility_gap",
+        "random",
+        "source_mass",
+        "transfer_mass",
+        "gradient_magnitude"
+      ],
+      "utility_gain_pairwise_advantage": {
+        "source_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.2469075520833333,
+          "ci95": [
+            1.0686848958333333,
+            1.4186238606770833
+          ],
+          "seed_means": [
+            1.06787109375,
+            1.2783203125,
+            1.39453125
+          ],
+          "positive_fraction": 0.9583333333333334
+        },
+        "transfer_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.2547200520833333,
+          "ci95": [
+            1.0992838541666667,
+            1.396484375
+          ],
+          "seed_means": [
+            1.0986328125,
+            1.32958984375,
+            1.3359375
+          ],
+          "positive_fraction": 0.9479166666666666
+        },
+        "utility_gap": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.3933919270833333,
+          "ci95": [
+            0.1501993815104167,
+            0.59456787109375
+          ],
+          "seed_means": [
+            0.13330078125,
+            0.47021484375,
+            0.57666015625
+          ],
+          "positive_fraction": 0.6640625
+        },
+        "source_gradient": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.2845052083333333,
+          "ci95": [
+            0.13606770833333334,
+            0.4259480794270833
+          ],
+          "seed_means": [
+            0.13330078125,
+            0.31591796875,
+            0.404296875
+          ],
+          "positive_fraction": 0.5989583333333334
+        },
+        "gradient_magnitude": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 2.2325846354166665,
+          "ci95": [
+            2.0366170247395834,
+            2.427734375
+          ],
+          "seed_means": [
+            2.38134765625,
+            2.08837890625,
+            2.22802734375
+          ],
+          "positive_fraction": 0.9765625
+        }
+      },
+      "primary_interval_positive": true,
+      "utility_gain_ranks_first": true,
+      "all_preregistered_mean_advantages_positive": true,
+      "preregistered_success": true,
+      "universal_superiority_supported": true
+    },
+    "Qwen/Qwen2.5-1.5B": {
+      "expected_seeds": [
+        0,
+        1,
+        2
+      ],
+      "available_seeds": [
+        0,
+        1,
+        2
+      ],
+      "missing_seeds": [],
+      "selectors": {
+        "source_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.06884765625,
+          "ci95": [
+            0.045084635416666664,
+            0.09635416666666667
+          ],
+          "seed_means": [
+            0.05419921875,
+            0.06298828125,
+            0.08935546875
+          ],
+          "positive_fraction": 0.53125
+        },
+        "transfer_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.537353515625,
+          "ci95": [
+            0.01602172851562501,
+            1.0126220703125
+          ],
+          "seed_means": [
+            0.68115234375,
+            0.782958984375,
+            0.14794921875
+          ],
+          "positive_fraction": 0.5625
+        },
+        "utility_gap": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.4925130208333333,
+          "ci95": [
+            1.3961588541666667,
+            1.5904947916666667
+          ],
+          "seed_means": [
+            1.46484375,
+            1.4697265625,
+            1.54296875
+          ],
+          "positive_fraction": 0.9557291666666666
+        },
+        "utility_gain": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.4925130208333333,
+          "ci95": [
+            1.3964803059895834,
+            1.5890340169270833
+          ],
+          "seed_means": [
+            1.46484375,
+            1.4697265625,
+            1.54296875
+          ],
+          "positive_fraction": 0.9557291666666666
+        },
+        "source_gradient": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.4925130208333333,
+          "ci95": [
+            1.3946940104166667,
+            1.5885416666666667
+          ],
+          "seed_means": [
+            1.46484375,
+            1.4697265625,
+            1.54296875
+          ],
+          "positive_fraction": 0.9557291666666666
+        },
+        "gradient_magnitude": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.033203125,
+          "ci95": [
+            -0.005696614583333333,
+            0.0693359375
+          ],
+          "seed_means": [
+            0.0146484375,
+            0.0517578125,
+            0.033203125
+          ],
+          "positive_fraction": 0.5286458333333334
+        },
+        "random": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.046549479166666664,
+          "ci95": [
+            -0.0234375,
+            0.15218098958333334
+          ],
+          "seed_means": [
+            0.15771484375,
+            -0.01611328125,
+            -0.001953125
+          ],
+          "positive_fraction": 0.4791666666666667
+        }
+      },
+      "ranking": [
+        "utility_gap",
+        "utility_gain",
+        "source_gradient",
+        "transfer_mass",
+        "source_mass",
+        "random",
+        "gradient_magnitude"
+      ],
+      "utility_gain_pairwise_advantage": {
+        "source_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.4236653645833333,
+          "ci95": [
+            1.3315388997395834,
+            1.5154663085937499
+          ],
+          "seed_means": [
+            1.41064453125,
+            1.40673828125,
+            1.45361328125
+          ],
+          "positive_fraction": 0.9453125
+        },
+        "transfer_mass": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.9551595052083334,
+          "ci95": [
+            0.4503397623697917,
+            1.5060363769531249
+          ],
+          "seed_means": [
+            0.78369140625,
+            0.686767578125,
+            1.39501953125
+          ],
+          "positive_fraction": 0.578125
+        },
+        "utility_gap": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "seed_means": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "positive_fraction": 0.0
+        },
+        "source_gradient": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "seed_means": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "positive_fraction": 0.0
+        },
+        "gradient_magnitude": {
+          "n_calibration_seeds": 3,
+          "n_examples": 384,
+          "mean": 1.4593098958333333,
+          "ci95": [
+            1.353515625,
+            1.5659261067708332
+          ],
+          "seed_means": [
+            1.4501953125,
+            1.41796875,
+            1.509765625
+          ],
+          "positive_fraction": 0.9427083333333334
+        }
+      },
+      "primary_interval_positive": true,
+      "utility_gain_ranks_first": false,
+      "all_preregistered_mean_advantages_positive": false,
+      "preregistered_success": false,
+      "universal_superiority_supported": false
+    }
+  },
+  "complete_models": 3,
+  "top_selector_counts": {
+    "utility_gain": 2,
+    "utility_gap": 1
+  },
+  "cross_family_claim": "heterogeneous_or_incomplete"
+}

@@ -1,0 +1,49 @@
+=== RUN pe=nope post_attn_ln=0 seed=0 -> results/lengthgen/lg_nope_ln0_s0.csv ===
+[pe=nope postLN=0] step      0 loss 2.810 | L5:acc=0.00,var=[0.02616, 0.03134] | L10:acc=0.00,var=[0.02139, 0.02502] | L15:acc=0.00,var=[0.01859, 0.02193]
+[pe=nope postLN=0] step   1000 loss 1.540 | L5:acc=0.00,var=[0.19443, 0.86616] | L10:acc=0.00,var=[0.13163, 0.9421] | L15:acc=0.00,var=[0.10607, 0.96022]
+[pe=nope postLN=0] step   2000 loss 0.900 | L5:acc=0.00,var=[0.16357, 0.66513] | L10:acc=0.00,var=[0.11272, 0.72224] | L15:acc=0.00,var=[0.09687, 0.75096]
+[pe=nope postLN=0] step   3000 loss 0.880 | L5:acc=0.00,var=[0.15688, 0.72091] | L10:acc=0.00,var=[0.11263, 0.83978] | L15:acc=0.00,var=[0.10111, 0.91393]
+[pe=nope postLN=0] step   4000 loss 0.787 | L5:acc=0.00,var=[0.14971, 0.7425] | L10:acc=0.00,var=[0.11054, 0.89249] | L15:acc=0.00,var=[0.10174, 0.98784]
+[pe=nope postLN=0] wrote results/lengthgen/lg_nope_ln0_s0.csv
+=== RUN pe=nope post_attn_ln=0 seed=1 -> results/lengthgen/lg_nope_ln0_s1.csv ===
+[pe=nope postLN=0] step      0 loss 2.762 | L5:acc=0.00,var=[0.03095, 0.03984] | L10:acc=0.00,var=[0.02435, 0.03332] | L15:acc=0.00,var=[0.02153, 0.03105]
+[pe=nope postLN=0] step   1000 loss 1.563 | L5:acc=0.00,var=[0.1887, 1.31059] | L10:acc=0.00,var=[0.12377, 1.44383] | L15:acc=0.00,var=[0.09976, 1.5274]
+[pe=nope postLN=0] step   2000 loss 0.975 | L5:acc=0.00,var=[0.178, 0.69682] | L10:acc=0.00,var=[0.12219, 0.81868] | L15:acc=0.00,var=[0.10311, 0.89025]
+[pe=nope postLN=0] step   3000 loss 0.853 | L5:acc=0.00,var=[0.1713, 0.77701] | L10:acc=0.00,var=[0.12416, 0.94771] | L15:acc=0.00,var=[0.10884, 1.05783]
+[pe=nope postLN=0] step   4000 loss 0.761 | L5:acc=0.00,var=[0.16716, 0.7885] | L10:acc=0.00,var=[0.12598, 1.00397] | L15:acc=0.00,var=[0.11299, 1.12702]
+[pe=nope postLN=0] wrote results/lengthgen/lg_nope_ln0_s1.csv
+=== RUN pe=nope post_attn_ln=1 seed=0 -> results/lengthgen/lg_nope_ln1_s0.csv ===
+[pe=nope postLN=1] step      0 loss 2.802 | L5:acc=0.00,var=[0.02627, 0.05191] | L10:acc=0.00,var=[0.02154, 0.04927] | L15:acc=0.00,var=[0.01875, 0.04657]
+[pe=nope postLN=1] step   1000 loss 1.408 | L5:acc=0.00,var=[0.05824, 0.23217] | L10:acc=0.00,var=[0.03944, 0.28557] | L15:acc=0.00,var=[0.0331, 0.3204]
+[pe=nope postLN=1] step   2000 loss 0.805 | L5:acc=0.00,var=[0.0848, 0.25216] | L10:acc=0.00,var=[0.05985, 0.29015] | L15:acc=0.00,var=[0.05155, 0.32036]
+[pe=nope postLN=1] step   3000 loss 0.816 | L5:acc=0.00,var=[0.09117, 0.21966] | L10:acc=0.00,var=[0.06434, 0.24737] | L15:acc=0.00,var=[0.05593, 0.2684]
+[pe=nope postLN=1] step   4000 loss 0.732 | L5:acc=0.00,var=[0.10243, 0.19012] | L10:acc=0.00,var=[0.07353, 0.20915] | L15:acc=0.00,var=[0.064, 0.2246]
+[pe=nope postLN=1] wrote results/lengthgen/lg_nope_ln1_s0.csv
+=== RUN pe=nope post_attn_ln=1 seed=1 -> results/lengthgen/lg_nope_ln1_s1.csv ===
+[pe=nope postLN=1] step      0 loss 2.735 | L5:acc=0.00,var=[0.03111, 0.06136] | L10:acc=0.00,var=[0.02449, 0.0577] | L15:acc=0.00,var=[0.02169, 0.05525]
+[pe=nope postLN=1] step   1000 loss 1.392 | L5:acc=0.00,var=[0.06572, 0.28199] | [pe=rope postLN=0] step      0 loss 2.810 | L5:acc=0.00,var=[0.02629, 0.03144] | L10:acc=0.00,var=[0.02141, 0.02506] | L15:acc=0.00,var=[0.01856, 0.0219]
+[pe=rope postLN=0] step   1000 loss 1.017 | L5:acc=0.00,var=[0.14481, 1.09746] | L10:acc=0.00,var=[0.12586, 1.37911] | L15:acc=0.00,var=[0.12223, 1.5267]
+[pe=rope postLN=0] step   2000 loss 0.080 | L5:acc=0.45,var=[0.13442, 0.2805] | L10:acc=0.00,var=[0.12538, 0.27322] | L15:acc=0.00,var=[0.12165, 0.2698]
+[pe=rope postLN=0] step   3000 loss 0.009 | L5:acc=0.86,var=[0.17363, 0.26833] | L10:acc=0.00,var=[0.18304, 0.25048] | L15:acc=0.00,var=[0.18311, 0.24992]
+[pe=rope postLN=0] step   4000 loss 0.019 | L5:acc=0.99,var=[0.2[pe=rope postLN=0] step      0 loss 2.810 | L5:acc=0.00,var=[0.02629, 0.03144] | L10:acc=0.00,var=[0.02141, 0.02506] | L15:acc=0.00,var=[0.01856, 0.0219]
+[pe=rope postLN=0] step   1000 loss 1.017 | L5:acc=0.00,var=[0.14481, 1.09746] | [pe=rope postLN=0] step      0 loss 2.764 | L5:acc=0.00,var=[0.03104, 0.03989] | L10:acc=0.00,var=[0.02434, 0.03343] | L15:acc=0.00,var=[0.02141, 0.03113]
+[pe=rope postLN=0] step   1000 loss 1.107 | L5:acc=0.00,var=[0.18168, 1.68408] | L10:acc=0.00,var=[0.14894, 2.09871] | L15:acc=0.00,var=[0.14183, 2.49494]
+[pe=rope postLN=0] step   2000 loss 0.330 | L5:acc=0.00,var=[0.15883, 0.63113] | L10:acc=0.00,var=[0.13545, 0.80886] | L15:acc=0.00,var=[0.12872, 0.92297]
+[pe=rope postLN=0] step   3000 loss 0.014 | L5:acc=0.80,var=[0.21021, 0.44776] | L10:acc=0.00,var=[0.20227, 0.53253] | L15:acc=0.00,var=[0.19981, 0.60053]
+[pe=rope postLN=0] step   4000 loss 0.010 | L5:acc=0.97,var=[pe=rope postLN=0] step      0 loss 2.764 | L5:acc=0.00,var=[0.03104, 0.03989] | L10:acc=0.00,var=[0.02434, 0.03343] | L15:acc=0.00,var=[0.02141, 0.03113]
+[pe=rope postLN=0] step   1000 loss 1.107 | L5:acc=0.00,var=[0.18168, 1.68408] | L10[pe=rope postLN=1] step      0 loss 2.798 | L5:acc=0.00,var=[0.02642, 0.05184] | L10:acc=0.00,var=[0.02157, 0.04915] | L15:acc=0.00,var=[0.01873, 0.0463]
+[pe=rope postLN=1] step   1000 loss 0.778 | L5:acc=0.00,var=[0.06028, 0.1826] | L10:acc=0.00,var=[0.05731, 0.20942] | L15:acc=0.00,var=[0.05691, 0.23091]
+[pe=rope postLN=1] step   2000 loss 0.046 | L5:acc=0.23,var=[0.06235, 0.08774] | L10:acc=0.00,var=[0.06037, 0.08356] | L15:acc=0.00,var=[0.05918, 0.0879]
+[pe=rope postLN=1] step   3000 loss 0.016 | L5:acc=0.99,var=[0.05777, 0.09041] | L10:acc=0.00,var=[0.06301, 0.08232] | L15:acc=0.00,var=[0.06468, 0.08512]
+[pe=rope postLN=1] step   4000 loss 0.012 | L5:acc=0.97,var=[0.[pe=rope postLN=1] step      0 loss 2.798 | L5:acc=0.00,var=[0.02642, 0.05184] | L10:acc=0.00,var=[0.02157, 0.04915] | L15:acc=0.00,var=[0.01873, 0.0463]
+[pe=rope postLN=1] step   1000 loss 0.778 | L5:acc=0.00,var=[0.06028, 0.1826] | L1[pe=rope postLN=1] step      0 loss 2.737 | L5:acc=0.00,var=[0.03118, 0.06154] | L10:acc=0.00,var=[0.02448, 0.05796] | L15:acc=0.00,var=[0.02155, 0.05551]
+[pe=rope postLN=1] step   1000 loss 0.674 | L5:acc=0.00,var=[0.07538, 0.34352] | L10:acc=0.00,var=[0.0611, 0.45957] | L15:acc=0.00,var=[0.05649, 0.55583]
+[pe=rope postLN=1] step   2000 loss 0.077 | L5:acc=0.45,var=[0.08445, 0.10364] | L10:acc=0.00,var=[0.06767, 0.09917] | L15:acc=0.00,var=[0.06061, 0.09844]
+[pe=rope postLN=1] step   3000 loss 0.002 | L5:acc=0.94,var=[0.08574, 0.1] | L10:acc=0.00,var=[0.07313, 0.08277] | L15:acc=0.00,var=[0.06645, 0.0791]
+[pe=rope postLN=1] step   4000 loss 0.012 | L5:acc=0.92,var=[0.079[pe=rope postLN=1] step      0 loss 2.737 | L5:acc=0.00,var=[0.03118, 0.06154] | L10:acc=0.00,var=[0.02448, 0.05796] | L15:acc=0.00,var=[0.02155, 0.05551]
+[pe=rope postLN=1] step   1000 loss 0.674 | L5:acc=0.00,var=[0.07538, 0.34352] | L10:acc=0.00,var=[0.0611, 0.45957] | L15:acc=0.00,var=[0.05649, 0.55583]
+[pe=rope postLN=1] step   2000 loss 0.077 | L5:acc=0.45,var=[0.08445, 0.10364] | L10:acc=0.00,var=[0.06767, 0.09917] | L15:acc=0.00,var=[0.06061, 0.09844]
+[pe=rope postLN=1] step   3000 loss 0.002 | L5:acc=0.94,var=[0.08574, 0.1] | L10:acc=0.00,var=[0.07313, 0.08277] | L15:acc=0.00,var=[0.06645, 0.0791]
+[pe=rope postLN=1] step   4000 loss 0.012 | L5:acc=0.92,var=[0.07929, 0.09935] | L10:acc=0.00,var=[0.07032, 0.07907] | L15:acc=0.00,var=[0.0648, 0.07445]
+[pe=rope postLN=1] wrote results/lengthgen/lg_rope_ln1_s1.csv
+=== ALL 8 RUNS DONE ===
