@@ -1,0 +1,22 @@
+{
+  "registered_before_outcomes": true,
+  "date": "2026-07-18",
+  "purpose": "Bridge fixed-spectrum counterfactual sensitivity to attention rows produced during ordinary model execution",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "dtype": "bf16",
+  "seeds": [0, 1, 2, 3, 4, 5],
+  "calibration_length": 5,
+  "calibration_examples": 64,
+  "head_budget": 4,
+  "evaluation_lengths": [20, 80],
+  "base_examples_per_length": 128,
+  "prompt_variants_per_base": 8,
+  "input_intervention": "Hold keys, values, query, answer, source pair slot, and token multiset fixed; permute only distractor-pair order before an untouched forward pass",
+  "internal_intervention": "none",
+  "matching_rule": "Within each base example, retain variant pairs with absolute selected-head source-mass gap at least 0.01, then choose the pair with minimum mean per-head L1 distance between sorted attention rows; orient higher source mass minus lower source mass",
+  "primary_outcome": "target margin difference in the matched naturally produced pair",
+  "secondary_model": "Within-base fixed-effects regression of margin on source mass, maximum weight, and entropy",
+  "inference_unit": "calibration seed above independent base prompt",
+  "success_rule": "positive hierarchical 95% interval for matched-pair margin and positive source-mass coefficient, with all six seedwise matched-pair means positive",
+  "scope": "This experiment establishes endogenous traversal and behavioral relevance of the assignment coordinate. It does not give the isolation guarantee of the fixed-spectrum swap."
+}

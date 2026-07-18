@@ -3,12 +3,23 @@ from __future__ import annotations
 
 import argparse
 import glob
+import itertools
 import json
 from pathlib import Path
 
 import numpy as np
 
 from analyze_pretrained_utility_selection import hierarchical_interval
+
+
+def exact_sign_flip(values):
+    values = np.asarray(values, dtype=np.float64)
+    observed = abs(float(values.mean()))
+    statistics = [
+        abs(float(np.mean(values * np.asarray(signs))))
+        for signs in itertools.product((-1.0, 1.0), repeat=len(values))
+    ]
+    return float(np.mean(np.asarray(statistics) >= observed - 1e-12))
 
 
 def _effect(result, selector, field):
@@ -116,6 +127,20 @@ def aggregate(results, expected_seeds=(0, 1, 2)):
         .get("baseline", {}).get("n_examples", 0) >= 16
     ]
     success = bool(stage1_success and len(full_size_seeds) >= 2)
+    utility_seed_means = (
+        effects.get("utility_gain", {}).get("margin", {}).get("seed_means", [])
+    )
+    seed_sign_flip_p = (
+        exact_sign_flip(utility_seed_means) if utility_seed_means else float("nan")
+    )
+    six_seed_complete = set(expected_seeds).issubset(gates) and len(expected_seeds) >= 6
+    six_seed_success = bool(
+        six_seed_complete
+        and all(gates[seed] for seed in expected_seeds)
+        and len(utility_seed_means) >= 6
+        and all(value > 0 for value in utility_seed_means)
+        and seed_sign_flip_p < 0.05
+    )
     return {
         "expected_seeds": list(expected_seeds),
         "available_seeds": [int(row["seed"]) for row in ordered],
@@ -128,6 +153,8 @@ def aggregate(results, expected_seeds=(0, 1, 2)):
         "stage1_replicated_success": stage1_success,
         "full_size_seeds": full_size_seeds,
         "preregistered_success": success,
+        "utility_margin_seed_sign_flip_p": seed_sign_flip_p,
+        "six_seed_confirmatory_success": six_seed_success,
         "variable_evidence_triggered": stage1_success,
     }
 
@@ -140,6 +167,10 @@ def markdown(summary):
         f"Full-size preregistered result: **{'pass' if summary['preregistered_success'] else 'pending'}**.",
         f"Full-size seeds: `{summary['full_size_seeds']}`.",
         f"Competent seeds: `{summary['passing_seeds']}`.",
+        f"Utility-margin exact seed-level sign-flip p: "
+        f"**{summary['utility_margin_seed_sign_flip_p']:.6g}**.",
+        f"Six-seed confirmatory result: "
+        f"**{'pass' if summary['six_seed_confirmatory_success'] else 'pending/fail'}**.",
         "",
         "| Seed | Full context on no-context failures | Gold only | No context (pool) | Rescue rate | Gate |",
         "|---:|---:|---:|---:|---:|:---:|",
@@ -202,12 +233,20 @@ def main():
     parser.add_argument(
         "--md-output", default="results/lengthgen/pretrained_natural_mcqa_summary.md"
     )
+    parser.add_argument(
+        "--expected-seeds",
+        default="0,1,2",
+        help="comma-separated independent seeds expected by the confirmatory analysis",
+    )
     args = parser.parse_args()
     paths = []
     for pattern in args.inputs:
         paths.extend(glob.glob(pattern) or [pattern])
     results = [json.loads(Path(path).read_text()) for path in sorted(set(paths))]
-    summary = aggregate(results)
+    expected_seeds = tuple(
+        int(value) for value in args.expected_seeds.split(",") if value.strip()
+    )
+    summary = aggregate(results, expected_seeds=expected_seeds)
     Path(args.json_output).write_text(json.dumps(summary, indent=2) + "\n")
     Path(args.md_output).write_text(markdown(summary))
     print(f"wrote {args.json_output}")

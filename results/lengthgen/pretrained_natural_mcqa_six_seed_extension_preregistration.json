@@ -1,0 +1,20 @@
+{
+  "registered_before_new_seed_outcomes": true,
+  "date": "2026-07-18",
+  "purpose": "Prospective power extension of the frozen natural-MCQA protocol",
+  "previously_observed_seeds": [0, 1, 2],
+  "prospective_seeds": [3, 4, 5],
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "dataset": "rajpurkar/squad",
+  "split": "train",
+  "calibration_examples": 64,
+  "evaluation_examples": 128,
+  "candidate_pool_multiplier": 16,
+  "head_budget": 4,
+  "eligibility_rule": "full-context correct AND gold-only correct AND no-context incorrect",
+  "primary_contrast": "utility-selected source_max minus displacement-matched distractor control margin",
+  "inference_unit": "independent calibration and structural seed",
+  "test": "two-sided exact sign-flip test over six seed means",
+  "success_rule": "all six seeds pass competence, all six margin contrasts are positive, and exact two-sided p < 0.05",
+  "frozen_protocol": "No prompt, selector, competence, generation, or intervention rule changes from natural_mcqa_v2_context_dependent."
+}

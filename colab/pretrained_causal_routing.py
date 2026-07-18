@@ -148,12 +148,16 @@ def patch_attention_weights(
         before = torch.stack(before_rows).float()
         after = torch.stack(after_rows).float()
         displacement = (after - before).abs().sum(dim=-1)
+        per_example = displacement.reshape(weights.shape[0], len(heads)).mean(dim=1)
         diagnostics["l1_displacement_sum"] = (
             diagnostics.get("l1_displacement_sum", 0.0)
             + float(displacement.sum().detach().cpu())
         )
         diagnostics["displacement_count"] = (
             diagnostics.get("displacement_count", 0) + int(displacement.numel())
+        )
+        diagnostics.setdefault("mean_l1_displacement_by_example", []).extend(
+            float(value) for value in per_example.detach().cpu()
         )
     if before_rows and not mode.endswith("_interp"):
         eps = 1e-12
@@ -208,7 +212,9 @@ def routing_attention_forward(
     weights = torch.softmax(weights, dim=-1, dtype=torch.float32).to(query.dtype)
 
     state = PATCH_STATE
-    if state is not None and layer == state["layer"]:
+    if state is not None and layer == state["layer"] and state["mode"] not in {
+        "activation_capture", "activation_patch"
+    }:
         weights = patch_attention_weights(
             weights,
             state["sources"],
@@ -223,6 +229,17 @@ def routing_attention_forward(
     if EAGER_CAPTURE_LAYER == layer:
         LAST_CAPTURED_ATTENTION = weights
     output = torch.matmul(weights, value_states)
+    if state is not None and layer == state["layer"] and state.get("capture_head_outputs"):
+        state["captured_head_outputs"] = output.detach().clone()
+    # Counterfactual activation patching replaces selected per-head attention outputs
+    # captured from a source-max run. Unlike the routing swap, this leaves the current
+    # attention row untouched and therefore does not preserve its weight spectrum.
+    if state is not None and layer == state["layer"] and state["mode"] == "activation_patch":
+        cached = state.get("cached_head_outputs")
+        if cached is None or cached.shape != output.shape:
+            raise ValueError("activation patch requires cached selected-head outputs of matching shape")
+        output = output.clone()
+        output[:, state["heads"], :, :] = cached[:, state["heads"], :, :].to(output.dtype)
     return output.transpose(1, 2).contiguous(), weights
 
 
