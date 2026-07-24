@@ -487,7 +487,7 @@ source-max cases. The reproducible aggregation reads the saved per-example artif
 \end{table*}
 
 \paragraph{Activation-patching baseline.}
-We compare the assay with standard clean-to-corrupt activation patching on Qwen2.5-1.5B. For each held-out
+We compare fixed-spectrum swaps with standard clean-to-corrupt activation patching on Qwen2.5-1.5B. For each held-out
 row, source-value corruption replaces the labeled value while preserving prompt length and positions. We then
 patch the selected per-head attention outputs from the clean run into the corrupted run. Circuit selection uses
 a disjoint 64-example split; each seed evaluates 128 paired rows. The fixed-spectrum condition acts on the

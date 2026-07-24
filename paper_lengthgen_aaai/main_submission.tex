@@ -42,15 +42,17 @@
 \maketitle
 
 \begin{abstract}
-Transformers can learn retrieval rules at short context lengths and may fail as competing tokens accumulate.
-Attention concentration is often part of the story, yet the same spectrum can place its large weights on useful
-evidence or irrelevant context. We therefore separate a spectrum's selective capacity from its assignment and
-from the downstream utility of the values it moves. Spectrum-preserving swaps let us test that separation on
-controlled retrieval, pretrained models, and natural question answering. They show when a reassignment changes
-the prediction, and they also expose saturation and selector mismatch. In controlled retrieval, a local utility
-term ranks finite margin effects with $0.989$ Spearman correlation and $99.5\%$ sign agreement, but does not
-calibrate their magnitude. The result is a fixed-context causal
-assay for attention routing in retrieval tasks evaluated across context lengths.
+Attention concentration cannot identify where a transformer routes information: two attention rows may share
+the same weight spectrum while assigning their largest weights to different tokens. We introduce
+fixed-spectrum swaps, a causal intervention that preserves every permutation-invariant property of an attention
+row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained language
+models, and context-grounded question answering, the intervention separates selective capacity from correct
+assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. A local value-aware
+utility term ranks finite margin effects in controlled retrieval with $0.989$ Spearman correlation and $99.5\%$
+sign agreement, and utility-selected circuits yield positive held-out effects on natural question answering.
+Context-length sweeps stress-test these diagnoses and identify cases where routing changes do not account for
+behavioral degradation. Fixed-spectrum swaps provide a controlled test of whether attention assignment causally
+affects a model's prediction.
 \end{abstract}
 
 \section{Background}
@@ -87,7 +89,7 @@ Our contributions are:
     assignment by preserving the complete attention spectrum and altering only its token placement.
     \item \textbf{Utility-conditioned mechanism.} We characterize when source--donor reassignment changes
     the final output and test the prediction against exact interventions.
-    \item \textbf{Transfer and boundaries.} We test the assay across controlled tasks, pretrained models,
+    \item \textbf{Transfer and boundaries.} We test the intervention across controlled tasks, pretrained models,
     multi-evidence computation, and natural QA, and identify saturation and selector-mismatch regimes.
 \end{itemize}
 
@@ -278,7 +280,7 @@ selected $K=8$ versus $-0.059$ for a random layer) and coverage dose response sh
 probe. They do not show that normal query--key computation produces swapped rows or that selected heads are the
 exclusive retrieval mechanism. In untouched distractor-order variants, the conditional source-mass coefficient
 is $+1.250$ ($p=.03125$), while the closest-spectrum paired effect is $+.026$ ($[-.017,+.070]$, $p=.25$).
-This bridges the assay to an endogenous association without establishing endogenous causality.
+This connects the intervention to an endogenous association without establishing endogenous causality.
 
 \begin{figure}[!ht]
 \centering
@@ -457,7 +459,7 @@ directions (b), and rescue stays flat or weakens (c). Bands are hierarchical 95\
 \end{figure*}
 
 The fixed-context natural-QA result establishes causal routing in ordinary text. The length ladder is a scope
-test: it asks whether the same fixed-context assay remains informative as context grows. We select the circuit
+test: it asks whether the same fixed-context protocol remains informative as context grows. We select the circuit
 at four passages, freeze every choice, and append unrelated passages to form nested 4, 8, 16, and 32-passage
 contexts. Hierarchical intervals resample calibration seeds and paired questions, so repeated observations from
 one circuit are not treated as independent models.
@@ -465,9 +467,9 @@ one circuit are not treated as independent models.
 Both Qwen and SmolLM2 lose margin and accuracy by 32 passages, yet their source-mass trajectories diverge.
 Qwen source mass rises as intervention rescue weakens. SmolLM2 source mass falls while rescue stays flat.
 The shared degradation therefore lies outside a single source-mass trajectory, which is the intended boundary
-condition for the assay rather than a failed prediction of it.
+condition for this diagnosis rather than a failed prediction of it.
 
-This result marks the boundary of the assay. At a fixed context, a spectrum-preserving swap measures whether a
+This result marks the boundary of the protocol. At a fixed context, a spectrum-preserving swap measures whether a
 chosen circuit can use reassigned evidence. As contexts grow, representation quality, distractor semantics,
 answer competition, and computation outside that circuit can also matter. The theorem therefore concerns a
 specified swap at a fixed context, while the full set of long-context bottlenecks remains open. Exact
@@ -561,14 +563,14 @@ Attention concentration tells us how much selectivity is available, while assign
 selectivity goes. Our capacity--assignment decomposition and utility term identify when a fixed-spectrum swap
 changes the target margin. This gives a local claim about the patched circuit.
 
-The assay reproduces across controlled retrieval, two-evidence computation, and pretrained models. Qwen and
+The intervention reproduces across controlled retrieval, two-evidence computation, and pretrained models. Qwen and
 Pythia respond to reassignment in the selected circuits, Gemma is saturated, and SmolLM2 benefits from
 output-conditioned circuit selection. Dose response, disjoint calibration, layer controls, and seedwise
 replication support these distinctions.
 
-Natural QA carries the assay into ordinary language at a fixed context. The length ladder then marks its
+Natural QA carries the protocol into ordinary language at a fixed context. The length ladder then marks its
 boundary: accuracy can decline even when source mass and intervention rescue follow different trajectories.
-The assay diagnoses a specified routing event and leaves the full account of long-context failure open.
+The protocol diagnoses a specified routing event and leaves the full account of long-context failure open.
 
 {\small
 \bibliography{references}
