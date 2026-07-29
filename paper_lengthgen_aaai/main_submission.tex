@@ -403,8 +403,8 @@ $p=.03125$). All competence gates pass. An unconstrained generation audit finds 
 cost.
 
 The selector results judge a selector by the frozen circuits it finds and their paired margin effects. They do
-not test whether the per-row utility functional predicts a finite swap effect; the held-out predictor audit in
-Table~\ref{tab:utility-replication} serves that separate purpose.
+not test whether the per-row utility functional predicts a finite swap effect; the held-out predictor audit
+reported in the supplement serves that separate purpose.
 
 \begin{table*}[!t]
 \centering
@@ -436,7 +436,7 @@ Pretrained KV & Pythia-1.4B & 384 & Margin & \helpful{$+.519$} & \helpful{$+.359
 \end{tabular*}
 \caption{Benchmark summary. Units make upper-block baselines comparable only within task. The lower block has
 no unpatched baseline: it evaluates selector quality using fixed-spectrum control effects, not per-row utility
-prediction; Table~\ref{tab:utility-replication} evaluates that prediction.
+prediction; the supplementary held-out audit evaluates that prediction.
 $\Pr(\Delta M>0)$ is the fraction of paired evaluation examples with a positive utility-gain source-max
 minus matched-control margin. Bold final columns remain identifiable in grayscale. Full cells and 95\%
 intervals are in the supplement.}
@@ -449,14 +449,14 @@ to reassignment on an unchanged input.
 
 \subsection{Natural Context Marks the Scope Boundary}
 
-\begin{figure*}[!t]
+\begin{figure}[!h]
 \centering
-\includegraphics[width=0.76\textwidth]{figures/fig_natural_length_ladder.png}
+\includegraphics[width=0.96\columnwidth]{figures/fig_natural_length_ladder.png}
 \caption{Natural-QA degradation follows divergent routing trajectories. Circuits are frozen from four through
 32 passages, shown as $1\times$--$8\times$ context. Accuracy falls (a), source routing moves in opposite
 directions (b), and rescue stays flat or weakens (c). Bands are hierarchical 95\% intervals.}
 \label{fig:natural-length-ladder}
-\end{figure*}
+\end{figure}
 
 The fixed-context natural-QA result establishes causal routing in ordinary text. The length ladder is a scope
 test: it asks whether the same fixed-context protocol remains informative as context grows. We select the circuit
@@ -483,94 +483,31 @@ leaves first-answer accuracy and repetition unchanged, so simple format collapse
 \subsection{Identification and Replication Audits}
 
 We then ask whether the result depends on one calibration sample, patch budget, or model family. Across three
-frozen Qwen calibration seeds, selected circuits are positive at every head budget. Adjacent-layer effects are
-smaller and inconsistent, while random layers average near zero (Table~\ref{tab:selection-audit}).
-
-\begin{table}[!t]
-\centering
-\small
-\setlength{\tabcolsep}{4.0pt}
-\begin{tabular}{lrrr}
-\toprule
-Circuit & Mean $\Delta M$ & Hierarchical 95\% CI & Seed SD \\
-\midrule
-Selected, $K=2$ & \helpful{+.460} & \helpful{[+.233,+.723]} & .180 \\
-Selected, $K=4$ & \helpful{+1.054} & \helpful{[+.652,+1.493]} & .346 \\
-Selected, $K=8$ & \helpful{+1.107} & \helpful{[+.739,+1.519]} & .293 \\
-Adjacent $-1$ & \neutral{+.147} & \neutral{[-.002,+.332]} & .155 \\
-Adjacent $+1$ & \neutral{-.131} & \neutral{[-.390,+.211]} & .323 \\
-Random layer & \neutral{-.059} & \neutral{[-.207,+.101]} & .151 \\
-\bottomrule
-\end{tabular}
-\caption{The selected Qwen circuit is stable across seeds and head budgets. Intervals resample
-calibration seeds and paired examples; SD is across seedwise mean effects.}
-\label{tab:selection-audit}
-\end{table}
+frozen Qwen calibration seeds, selected circuits are positive at every head budget: $K=2,4,8$ gives
+$+.460$, $+1.054$, and $+1.107$ margin. Adjacent layers are smaller and inconsistent ($+.147$ and
+$-.131$), while random layers average near zero ($-.059$). Full intervals and seed standard deviations are
+reported in the supplement.
 
 The utility relation also survives a separate replication check. Circuits are chosen by source mass on
 disjoint calibration examples; utility is then computed on held-out evaluation rows. Across three seeds per
 family, every competent source-max cell is positive, and predicted effects rank the exact effects within each
-cell (Table~\ref{tab:utility-replication}). The approximation is imperfect at large effects, so we use it as a
-local ranking signal rather than a calibrated finite-effect estimator. For the 32 controlled cell means in
+cell. Mean Spearman correlations are $.866$ for Qwen2.5-1.5B, $.544$ for Pythia-1.4B, and $.554$ for
+Gemma-2-2B, with sign agreements $.805$, $.807$, and $.714$. The approximation is imperfect at large effects,
+so we use it as a local ranking signal rather than a calibrated finite-effect estimator. For the 32 controlled cell means in
 Figure~\ref{fig:capacity-assignment}b, the actual-on-predicted fit is $1.387x-.102$ (Pearson $.978$), which
 deviates from identity calibration.
-
-\begin{table}[!t]
-\centering
-\small
-\setlength{\tabcolsep}{4.0pt}
-\begin{tabular}{lrrr}
-\toprule
-Model & Mean Spearman & Seed range & Sign agreement \\
-\midrule
-Qwen2.5-1.5B & \utilityhelpful{.866} & \utilityhelpful{[.832,.898]} & .805 \\
-Pythia-1.4B & \utilityhelpful{.544} & \utilityhelpful{[.500,.586]} & .807 \\
-Gemma-2-2B & \utilityhelpful{.554} & \utilityhelpful{[.534,.582]} & .714 \\
-\bottomrule
-\end{tabular}
-\caption{Held-out local utility ranks exact source-max effects across pretrained families. Means and
-ranges summarize three disjoint calibration seeds; calibration-error diagnostics appear in the supplement.}
-\label{tab:utility-replication}
-\end{table}
 
 The exact Qwen rerun keeps precision, lengths, contrast, and sample counts fixed. All five new seeds are positive
 (mean $+.042$); the combined six-seed test gives $p=.03125$, while the original $+1.882$ magnitude is atypical.
 
-Output-conditioned selectors lead in each family, although their internal ranking changes by architecture.
-Full selector results and competence-gate failures appear in the supplement.
+Output-conditioned selectors lead in each family, although their internal ranking changes by architecture. Full
+selector results, competence-gate failures, and the anonymized code package appear in the supplement.
 
-\paragraph{Code availability.}
-An anonymized code package with configurations, result artifacts, and analysis scripts accompanies the
-supplementary release and will be made public on acceptance.
-
-\section{Limitations}
-
-\begin{itemize}
-    \item Evidence positions must be identifiable. Source-max uses labels and serves as a causal probe; it is
-    unsuitable as a deployable inference algorithm.
-    \item Utility selection needs disjoint task-conditioned calibration and varies across model families.
-    \item The reassignment is an off-manifold counterfactual. Endogenous rows show a positive conditional
-    source-mass coefficient, but their closest-spectrum paired effect is inconclusive; the swap still identifies
-    downstream sensitivity rather than the mechanism that produced the row.
-    \item Higher evidence arity remains inconclusive or competence-limited; order-dependent computation is
-    outside the current intervention.
-    \item Natural long-context failure has multiple causes. We make no universal source-mass-loss claim.
-\end{itemize}
-
-\section{Conclusion}
-
-Attention concentration tells us how much selectivity is available, while assignment tells us where that
-selectivity goes. Our capacity--assignment decomposition and utility term identify when a fixed-spectrum swap
-changes the target margin. This gives a local claim about the patched circuit.
-
-The intervention reproduces across controlled retrieval, two-evidence computation, and pretrained models. Qwen and
-Pythia respond to reassignment in the selected circuits, Gemma is saturated, and SmolLM2 benefits from
-output-conditioned circuit selection. Dose response, disjoint calibration, layer controls, and seedwise
-replication support these distinctions.
-
-Natural QA carries the protocol into ordinary language at a fixed context. The length ladder then marks its
-boundary: accuracy can decline even when source mass and intervention rescue follow different trajectories.
-The protocol diagnoses a specified routing event and leaves the full account of long-context failure open.
+\paragraph{Scope.}
+The protocol needs identifiable evidence positions, disjoint calibration for utility selection, and an
+off-manifold reassignment counterfactual. Higher evidence arity remains competence-limited, and natural
+long-context failure has multiple causes. Within that scope, fixed-spectrum swaps make the
+capacity--assignment distinction causal across controlled retrieval, pretrained models, and fixed-context natural QA.
 
 {\small
 \bibliography{references}
