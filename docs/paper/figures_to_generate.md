@@ -27,8 +27,7 @@ Purpose:
 
 Source:
 
-- Method equations in `C:\Users\User\Downloads\CENTRAL_CODEX_PROMPT.md`
-- Implementation in `thermosafety/attention.py`
+- Method equations and implementation in `thermosafety/attention.py`
 
 Status:
 

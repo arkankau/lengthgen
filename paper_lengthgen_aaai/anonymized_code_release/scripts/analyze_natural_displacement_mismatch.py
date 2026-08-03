@@ -8,9 +8,14 @@ from pathlib import Path
 import numpy as np
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_INPUT = REPO_ROOT / "results/lengthgen/pretrained_natural_mcqa_full"
+DEFAULT_OUTPUT = REPO_ROOT / "results/lengthgen/natural_displacement_mismatch_summary.json"
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("input")
+    parser.add_argument("input", nargs="?", default=DEFAULT_INPUT)
     parser.add_argument("--out")
     args = parser.parse_args()
     path = Path(args.input)
@@ -58,7 +63,12 @@ def main():
         "p95_absolute_epsilon": float(np.quantile(absolute, 0.95)),
         "max_absolute_epsilon": float(absolute.max()),
     }
-    output = Path(args.out) if args.out else path.with_name(path.stem + "_summary.json")
+    if args.out:
+        output = Path(args.out)
+    elif path.resolve() == DEFAULT_INPUT.resolve():
+        output = DEFAULT_OUTPUT
+    else:
+        output = path.with_name(path.stem + "_summary.json")
     output.write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
 

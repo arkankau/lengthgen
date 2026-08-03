@@ -1,4 +1,6 @@
-# Fixed-Spectrum Attention Routing: Anonymous Reproduction Package
+# Fixed-Spectrum Swaps Separate Attention Capacity from Assignment
+
+## Anonymous reproduction package
 
 This package accompanies the anonymous submission. It contains the paper-specific training, intervention,
 preprocessing, analysis, and figure code; preregistrations; competence failures; and saved result artifacts.
@@ -9,19 +11,23 @@ are publicly hosted.
 
 - `colab/`: controlled-model training and all controlled, pretrained, arity, selector, natural-QA, and
   activation-patching runners used by the paper.
-- `scripts/`: analysis and figure builders, including the reviewer-hardening analysis.
+- `scripts/`: analysis and figure builders, including robustness and corrected-inference analyses.
 - `tests/`: paper-specific intervention and analysis tests.
 - `results/lengthgen/`: saved configurations, raw paired outputs, summaries, preregistrations, and negative
   competence-gate results.
 - `paper_lengthgen_aaai/figures/`: generated paper figures.
 - `MANIFEST.txt`: complete file listing.
+- `ARTIFACT_INDEX.md`: claim-to-data and claim-to-command map.
+- `DATA_DICTIONARY.md`: field definitions, units, aggregation levels, and intervention names.
+- `REPRODUCE.md`: CPU analysis, tests, figure generation, and optional GPU reruns.
+- `MANIFEST.sha256`: file sizes and SHA-256 digests for integrity checking.
 
-## Reproduce the reviewer-hardening audit
+## Reproduce the robustness analyses
 
 From the package root:
 
 ```bash
-python scripts/analyze_reviewer_hardening.py
+python scripts/analyze_corrected_inference.py
 python scripts/analyze_controlled_utility_audit.py
 python scripts/analyze_natural_displacement_mismatch.py
 python scripts/analyze_activation_patching_baseline.py
@@ -30,7 +36,7 @@ python scripts/analyze_endogenous_assignment.py
 ```
 
 The first command reproduces the exact cluster sign-flip tests with Holm correction, full-circuit vacuity
-analysis, active-only effect, and ceiling-robust association statistics reported in the revision.
+analysis, active-only effect, and ceiling-robust association statistics reported in the supplement.
 
 ## Regenerate figures
 
@@ -45,13 +51,14 @@ python scripts/analyze_controlled_utility_audit.py
 ## Run tests
 
 ```bash
+python scripts/verify_package.py
 pytest tests
 ```
 
 GPU runners expose their model identifiers, seeds, precisions, sample counts, and output directories through
 command-line arguments. The included Colab runbooks cover the long controlled grid, pretrained family probes,
 activation-patching comparison. `colab/run_reviewer_critical_suite.py` runs the exact Qwen replication,
-six-seed natural-QA extension, and endogenous distractor-order audit. Later pretrained audits were run on an NVIDIA T4 runtime. Earlier saved
+six-seed natural-QA extension, and endogenous distractor-order comparison. Later pretrained experiments were run on an NVIDIA T4 runtime. Earlier saved
 controlled artifacts did not retain the exact accelerator model or package-version snapshot; this limitation is
 disclosed in the supplement and checklist rather than reconstructed after the fact.
 

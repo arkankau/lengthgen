@@ -128,73 +128,134 @@ def token_row(
 
 def routing_overview() -> None:
     fig, ax = plt.subplots(figsize=(7.15, 2.52))
-    fig.subplots_adjust(left=0.015, right=0.985, bottom=0.05, top=0.88)
+    fig.subplots_adjust(left=0.015, right=0.985, bottom=0.04, top=0.96)
     ax.set_xlim(0, 14)
-    ax.set_ylim(0, 3.0)
+    ax.set_ylim(0, 3.65)
     ax.axis("off")
-    ax.set_title("One attention spectrum, two token assignments", pad=5, weight="bold", fontsize=11)
+    ax.set_title(
+        "Use case: Does routing the right evidence change a model's answer?",
+        pad=3,
+        weight="bold",
+        fontsize=10.6,
+    )
 
-    ax.text(7.0, 2.62, "Query: Japan -> ?     Required evidence: Tokyo", ha="center", va="center", fontsize=9.2, color=CHARCOAL)
+    box(ax, 0.18, 2.72, 13.64, 0.66, face="#F8F9FA", edge="#A7B0B5", lw=0.8)
+    ax.text(0.42, 3.17, "CONTEXT", ha="left", va="center", fontsize=7.2, color=BLUE, weight="bold")
+    ax.text(
+        1.62,
+        3.17,
+        "Japan's capital is Tokyo.  France's capital is Paris.  Brazil's capital is Brasilia.",
+        ha="left",
+        va="center",
+        fontsize=8.0,
+        color=CHARCOAL,
+    )
+    ax.text(0.42, 2.88, "QUESTION", ha="left", va="center", fontsize=7.2, color=BLUE, weight="bold")
+    ax.text(
+        1.62,
+        2.88,
+        "What is the capital of Japan?",
+        ha="left",
+        va="center",
+        fontsize=8.2,
+        color=CHARCOAL,
+    )
+    ax.text(10.18, 2.88, "TARGET EVIDENCE", ha="left", va="center", fontsize=7.2, color=BLUE, weight="bold")
+    ax.text(12.45, 2.88, "Tokyo", ha="left", va="center", fontsize=8.3, color=BLUE, weight="bold")
 
     def assignment_panel(
         x: float,
         *,
         title: str,
         title_color: str,
-        face: str,
         weights: list[float],
+        maximum_index: int,
         result: str,
-        result_color: str,
     ) -> None:
-        panel_w = 6.15
-        box(ax, x, 0.76, panel_w, 1.52, face=WHITE, edge=title_color, lw=1.15)
-        ax.text(x + panel_w / 2, 2.08, title, ha="center", va="center", fontsize=9.1, color=title_color, weight="bold")
+        panel_w = 6.10
+        box(ax, x, 0.76, panel_w, 1.72, face=WHITE, edge=title_color, lw=1.15)
+        ax.text(
+            x + panel_w / 2,
+            2.29,
+            title,
+            ha="center",
+            va="center",
+            fontsize=8.8,
+            color=title_color,
+            weight="bold",
+        )
         labels = ["Paris", "Tokyo", "Brasilia", "other"]
         for i, (label, value) in enumerate(zip(labels, weights)):
-            left = x + 0.22 + i * 1.47
+            left = x + 0.20 + i * 1.46
             evidence = label == "Tokyo"
-            chip_face = PALE_BLUE if evidence else WHITE
-            chip_edge = BLUE if evidence else "#A7B0B5"
-            box(ax, left, 1.13, 1.18, 0.62, face=chip_face, edge=chip_edge, lw=1.2 if evidence else 0.8)
-            ax.text(left + 0.59, 1.53, label, ha="center", va="center", fontsize=8.2, color=BLUE if evidence else CHARCOAL, weight="bold" if evidence else "normal")
+            maximum = i == maximum_index
+            if maximum and evidence:
+                chip_face, chip_edge = PALE_BLUE, BLUE
+            elif maximum:
+                chip_face, chip_edge = PALE_RED, VERMILION
+            elif evidence:
+                chip_face, chip_edge = "#F5F8FB", BLUE
+            else:
+                chip_face, chip_edge = WHITE, "#A7B0B5"
+            box(ax, left, 1.32, 1.18, 0.66, face=chip_face, edge=chip_edge, lw=1.25 if maximum or evidence else 0.8)
             ax.text(
                 left + 0.59,
-                1.28,
+                1.76,
+                label,
+                ha="center",
+                va="center",
+                fontsize=7.9,
+                color=chip_edge if maximum or evidence else CHARCOAL,
+                weight="bold" if maximum or evidence else "normal",
+            )
+            ax.text(
+                left + 0.59,
+                1.49,
                 f"{value:.2f}",
                 ha="center",
                 va="center",
-                fontsize=9.4,
+                fontsize=8.8,
                 color=CHARCOAL,
             )
-        ax.text(x + panel_w / 2, 0.94, result, ha="center", va="center", fontsize=8.8, color=result_color, weight="bold")
+        ax.text(
+            x + panel_w / 2,
+            1.04,
+            result,
+            ha="center",
+            va="center",
+            fontsize=8.1,
+            color=title_color,
+            weight="bold",
+        )
 
     assignment_panel(
-        0.25,
-        title="Maximum assigned to a distractor",
+        0.18,
+        title="Distractor-focused assignment",
         title_color=VERMILION,
-        face=PALE_RED,
         weights=[0.55, 0.07, 0.25, 0.13],
-        result="Source mass: 0.07",
-        result_color=VERMILION,
+        maximum_index=0,
+        result='"Tokyo" evidence mass = 0.07',
     )
     assignment_panel(
-        7.60,
-        title="Maximum assigned to required evidence",
+        7.72,
+        title="Evidence-focused assignment",
         title_color=BLUE,
-        face=PALE_TEAL,
         weights=[0.07, 0.55, 0.25, 0.13],
-        result="Source mass: 0.55",
-        result_color=BLUE,
+        maximum_index=1,
+        result='"Tokyo" evidence mass = 0.55',
     )
 
-    box(ax, 0.25, 0.14, 13.50, 0.40, face=LIGHTGRAY, edge=MIDGRAY)
+    ax.text(7.0, 1.88, "swap\nweights", ha="center", va="center", fontsize=6.8, color=CHARCOAL, weight="bold")
+    arrow(ax, (6.43, 1.58), (7.57, 1.58), color=CHARCOAL, lw=1.0, style="<->")
+
     ax.text(
         7.0,
-        0.34,
-        "Preserved: complete weight spectrum  |  entropy  |  norms  |  maximum weight",
+        0.35,
+        r"We preserve the model, prompt, values, and complete weight spectrum, "
+        r"and measure the paired change in target-answer margin $\Delta M$.",
         ha="center",
         va="center",
-        fontsize=8.9,
+        fontsize=7.8,
         color=CHARCOAL,
         weight="bold",
     )

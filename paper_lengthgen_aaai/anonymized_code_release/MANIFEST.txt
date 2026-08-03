@@ -327,8 +327,8 @@ results/lengthgen/realmodel_qwen1p5b_h16.json
 results/lengthgen/realmodel_qwen1p5b_h4.json
 results/lengthgen/realmodel_qwen1p5b_h8.json
 results/lengthgen/realmodel_results.json
-results/lengthgen/reviewer_hardening_analysis.json
-results/lengthgen/reviewer_hardening_analysis.md
+results/lengthgen/corrected_inference_analysis.json
+results/lengthgen/corrected_inference_analysis.md
 results/lengthgen/run_log.txt
 results/lengthgen/run_log_recall.txt
 results/lengthgen/utility_gap/routing_utility_gap_report.md
@@ -363,7 +363,7 @@ scripts/analyze_pretrained_utility_selection.py
 scripts/analyze_qwen_exact_replication.py
 scripts/analyze_real_model.py
 scripts/analyze_real_model_family.py
-scripts/analyze_reviewer_hardening.py
+scripts/analyze_corrected_inference.py
 scripts/analyze_variable_evidence.py
 scripts/audit_lengthgen_experiment_coverage.py
 scripts/audit_mechanism_specificity.py
@@ -395,5 +395,5 @@ tests/test_pretrained_selector_ablation.py
 tests/test_pretrained_utility_selection.py
 tests/test_pretrained_utility_selection_analysis.py
 tests/test_reviewer_critical_extensions.py
-tests/test_reviewer_hardening_analysis.py
+tests/test_corrected_inference_analysis.py
 tests/test_variable_evidence.py

@@ -1,4 +1,4 @@
-"""Loop-engineered thermodynamic exploration (see .claude/loop.md).
+"""Iterative thermodynamic exploration with automated evaluation.
 
 Question: does alignment leave a *thermodynamic* signature in attention -- a per-layer difference in
 specific heat / entropy between a base model and its instruct-tuned sibling of the SAME architecture

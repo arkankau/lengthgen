@@ -1,4 +1,4 @@
-# Reviewer-hardening statistics (layer-aggregation robustness, CIs, sign test)
+# Robustness statistics (layer aggregation, confidence intervals, and sign test)
 
 ## 4L/256
 # results/lengthgen/gpu_resultsA.json

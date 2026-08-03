@@ -1,6 +1,6 @@
-# Path C Defense Loop (Loop-Engineered)
+# Path C Defense Evaluation
 
-Applies `.claude/loop.md`: a bounded, verifier-gated search for a null-attractor/barrier
+Uses a bounded, verifier-gated search for a null-attractor/barrier
 configuration that works as a *defense* -- suppressing unsafe continuations on jailbreak prompts
 while preserving coherent, on-topic generation on benign prompts. Every prior attempt used an
 attractor (global pull -> benign coherence breaks); this loop's new lever is the theory-grounded

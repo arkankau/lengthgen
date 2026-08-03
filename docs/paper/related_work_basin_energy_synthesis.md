@@ -1,6 +1,6 @@
 # Basin-Energy Extension: Multi-Perspective Research Synthesis
 
-Method: `.claude/research.md` (5-perspective scan -> contradiction map -> synthesis -> self peer-review), grounded with live web search/fetch rather than run as pure prompting.
+Method: a five-perspective literature scan followed by a contradiction map, synthesis, and self-review, grounded in cited sources.
 
 Scope question: is extending the null-attractor diagnostic with explicit basin-energy scoring (`E_b = -cos(h, c_b)`, `F = E - TS`, basin competition) a credible, publishable next step, and what does prior art say about how to do it right.
 

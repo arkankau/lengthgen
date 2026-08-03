@@ -24,15 +24,17 @@ CONTROL_GRAY = "#7F7F7F"
 CHARCOAL = "#333333"
 MIDGRAY = "#7A8388"
 LIGHTGRAY = "#D8DDDF"
+MATCHED_LENGTHS = (5, 20, 80)
+PAIRED_EXAMPLES_PER_CELL = 128
 
 plt.rcParams.update(
     {
         "font.family": "sans-serif",
-        "font.size": 9.6,
-        "axes.titlesize": 9.8,
-        "axes.labelsize": 9.6,
-        "xtick.labelsize": 9.6,
-        "ytick.labelsize": 9.6,
+        "font.size": 10.8,
+        "axes.titlesize": 11.0,
+        "axes.labelsize": 10.6,
+        "xtick.labelsize": 10.6,
+        "ytick.labelsize": 10.6,
         "figure.dpi": 180,
         "pdf.fonttype": 42,
         "ps.fonttype": 42,
@@ -52,158 +54,133 @@ def paired_interval(values: np.ndarray, seed: int, draws: int = 5000) -> tuple[f
     return float(low), float(high)
 
 
-def causal_trajectory(path: Path, seed: int) -> list[tuple[int, float, tuple[float, float]]]:
+def model_trajectory(path: Path, seed: int) -> list[dict]:
     data = load(path)
+    if data.get("seed") != 0:
+        raise ValueError(f"expected experiment seed 0 in {path}, found {data.get('seed')}")
     rows = []
     for length_text, sweep in sorted(data["lengths"].items(), key=lambda item: int(item[0])):
-        source = sweep["conditions"]["source_max"]["records"]
+        baseline = sweep["conditions"]["baseline"]["records"]
+        source_max = sweep["conditions"]["source_max"]["records"]
+        source_min = sweep["conditions"]["source_min"]["records"]
         control = sweep["conditions"]["distractor_control"]["records"]
-        effects = np.asarray(
-            [left["margin"] - right["margin"] for left, right in zip(source, control)],
-            dtype=np.float64,
+        counts = {len(baseline), len(source_max), len(source_min), len(control)}
+        if len(counts) != 1:
+            raise ValueError(f"paired sample-count mismatch at length {length_text}")
+        contrasts = {}
+        for offset, (name, records) in enumerate(
+            [
+                ("source_max", source_max),
+                ("source_min", source_min),
+                ("untouched", baseline),
+            ]
+        ):
+            effects = np.asarray(
+                [left["margin"] - right["margin"] for left, right in zip(records, control)],
+                dtype=np.float64,
+            )
+            contrasts[name] = {
+                "mean": float(effects.mean()),
+                "ci95": paired_interval(effects, seed + offset),
+            }
+        rows.append(
+            {
+                "length": int(length_text),
+                "n": counts.pop(),
+                "contrasts": contrasts,
+            }
         )
-        rows.append((int(length_text), float(effects.mean()), paired_interval(effects, seed)))
     return rows
 
 
 def main() -> None:
-    fig, axes = plt.subplots(2, 2, figsize=(7.05, 5.35))
-    fig.subplots_adjust(left=0.075, right=0.98, bottom=0.10, top=0.88, wspace=0.48, hspace=0.46)
+    fig, axes = plt.subplots(2, 2, figsize=(7.05, 4.75), sharex=True, sharey=True)
+    fig.subplots_adjust(
+        left=0.105, right=0.985, bottom=0.115, top=0.87, wspace=0.16, hspace=0.30
+    )
 
-    # The same source-max operation has different effects across pretrained circuits.
     models = [
-        ("Qwen", "pretrained_causal_qwen1p5b", ROUTE_BLUE, "s", "-"),
-        ("Pythia", "pretrained_causal_pythia1p4b", ROUTE_BLUE, "o", "--"),
-        ("Gemma", "pretrained_causal_gemma2b", BOUNDARY_PURPLE, "^", "-."),
-        ("SmolLM2", "pretrained_causal_smollm2_1p7b", HARM_ORANGE, "D", ":"),
+        ("Qwen2.5-1.5B", "pretrained_causal_qwen1p5b"),
+        ("Pythia-1.4B", "pretrained_causal_pythia1p4b"),
+        ("Gemma-2-2B", "pretrained_causal_gemma2b"),
+        ("SmolLM2-1.7B", "pretrained_causal_smollm2_1p7b"),
     ]
-    ax = axes[0, 0]
-    for index, (label, directory, color, marker, linestyle) in enumerate(models):
-        rows = causal_trajectory(
-            RESULTS / directory / "pretrained_causal_routing_results.json", 3100 + index
+    trajectories = [
+        (
+            label,
+            model_trajectory(
+                RESULTS / directory / "pretrained_causal_routing_results.json",
+                3100 + index,
+            ),
         )
-        x = np.asarray([row[0] for row in rows])
-        y = np.asarray([row[1] for row in rows])
-        ci = np.asarray([row[2] for row in rows])
-        ax.errorbar(
-            x,
-            y,
-            yerr=np.vstack([y - ci[:, 0], ci[:, 1] - y]),
-            color=color,
-            marker=marker,
-            markersize=3.5,
-            linewidth=1.2,
-            linestyle=linestyle,
-            capsize=2,
-            label=label,
-        )
-    ax.axhline(0, color=MIDGRAY, linewidth=0.8, linestyle=":")
-    ax.set_xscale("log", base=2)
-    ax.set_xticks([5, 20, 80, 160])
-    ax.set_xticklabels([5, 20, 80, 160])
-    ax.set_xlim(4, 235)
-    ax.set_xlabel("key-value pairs")
-    ax.set_ylabel("margin effect (max - control)")
-    ax.set_title("(a) Routing varies by model regime", pad=5)
-    ax.grid(alpha=0.18)
-    handles, labels = ax.get_legend_handles_labels()
+        for index, (label, directory) in enumerate(models)
+    ]
+    for model_label, trajectory in trajectories:
+        rows_by_length = {row["length"]: row for row in trajectory}
+        missing = set(MATCHED_LENGTHS) - set(rows_by_length)
+        if missing:
+            raise ValueError(
+                f"{model_label} is missing matched lengths {sorted(missing)}"
+            )
+        counts = {rows_by_length[length]["n"] for length in MATCHED_LENGTHS}
+        if counts != {PAIRED_EXAMPLES_PER_CELL}:
+            raise ValueError(
+                f"{model_label} expected {PAIRED_EXAMPLES_PER_CELL} paired examples "
+                f"at each matched length, found {sorted(counts)}"
+            )
+
+    shared_ticks = list(MATCHED_LENGTHS)
+    series = [
+        ("source-max", "source_max", ROUTE_BLUE, "s", "-"),
+        ("source-min", "source_min", HARM_ORANGE, "v", "--"),
+        ("untouched", "untouched", CONTROL_GRAY, "o", ":"),
+    ]
+    panel_letters = ["a", "b", "c", "d"]
+    for ax, letter, (model_label, trajectory) in zip(
+        axes.flat, panel_letters, trajectories
+    ):
+        rows_by_length = {row["length"]: row for row in trajectory}
+        rows = [rows_by_length[length] for length in MATCHED_LENGTHS]
+        x = np.asarray([row["length"] for row in rows])
+        for display, key, color, marker, linestyle in series:
+            means = np.asarray([row["contrasts"][key]["mean"] for row in rows])
+            cis = np.asarray([row["contrasts"][key]["ci95"] for row in rows])
+            ax.errorbar(
+                x,
+                means,
+                yerr=np.vstack([means - cis[:, 0], cis[:, 1] - means]),
+                color=color,
+                marker=marker,
+                markersize=3.5,
+                linewidth=1.2,
+                linestyle=linestyle,
+                capsize=2,
+                label=display,
+            )
+        ax.axhline(0, color=MIDGRAY, linewidth=0.8, linestyle=":")
+        ax.set_xscale("log", base=2)
+        ax.set_xticks(shared_ticks)
+        ax.set_xticklabels(shared_ticks)
+        ax.set_xlim(4, 105)
+        ax.set_title(f"({letter}) {model_label}", pad=5)
+        ax.grid(alpha=0.18)
+
+    axes[0, 0].set_ylabel("margin effect vs. control")
+    axes[1, 0].set_ylabel("margin effect vs. control")
+    axes[1, 0].set_xlabel("key-value pairs")
+    axes[1, 1].set_xlabel("key-value pairs")
+    handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(
         handles,
         labels,
         loc="upper center",
-        bbox_to_anchor=(0.30, 0.995),
+        bbox_to_anchor=(0.55, 0.985),
         frameon=False,
-        fontsize=8.0,
-        ncol=2,
-        handlelength=1.4,
-        columnspacing=0.8,
+        fontsize=8.5,
+        ncol=3,
+        handlelength=1.8,
+        columnspacing=1.2,
     )
-
-    # A broad selector ablation tests whether output-conditioned scoring matters.
-    selector = load(RESULTS / "pretrained_selector_ablation_summary.json")["selectors"]
-    selector_order = [
-        ("source grad.", "source_gradient", ROUTE_BLUE),
-        ("utility gain", "utility_gain", UTILITY_TEAL),
-        ("utility gap", "utility_gap", UTILITY_TEAL),
-        ("random", "random", MIDGRAY),
-        ("grad. magnitude", "gradient_magnitude", MIDGRAY),
-        ("source mass", "source_mass", HARM_ORANGE),
-        ("transfer mass", "transfer_mass", CONTROL_GRAY),
-    ]
-    ax = axes[0, 1]
-    labels = [row[0] for row in selector_order][::-1]
-    means = np.asarray([selector[row[1]]["mean"] for row in selector_order][::-1])
-    cis = np.asarray([selector[row[1]]["ci95"] for row in selector_order][::-1])
-    colors = [row[2] for row in selector_order][::-1]
-    positions = np.arange(len(labels))
-    ax.barh(positions, means, color=colors, alpha=0.88, height=0.68)
-    ax.errorbar(
-        means,
-        positions,
-        xerr=np.vstack([means - cis[:, 0], cis[:, 1] - means]),
-        fmt="none",
-        ecolor=CHARCOAL,
-        elinewidth=0.8,
-        capsize=2,
-    )
-    ax.axvline(0, color=MIDGRAY, linewidth=0.8, linestyle=":")
-    ax.set_yticks(positions)
-    ax.set_yticklabels(labels)
-    ax.set_xlabel("margin effect (max - control)")
-    ax.set_title("(b) Output-aware selection", pad=5)
-    ax.grid(axis="x", alpha=0.18)
-
-    # Interpolation tests whether the effect changes smoothly with intervention strength.
-    dose = load(RESULTS / "pretrained_dose_response_summary.json")
-    alphas = np.asarray(dose["alphas"], dtype=np.float64)
-    dose_rows = [dose["dose_response"][str(float(alpha))] for alpha in alphas]
-    means = np.asarray([row["mean"] for row in dose_rows])
-    cis = np.asarray([row["ci95"] for row in dose_rows])
-    ax = axes[1, 0]
-    for seed_values in zip(*[row["seed_means"] for row in dose_rows]):
-        ax.plot(alphas, seed_values, color=LIGHTGRAY, linewidth=0.9, zorder=1)
-    ax.errorbar(
-        alphas,
-        means,
-        yerr=np.vstack([means - cis[:, 0], cis[:, 1] - means]),
-        color=UTILITY_TEAL,
-        marker="o",
-        markersize=4,
-        linewidth=1.5,
-        capsize=2.5,
-        zorder=2,
-    )
-    ax.axhline(0, color=MIDGRAY, linewidth=0.8, linestyle=":")
-    ax.set_xticks(alphas)
-    ax.set_xlabel(r"intervention strength $\alpha$")
-    ax.set_ylabel("margin effect (max - control)")
-    ax.set_title("(c) Response is graded", pad=5)
-    ax.grid(alpha=0.18)
-
-    # The natural QA experiment keeps the task grounded in ordinary text.
-    natural = load(RESULTS / "pretrained_natural_mcqa_summary.json")["effects"]
-    natural_order = [
-        ("source mass", natural["source_mass"]["margin"], HARM_ORANGE),
-        ("utility gain", natural["utility_gain"]["margin"], UTILITY_TEAL),
-    ]
-    ax = axes[1, 1]
-    labels = [row[0] for row in natural_order]
-    means = np.asarray([row[1]["mean"] for row in natural_order])
-    cis = np.asarray([row[1]["ci95"] for row in natural_order])
-    ax.bar(labels, means, color=[row[2] for row in natural_order], width=0.58, alpha=0.88)
-    ax.errorbar(
-        np.arange(len(labels)),
-        means,
-        yerr=np.vstack([means - cis[:, 0], cis[:, 1] - means]),
-        fmt="none",
-        ecolor=CHARCOAL,
-        elinewidth=0.9,
-        capsize=3,
-    )
-    ax.axhline(0, color=MIDGRAY, linewidth=0.8, linestyle=":")
-    ax.set_ylabel("margin effect (max - control)")
-    ax.set_title("(d) Natural-QA transfer", pad=5)
-    ax.grid(axis="y", alpha=0.18)
 
     output_pdf = RESULTS / "fig_pretrained_summary.pdf"
     output_png = RESULTS / "fig_pretrained_summary.png"

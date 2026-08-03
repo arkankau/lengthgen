@@ -1,4 +1,4 @@
-"""Reviewer-hardening statistics for the length-gen paper.
+"""Corrected-inference statistics for the length-gen paper.
 
 (1) Is attention a better predictor than variance ROBUST to the layer-aggregation choice?
     Recompute pooled corr(acc, attn) and corr(acc, var) under max/mean/last-layer aggregation.

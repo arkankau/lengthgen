@@ -1,4 +1,4 @@
-"""Grokking trainer with per-checkpoint thermodynamic observables (Direction E, see .claude/loop.md).
+"""Grokking trainer with per-checkpoint thermodynamic observables (Direction E).
 
 A tiny 1-layer transformer learns modular addition (a + b) mod p. With high weight decay it "groks":
 train accuracy saturates early, validation accuracy jumps much later -- a known, sharp phase

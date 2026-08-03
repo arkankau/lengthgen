@@ -108,9 +108,14 @@ def main():
     exact_argmax_fraction = float(np.mean(np.asarray(head_transfer) <= 1e-8))
     bins = quantile_bins(total_transfer, actual)
     groups = payload["summary"]["groups"]
+    input_path = Path(args.input).resolve()
+    try:
+        recorded_input = input_path.relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        recorded_input = input_path.name
 
     result = {
-        "input": str(args.input),
+        "input": recorded_input,
         "n_examples": len(records),
         "n_head_example_pairs": len(head_transfer),
         "figure_point_regression": fit(

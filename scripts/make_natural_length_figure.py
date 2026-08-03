@@ -55,12 +55,29 @@ def plot_series(ax, summary: dict, field: str, label: str, color: str, marker: s
     ax.fill_between(x, interval[:, 0], interval[:, 1], color=color, alpha=0.13, linewidth=0)
 
 
+def validate_matched_summary(summary: dict, label: str) -> None:
+    if summary.get("full_size_seeds") != [0]:
+        raise ValueError(f"{label} must contain only full-size seed 0")
+    if summary["passage_counts"] != [4, 8, 16, 32]:
+        raise ValueError(f"{label} must use the shared 4, 8, 16, 32 passage ladder")
+    for passage_count in summary["passage_counts"]:
+        cell = summary["trajectory"][str(passage_count)]
+        for field in ("baseline_accuracy", "baseline_source_mass", "rescue_margin"):
+            row = cell[field]
+            if row["n_seeds"] != 1 or row["n_examples"] != 128:
+                raise ValueError(
+                    f"{label} {passage_count} {field} must use one seed and 128 examples"
+                )
+
+
 def main() -> None:
-    qwen = load(RESULTS / "pretrained_natural_mcqa_ladder" / "qwen_two_seed_summary.json")
+    qwen = load(RESULTS / "pretrained_natural_mcqa_ladder" / "qwen_seed0_summary.json")
     smol = load(RESULTS / "pretrained_natural_mcqa_ladder" / "smollm2_seed0_summary.json")
+    validate_matched_summary(qwen, "Qwen2.5-1.5B")
+    validate_matched_summary(smol, "SmolLM2-1.7B")
     models = [
-        (qwen, "Qwen2.5-1.5B (2 seeds)", ROUTE_BLUE, "o"),
-        (smol, "SmolLM2-1.7B (1 seed)", BOUNDARY_PURPLE, "s"),
+        (qwen, "Qwen2.5-1.5B", ROUTE_BLUE, "o"),
+        (smol, "SmolLM2-1.7B", BOUNDARY_PURPLE, "s"),
     ]
 
     fig, axes = plt.subplots(1, 3, figsize=(7.05, 2.45))

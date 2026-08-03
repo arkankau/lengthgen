@@ -1,5 +1,5 @@
 {
-  "input": "C:\\Users\\User\\Downloads\\thermo-safety\\results\\lengthgen\\utility_gap\\routing_utility_gap_results.json",
+  "input": "results/lengthgen/utility_gap/routing_utility_gap_results.json",
   "n_examples": 1024,
   "n_head_example_pairs": 8192,
   "figure_point_regression": {

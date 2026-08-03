@@ -15,7 +15,7 @@ python scripts/make_report.py --output results/phase1_report.md
 python -m unittest discover -s tests -q
 ```
 
-If `python` is not on PATH in Codex Desktop, use the bundled interpreter path shown by the workspace dependency helper.
+If `python` is not on PATH, activate the project environment and use its interpreter directly.
 
 ## Outputs
 

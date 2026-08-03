@@ -32,7 +32,7 @@ import os; assert os.path.isdir('/content/drive/MyDrive')
   batch OOMs). pythia-1.4b fits a T4 easily; 2.8b fits; 6.9b is tight.
 - Saves `realmodel_results.json` incrementally after each length.
 
-## Step 1b - reviewer-hardening model-family runs
+## Step 1b - additional model-family robustness runs
 The main reviewer gap is whether the pretrained-model probe is Pythia-specific.
 Run the same probe on one or two modern open-weight base models.
 Use base models when possible, because chat tuning can add instruction-following behavior that is not part

@@ -44,9 +44,44 @@
 \begin{document}
 \maketitle
 
-This document supplies proofs, experimental protocols, complete result tables, secondary figures, negative
-replications, and reproducibility information for the main paper. The main paper is self-contained; this
-supplement preserves the full audit trail behind its compressed claims.
+This document provides proofs, experimental protocols, full result tables, secondary figures, negative
+replications, and reproducibility information for results summarized in the main paper.
+
+\section{Guide to Supplementary Evidence}
+
+Table~\ref{tab:supp-map} maps the main claims to their detailed evidence and archived analysis. The anonymous
+bundle also contains \texttt{ARTIFACT\_INDEX.md}, which gives exact input and output paths, and
+\texttt{REPRODUCE.md}, which separates saved-artifact analysis from GPU reruns.
+
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\textwidth}
+                >{\raggedright\arraybackslash}p{0.22\textwidth}
+                >{\raggedright\arraybackslash}p{0.24\textwidth}
+                >{\raggedright\arraybackslash}p{0.23\textwidth}}
+\toprule
+Main-paper claim & Supplement evidence & Saved artifact family & Analysis entry point \\
+\midrule
+Capacity and assignment are distinct & Theory details; controlled permutation and concentration controls
+& \path{factorial_grid}, paired permutation records
+& Concentration and assignment analysis \\
+Assignment effects depend on downstream utility & Nonlinear bound, held-out utility calibration, and dose response
+& Controlled utility records, pretrained utility records, dose-response records
+& Controlled and pretrained utility analyses \\
+The same swap exposes different pretrained regimes & Full family table, selector comparison, layer and head controls
+& Pretrained causal, selector, and circuit-selection records
+& Pretrained routing and selector analyses \\
+The intervention is local and conditional & Arity gate, activation patching, exact Qwen rerun, endogenous-row comparison, and natural-QA ladder
+& Multi-evidence, patching, replication, endogenous, and natural-QA records
+& Robustness and boundary analyses \\
+\bottomrule
+\end{tabular}
+\caption{Claim-to-artifact map. Paths are relative to \texttt{results/lengthgen/} in the anonymous bundle.
+All reported statistics can be reconstructed from saved artifacts without loading a language model.}
+\label{tab:supp-map}
+\end{table*}
 
 \section{Theory Details}
 
@@ -69,10 +104,10 @@ m_S\ge\alpha
 T\left(\log\frac{|D|}{|S|}+\operatorname{logit}(\alpha)\right).
 \label{eq:supp-length-cost}
 \end{equation}
-These are standard Gibbs or partition-function identities \citep{ramsauer2021hopfield}. They motivate the
-competition for evidence mass and position the paper. Equation~\ref{eq:supp-length-cost} also prevents
-an overstatement: distractor count alone is insufficient because arbitrarily many negligible-score
-distractors need not reduce evidence mass.
+These standard Gibbs or partition-function identities \citep{ramsauer2021hopfield} describe the competition
+between evidence and distractors. Equation~\ref{eq:supp-length-cost} makes the dependence on distractor scores
+explicit: distractor count alone is insufficient because arbitrarily many negligible-score distractors need
+not reduce evidence mass.
 
 \subsection{Fixed-spectrum routing range}
 
@@ -160,8 +195,8 @@ one and two evidence positions in the current experiments. The three-evidence in
 four-evidence models miss the competence gate, so efficacy beyond $r=2$ remains open.
 
 The condition is sufficient, not necessary. Source-max can fail when evidence values have no greater
-downstream utility, patched heads cancel, or curvature dominates. This is why natural source mass is not a
-universal circuit-selection rule.
+downstream utility, patched heads cancel, or curvature dominates. Natural source mass alone is therefore not
+a universal circuit-selection rule.
 
 \section{Controlled Experiments}
 
@@ -283,9 +318,8 @@ utility term predicts finite margin changes with Pearson $0.917$, Spearman $0.98
 agreement. Active source utility gaps are positive in $89.2\%$ of head--example pairs.
 
 Directly forcing source mass provides a separate dose response: at $50\times$ training length, baseline
-accuracy is $0.59$ and rises monotonically toward one as forced source mass approaches one. This shows that
-the routed source value is sufficient in the controlled task without implying that arbitrary source-max
-swaps satisfy the utility condition.
+accuracy is $0.59$ and rises monotonically toward one as forced source mass approaches one. In this controlled
+task, the routed source value is sufficient; arbitrary source-max swaps need not satisfy the utility condition.
 
 \begin{figure}[t]
 \centering
@@ -316,8 +350,8 @@ $5\times$ & .484 & .550 & .194 & .507 & +.043 \\
 \label{tab:supp-multi}
 \end{table}
 
-The registered variable-evidence stage leaves arbitrary $r$ unestablished. Two- and three-evidence
-models reach training competence, but the three-evidence max--control interval includes zero. Four-evidence
+The variable-evidence study does not establish effects for arbitrary $r$. Two- and three-evidence models
+reach training competence, but the three-evidence max--control interval includes zero. Four-evidence
 candidates fail the frozen competence gate: the largest eight-layer, width-$512$ candidate reaches
 $0.748$ exact match against the required $0.8$. No four-evidence intervention is interpreted.
 
@@ -345,7 +379,7 @@ despite declining selected-head source attention.}
 \setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{lrrrrrrr}
 \toprule
-Model & $N$ & Base & \multicolumn{3}{c}{$\Delta$ accuracy} & \multicolumn{2}{c}{$\Delta$ margin} \\
+Model & Pairs & Base & \multicolumn{3}{c}{$\Delta$ accuracy} & \multicolumn{2}{c}{$\Delta$ margin} \\
 \cmidrule(lr){4-6}\cmidrule(lr){7-8}
 & & Acc. & Source-max & Source-min & Control & Source-max & Source-min \\
 \midrule
@@ -371,15 +405,18 @@ SmolLM2-1.7B & 5  & .945 & +.008 & -.008 & -.008 & -.013 & -.133 \\
 & 80 & .023 & +.000 & +.000 & +.000 & -.083 & -.012 \\
 \bottomrule
 \end{tabular}
-\caption{Complete source-mass-selected intervention table. Qwen and Pythia show positive source-max
-effects; Gemma is saturated; SmolLM2 is the preregistered negative replication.}
+\caption{Source-mass-selected intervention results for seed 0, with 128 paired held-out examples in
+each model-length cell. Qwen and Pythia show positive source-max effects; Gemma is saturated; SmolLM2 is the
+preregistered negative replication. Main Figure~5 uses the common 5-, 20-, and 80-pair cells only, so every
+curve has identical seed, sample count, and length support.}
 \label{tab:supp-pretrained}
 \end{table*}
 
 \subsection{Utility-conditioned circuit selection}
 
 For every candidate head, the calibration split evaluates transferred source mass times the local
-source--donor utility gap. Selecting the layer with the largest top-four sum rescues SmolLM2 over three seeds:
+source--donor utility gap. Selecting the layer with the largest top-four sum produces a positive SmolLM2 effect
+over three seeds:
 at five pairs, source-max minus control is $+0.702$ margin ($[0.529,0.858]$) and $+0.052$ accuracy, while the
 source-mass selector changes margin by $-0.021$ ($[-0.057,0.014]$). The paired utility-minus-mass effect is
 $+0.723$ ($[0.544,0.882]$).
@@ -420,7 +457,7 @@ Seed & $K$ & Circuit & Layer & Max--control $\Delta M$ & Paired 95\% interval \\
 2 & 4 & random layer & 7 & +.106 & [-.007,.223] \\
 \bottomrule
 \end{tabular}
-\caption{Complete Qwen layer, head-budget, and calibration-seed robustness audit. All nine selected-circuit
+\caption{Qwen layer, head-budget, and calibration-seed robustness results. All nine selected-circuit
 intervals exclude zero; none of the three random-layer intervals does.}
 \label{tab:supp-selection-robustness}
 \end{table*}
@@ -444,18 +481,17 @@ Spearman correlations.}
 \end{table}
 
 \paragraph{Held-out utility calibration and intervention displacement.}
-The utility audit uses circuits selected by source mass on calibration examples, then evaluates the local
+The utility analysis uses circuits selected by source mass on calibration examples, then evaluates the local
 first-order term on disjoint rows. It therefore does not select a circuit by the same per-row utility values
 used in the prediction check. Table~\ref{tab:supp-utility-calibration} reports calibration as well as rank
 agreement. The first-order term is informative but imperfect, particularly for the largest Qwen effects, so
-we treat it as a local ranking signal rather than a calibrated estimator of the finite effect. We also retain
-rows where every selected head already assigns the source its maximum weight. These rows have zero source-max
-displacement and prevent the mean effect from being driven by an unreported subset with movable mass.
+we use it only as a local ranking signal. We also retain rows where every selected head already assigns the
+source its maximum weight. These rows have zero source-max displacement and attenuate the aggregate effect.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=.80\textwidth]{figures/fig_controlled_delta_distribution.png}
-\caption{Controlled source-max displacement audit. Left: the per-head transferred-mass distribution. Right:
+\caption{Controlled source-max displacement. Left: the per-head transferred-mass distribution. Right:
 exact margin change increases with total circuit transfer. Individual swaps are vacuous for 18.5\% of
 head--example pairs, while 8.4\% of complete eight-head circuits are entirely vacuous.}
 \label{fig:controlled-delta}
@@ -480,7 +516,7 @@ Pythia-1.4B & 384 & .670 & .885 & +.184 & .724 & 4.2\% & .346 \\
 Gemma-2-2B & 384 & .738 & .947 & +.001 & .112 & 21.9\% & .312 \\
 \bottomrule
 \end{tabular}
-\caption{Held-out calibration and displacement audit for the pretrained utility check. Slope and intercept
+\caption{Held-out calibration and displacement results for the pretrained utility check. Slope and intercept
 fit exact margin change from the first-order prediction. All rows are retained, including zero-displacement
 source-max cases. The reproducible aggregation reads the saved per-example artifacts.}
 \label{tab:supp-utility-calibration}
@@ -550,7 +586,7 @@ For each untouched Qwen prompt, the source pair remains in the same slot while d
 match the pair of naturally produced attention rows with minimum sorted-spectrum distance subject to a source
 mass gap of at least $.01$. The paired margin effect is $+.026$ ($[-.017,+.070]$, $p=.25$). A within-instance
 regression that controls maximum weight and entropy gives a positive source-mass coefficient in every seed,
-averaging $+1.250$ ($p=.03125$). This is observational support for source-mass relevance on endogenous rows;
+averaging $+1.250$ ($p=.03125$). These endogenous rows support an association with source mass;
 the stricter matched comparison remains inconclusive and does not identify an endogenous causal mechanism.
 
 \begin{table*}[t]
@@ -569,7 +605,7 @@ Seed & Eligible pairs & Matched $\Delta M$ & Positive pairs & Source coefficient
 5 & 256 & -.001 & 46.9\% & +.815 & .1216 \\
 \bottomrule
 \end{tabular}
-\caption{On-manifold distractor-order audit across six calibration and evaluation seeds. Coefficients are
+\caption{On-manifold distractor-order comparison across six calibration and evaluation seeds. Coefficients are
 within-instance source-mass slopes controlling maximum weight and entropy.}
 \label{tab:supp-endogenous}
 \end{table*}
@@ -587,7 +623,7 @@ SmolLM2-1.7B & utility gain & +1.253 & 1 \\
 Qwen2.5-1.5B & utility gap & +1.493 & 2 \\
 \bottomrule
 \end{tabular}
-\caption{Equal-budget cross-family selector audit. No selector wins all three families; output-conditioned
+\caption{Equal-budget cross-family selector comparison. No selector wins all three families; output-conditioned
 selectors lead each family.}
 \label{tab:supp-selector-family}
 \end{table}
@@ -609,33 +645,36 @@ On the locked
 64-calibration/128-evaluation
 design over six seeds, utility-selected source-max exceeds control by $+0.378$ margin
 ($[0.253,0.520]$). Source-mass selection is harmful at $-0.090$ ($[-0.141,-0.049]$). An eight-token greedy
-audit changes neither first-answer accuracy nor repetition relative to control. All six utility-selected seed
+check changes neither first-answer accuracy nor repetition relative to control. All six utility-selected seed
 means are positive; the exact two-sided sign-flip test gives $p=.03125$, which remains $.03125$ after Holm
 adjustment across the three confirmatory tests.
 
 For the nested length ladder, the selected circuit is frozen at four passages before appending unrelated
-passages. Table~\ref{tab:supp-ladder} reports hierarchical 32-minus-4 changes. Qwen loses performance while
+passages. Main Figure~6 compares seed 0 for both models, using the same 128 paired questions in every
+model-length cell. Table~\ref{tab:supp-ladder} separately reports the broader available-seed aggregation:
+Qwen seeds 0 and 2 and SmolLM2 seed 0, with 128 examples per seed and passage count. Qwen loses performance while
 source mass rises and rescue weakens. SmolLM2 loses performance while source mass falls and rescue does not
-increase. This rejects source-mass loss or increasing rescue as a universal mechanism of natural-context
-degradation.
+increase. The two models therefore do not share a source-mass-loss or increasing-rescue account of
+natural-context degradation.
 
 \begin{table*}[t]
 \centering
-\small
-\setlength{\tabcolsep}{3.0pt}
-\begin{tabular}{lrrrr}
+\scriptsize
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{lrrrrrr}
 \toprule
-Model & $\Delta$ baseline source mass & $\Delta$ margin & $\Delta$ accuracy & $\Delta$ rescue margin \\
+Model & Seeds & $n$/seed & $\Delta$ source mass & $\Delta$ margin & $\Delta$ accuracy & $\Delta$ rescue \\
 \midrule
-Qwen2.5-1.5B & +.000955 $[+.000141,+.002033]$ & -1.036 $[-1.397,-.698]$ & -.0469 $[-.0742,-.0234]$ & -.179 $[-.352,-.005]$ \\
-SmolLM2-1.7B & -.0000736 $[-.0000989,-.0000519]$ & -.193 $[-.320,-.066]$ & -.1016 $[-.1563,-.0547]$ & +.018 $[-.027,+.066]$ \\
+Qwen2.5-1.5B & 0, 2 & 128 & +.000955 $[+.000141,+.002033]$ & -1.036 $[-1.397,-.698]$ & -.0469 $[-.0742,-.0234]$ & -.179 $[-.352,-.005]$ \\
+SmolLM2-1.7B & 0 & 128 & -.0000736 $[-.0000989,-.0000519]$ & -.193 $[-.320,-.066]$ & -.1016 $[-.1563,-.0547]$ & +.018 $[-.027,+.066]$ \\
 \bottomrule
 \end{tabular}
-\caption{Natural-QA 32-minus-4-passage changes with hierarchical 95\% intervals.}
+\caption{Natural-QA 32-minus-4-passage changes with hierarchical 95\% intervals. This robustness table uses
+all passing seeds available for each model and is separate from the seed-0 matched comparison in Main Figure~6.}
 \label{tab:supp-ladder}
 \end{table*}
 
-\subsection{Complete alternative-explanation audit}
+\subsection{Alternative Explanations and Controls}
 
 \begin{table*}[!t]
 \centering
@@ -648,34 +687,34 @@ SmolLM2-1.7B & -.0000736 $[-.0000989,-.0000519]$ & -.193 $[-.320,-.066]$ & -.101
 \toprule
 Alternative & Experiment or matched control & Quantitative result & Conclusion \\
 \midrule
-Concentration changed & Exact invariant checks after every permutation & Sorted-spectrum error is \neutral{0} in controlled models and $\leq\neutral{4.77\times10^{-7}}$ in pretrained runs & \helpful{Excluded exactly} \\
-Any perturbation helps & Distractor-only permutation on the same rows & Control $\Delta$accuracy is \neutral{+.011 [.004,.018]} versus source-max \helpful{+.153 [.086,.222]} & \helpful{Cannot explain main effect} \\
-Total source mass suffices & Two-evidence mass-preserving reassignment & Evidence-max exceeds the same-mass control by \helpful{+.043 [.017,.072]} exact match & \helpful{Rejected} \\
-Output variance is causal & Normalize post-attention variance while leaving routing untouched & Variance ratio returns to \neutral{.99--1.00}; $50\times$ $\Delta$accuracy remains \harmful{-.013 to -.081} & \helpful{Rejected} \\
-Any layer works & Frozen selected, adjacent, and random-layer circuits & Selected Qwen cells average \helpful{+.874}; random layers average \neutral{-.059} & \helpful{Rejected} \\
-Output-independent selection suffices & Equal-budget ten-seed selector ablation & Source gradient \utilityhelpful{+.750}, utility gain \utilityhelpful{+.600}, source mass \harmful{-.040} & \helpful{Rejected} \\
-Calibration leakage drives the gain & Disjoint calibration/evaluation examples and seed-cluster intervals & Held-out natural QA gives \utilityhelpful{+.378 [.253,.520]} margin over control across six seeds & \helpful{Excluded by design} \\
-One source-mass trajectory explains natural length failure & Frozen-circuit 4--32 passage ladder & Qwen $\Delta m_S$ \diagnostic{+.00095} while margin falls \harmful{-1.036}; SmolLM2 $\Delta m_S$ \diagnostic{-.00007} with flat rescue & \diagnostic{Universal account rejected; cause open} \\
+Concentration changed & Exact invariant checks after every permutation & Sorted-spectrum error is \neutral{0} in controlled models and $\leq\neutral{4.77\times10^{-7}}$ in pretrained runs & \helpful{Spectrum invariant} \\
+Any perturbation helps & Distractor-only permutation on the same rows & Control $\Delta$accuracy is \neutral{+.011 [.004,.018]} versus source-max \helpful{+.153 [.086,.222]} & \helpful{Control is insufficient} \\
+Total source mass suffices & Two-evidence mass-preserving reassignment & Evidence-max exceeds the same-mass control by \helpful{+.043 [.017,.072]} exact match & \helpful{Not supported} \\
+Output variance is causal & Normalize post-attention variance while leaving routing untouched & Variance ratio returns to \neutral{.99--1.00}; $50\times$ $\Delta$accuracy remains \harmful{-.013 to -.081} & \helpful{Not supported} \\
+Any layer works & Frozen selected, adjacent, and random-layer circuits & Selected Qwen cells average \helpful{+.874}; random layers average \neutral{-.059} & \helpful{Not supported} \\
+Output-independent selection suffices & Equal-budget ten-seed selector ablation & Source gradient \utilityhelpful{+.750}, utility gain \utilityhelpful{+.600}, source mass \harmful{-.040} & \helpful{Not supported} \\
+Calibration leakage drives the gain & Disjoint calibration/evaluation examples and seed-cluster intervals & Held-out natural QA gives \utilityhelpful{+.378 [.253,.520]} margin over control across six seeds & \helpful{Addressed by split} \\
+One source-mass trajectory explains natural length failure & Frozen-circuit 4--32 passage ladder & Qwen $\Delta m_S$ \diagnostic{+.00095} while margin falls \harmful{-1.036}; SmolLM2 $\Delta m_S$ \diagnostic{-.00007} with flat rescue & \diagnostic{Not shared across models} \\
 The result extends to arbitrary evidence arity & Registered pair, triple, and quadruple study & Pair \helpful{+.043 [.017,.072]}; triple \neutral{-.001 [-.009,.008]}; quadruple misses competence & \diagnostic{Unresolved beyond two} \\
 Headline Qwen direction is seed-specific & Exact protocol rerun on five new seeds & All five are positive with mean \helpful{+.042}; the original \helpful{+1.882} is atypically large & \diagnostic{Direction replicates; magnitude unstable} \\
 Off-manifold swap reflects endogenous rows & Untouched distractor-order variants with source slot fixed & Conditional source coefficient \helpful{+1.250} ($p=.03125$); matched effect \neutral{+.026 [-.017,+.070]} & \diagnostic{Partial bridge; causal gap remains} \\
 \bottomrule
 \end{tabular}
-\caption{The complete alternative-explanation audit links each claim to a matched experiment and result.}
+\caption{Alternative explanations, matched controls, and their quantitative outcomes.}
 \label{tab:supp-causal-audit}
 \end{table*}
 
-\section{Additional Boundaries}
+\section{Scope and Boundaries}
 
 The equals-sign second prompt format fails its competence gate in Qwen; the blinded arrow-format pilot also
 fails full-run competence despite directional margin signs. These runs are excluded from causal
 replications. Pythia and Qwen are floor-limited at their longest contexts, so margin is the interpretable
 tail outcome. Qwen-7B is quantized. Gemma supplies a high-competence saturation boundary.
 
-The natural-QA length result broadens the behavioral observation but narrows the mechanism. The conditional
-fixed-spectrum theorem survives because it predicts effects only through transferred mass, value utility,
-and curvature. What fails is the stronger proposition that natural length degradation must involve
-source\mbox{-}mass loss or become increasingly rescuable by the same frozen circuit.
+The fixed-spectrum theorem remains applicable to the natural-QA length result because it conditions effects on
+transferred mass, value utility, and curvature. The length ladder does not support the stronger claim that
+natural length degradation must involve source\mbox{-}mass loss or become increasingly rescuable by the same
+frozen circuit.
 
 \section{Reproducibility}
 
@@ -684,17 +723,25 @@ The anonymous supplementary bundle contains the paper-specific training, preproc
 analysis, and figure code; configurations and random seeds; prompts; paired per-example outputs;
 competence-gate failures; invariant checks; and preregistrations. The saved artifacts reproduce reported
 statistics and figures without rerunning a model, while the runners reproduce the experiments from public
-pretrained checkpoints or newly trained controlled models.
+pretrained checkpoints or newly trained controlled models. \texttt{ARTIFACT\_INDEX.md} maps claims to files,
+\texttt{DATA\_DICTIONARY.md} defines common fields and units, and \texttt{REPRODUCE.md} gives CPU-only analysis,
+test, figure, and optional GPU commands.
 
 \paragraph{Data and models.}
 The controlled tasks are generated from the included task generator and therefore require no external dataset.
 Natural MCQA samples are constructed from the public SQuAD training split \citep{rajpurkar2016squad}; the
 sampling seed and eligibility rule are included in the bundle. Pretrained probes use publicly released Qwen,
 Pythia, Gemma, and SmolLM2 checkpoints, with exact identifiers, tokenizer settings, and precision recorded in
-the result artifacts. Later pretrained audits used a Linux Google Colab runtime with one NVIDIA T4 GPU
+the result artifacts. Later pretrained experiments used a Linux Google Colab runtime with one NVIDIA T4 GPU
 (16 GB), PyTorch, and Hugging Face Transformers. The earlier controlled artifacts retain configurations and
 seeds but not the accelerator model or exact package-version snapshot; we therefore mark infrastructure
 reproducibility partial in the checklist. A public code and artifact archive will be released on acceptance.
+
+\paragraph{Integrity and anonymity.}
+\texttt{MANIFEST.sha256} records the path, byte size, and SHA-256 digest of every bundled file except the
+manifest itself. Running \texttt{python scripts/verify\_package.py} checks required assets, parses every JSON
+artifact, scans text files for local user paths and credential-shaped strings, and verifies the manifest.
+The upload archive omits Git history, model caches, compiled paper PDFs, and LaTeX build products.
 
 \bibliography{references}
 
