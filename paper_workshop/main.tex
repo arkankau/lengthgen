@@ -1,8 +1,10 @@
 % InterpScience @ NeurIPS 2026 (Sydney) -- non-archival workshop submission, long track (9 pages).
-% Requires neurips_2026.sty from https://neurips.cc/Conferences/2026/CallForPapers
-% (or start from the official NeurIPS 2026 Overleaf template and paste this body in).
+% neurips_2026.sty is the official file from
+% https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip
 \documentclass{article}
-\usepackage[final]{neurips_2026}   % double-blind: keep the default (anonymous) submission mode
+% dblblindworkshop keeps the submission anonymous (the style's default) and prints the workshop notice.
+\usepackage[dblblindworkshop]{neurips_2026}
+\workshoptitle{Interpretability as a Science: Toward Rigorous Foundations for Understanding LLMs}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -90,12 +92,11 @@ spectrum, a distractor-only exchange gives a matched control. This paired design
 weight to the source helps. The answer depends on the spectrum's selective capacity,
 its assignment to task-labeled positions, and the downstream utility of the moved values.
 
-Source-max raises per-token accuracy by $0.153$, source-min lowers it by
-$0.043$, and the distractor control changes it by $0.011$. As the spectrum sharpens, the gap between the two
-assignments grows even though sharpening the original assignment remains near zero. A local utility term then
-orders the finite margin effect with $0.989$ Spearman correlation and $99.5\%$ sign agreement. Qwen and Pythia
-show the same direction, while Gemma and SmolLM2 show saturation and selector mismatch.
-Utility-selected routing also transfers to context-grounded natural QA.
+Source-max raises per-token accuracy by $0.153$, source-min lowers it by $0.043$, and the distractor control
+changes it by $0.011$. As the spectrum sharpens, the gap between the two assignments grows even though
+sharpening the original assignment remains near zero, and a local utility term orders the finite margin effect.
+Qwen and Pythia respond in the same direction, while Gemma and SmolLM2 expose saturation and selector-mismatch
+regimes.
 
 Our contributions are:
 \begin{itemize}
@@ -107,7 +108,14 @@ Our contributions are:
     multi-evidence computation, and natural QA, and identify saturation and selector-mismatch regimes.
 \end{itemize}
 
-% PAGE BUDGET: the illustrative routing schematic is Figure~\ref{fig:overview} in Appendix~\ref{app:overview}.
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/fig_routing_overview.png}
+\caption{Question-answering use case. For the same context and question, a spectrum-preserving swap (SPS) moves
+the maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model, values,
+and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects the answer.}
+\label{fig:overview}
+\end{figure}
 
 \section{Related Work}
 
@@ -130,20 +138,15 @@ first-order form. Here we evaluate it along an exact permutation of a model's ow
 finite swap itself.
 
 \paragraph{Closest attention interventions.}
-Attention Knockout blocks selected edges and renormalizes the row to trace factual information flow
-\citep{geva2023dissecting}. Efficient attention projects a row onto its output-effective subspace and studies
-when attention supports causal explanation \citep{naim2024explaining}. Contribution Weights combine attention
-mass with projected-value magnitude and alignment, then test token importance through removal
-\citep{cunningham2026contribution}. These approaches delete, block, renormalize, or rank parts of an attention
-pathway. Our reassignment leaves the complete attention-weight multiset intact and changes its assignment to
-token positions. Equation~\ref{eq:margin-bound} then connects that finite, task-labeled swap to the target margin.
-
-\paragraph{Retrieval-based long-context architectures.}
-Sparse and retrieval-based architectures ask how a model can access distant context efficiently
-\citep{sparselong,hu2025causalretrieval}. Grouped Cross Attention, for example, learns to retrieve useful
-chunks into a bounded attention window. We study a different object: a trained attention row with a fixed
-weight spectrum. We isolate the behavioral effect of assigning its available selectivity to
-task-required evidence.
+The nearest methods delete, block, renormalize, or rank parts of an attention pathway: Attention Knockout
+blocks selected edges and renormalizes the row \citep{geva2023dissecting}, efficient attention projects a row
+onto its output-effective subspace \citep{naim2024explaining}, and Contribution Weights rank tokens by
+attention mass combined with projected-value magnitude, testing importance through removal
+\citep{cunningham2026contribution}. Each changes the weight multiset. Our reassignment leaves it intact and
+changes only its assignment to token positions, and Equation~\ref{eq:margin-bound} connects that finite,
+task-labeled swap to the target margin. Sparse and retrieval-based architectures instead change how distant
+context is accessed \citep{sparselong,hu2025causalretrieval}; we study a trained row with a fixed spectrum and
+isolate the effect of assigning its available selectivity to task-required evidence.
 
 \section{Methods}
 
@@ -289,7 +292,14 @@ exclusive retrieval mechanism. In untouched distractor-order variants, the condi
 is $+1.250$ ($p=.03125$), while the closest-spectrum paired effect is $+.026$ ($[-.017,+.070]$, $p=.25$).
 This connects the intervention to an endogenous association without establishing endogenous causality.
 
-% PAGE BUDGET: protocol schematic moved to Appendix B (the text above states the protocol in full).
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.82\linewidth]{figures/fig_paired_causal_protocol.png}
+\caption{Paired causal protocol. A circuit selected on disjoint calibration data is frozen before
+treatment and control are applied to the same evaluation row. Both paths preserve the spectrum; the natural
+QA control additionally minimizes displacement mismatch in Equation~\ref{eq:matched-control}.}
+\label{fig:paired-protocol}
+\end{figure}
 
 \paragraph{Measured outcomes.}
 We record task accuracy, target-versus-competitor margin, source mass, attention-output variance, entropy,
@@ -303,7 +313,7 @@ and preregistered decision rules.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.88\textwidth]{figures/fig_fixed_spectrum_result.png}
+\includegraphics[width=0.75\textwidth]{figures/fig_fixed_spectrum_result.png}
 \caption{Assignment changes retrieval despite an identical attention spectrum. Source-max improves accuracy,
 source-min harms it, and the distractor-only control remains near zero (a). The effect increases with the
 fraction of the selected circuit receiving the intervention (b). Diamonds and intervals summarize trained
@@ -340,7 +350,7 @@ held fixed. Full model-level intervals and the variance and patching results app
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/fig_capacity_assignment.png}
+\includegraphics[width=0.71\textwidth]{figures/fig_capacity_assignment.png}
 \caption{Capacity controls leverage, and utility predicts the finite intervention. Sharper spectra
 increase the correct-versus-wrong assignment contrast while sharpening alone remains near zero (a). The
 first-order utility term predicts the exact source-max margin effect across tasks and positional encodings
@@ -376,7 +386,7 @@ aggregate source mass from useful evidence assignment.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.68\textwidth]{figures/fig_pretrained_summary.png}
+\includegraphics[width=0.58\textwidth]{figures/fig_pretrained_summary.png}
 \caption{Matched pretrained-model comparison (seed 0; $n=128$ paired examples per model-length cell).
 All panels use the 5-, 20-, and 80-pair ladder and report source-max, source-min, and untouched margin
 relative to the same distractor control. Qwen and Pythia respond positively, Gemma is saturated, and the
@@ -454,7 +464,7 @@ to reassignment on an unchanged input.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.94\textwidth]{figures/fig_natural_length_ladder.png}
+\includegraphics[width=0.8\textwidth]{figures/fig_natural_length_ladder.png}
 \caption{Matched natural-QA length ladder (seed 0; $n=128$ paired examples per model-length cell).
 From 4 to 32 passages, accuracy falls (a), source routing moves in opposite directions (b), and
 frozen-circuit rescue stays flat or weakens (c). Bands are paired-example bootstrap 95\% intervals.}
@@ -536,29 +546,6 @@ Output-conditioned selectors lead in each family, although their internal rankin
 selector results, competence-gate failures, and the anonymized code package appear in the supplementary
 material.
 
-\section{Illustration of a spectrum-preserving swap}
-\label{app:overview}
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.97\textwidth]{figures/fig_routing_overview.png}
-\caption{Question-answering use case. For the same context and question, a spectrum-preserving swap (SPS)
-moves the maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model,
-values, and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects
-the answer.}
-\label{fig:overview}
-\end{figure}
-
-\section{Paired causal protocol}
-\label{app:protocol}
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.96\linewidth]{figures/fig_paired_causal_protocol.png}
-\caption{Paired causal protocol. A circuit selected on disjoint calibration data is frozen before
-treatment and control are applied to the same evaluation row. Both paths preserve the spectrum; the natural
-QA control additionally minimizes displacement mismatch in Equation~\ref{eq:matched-control}.}
-\label{fig:paired-protocol}
-\end{figure}
+% Figures live in the main text, not here.
 
 \end{document}

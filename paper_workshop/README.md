@@ -15,29 +15,32 @@ The AAAI source is **untouched**; this is a separate copy so the two never diver
   (all 20 used citations resolve to real papers with correct metadata).
 
 ## How to compile
-There is no local LaTeX toolchain, so use Overleaf:
-1. Start from the official NeurIPS 2026 template (it supplies `neurips_2026.sty`), or download the style
-   file from https://neurips.cc/Conferences/2026/CallForPapers.
-2. Upload `main.tex`, `references.bib`, and `figures/`.
-3. Compile with pdfLaTeX. `\usepackage[final]{neurips_2026}` is set; for the anonymous submission build use
-   the style's submission mode so author identity is suppressed.
+MiKTeX is installed locally, so this builds here (no Overleaf needed):
 
-## The one open risk: page count
-Main text is roughly 4,400 words plus 5 figures and 1 wide table, which lands near **10–11 pages** in
-single-column NeurIPS format against a **9-page limit**. This must be checked on the first compile.
+```
+pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+```
 
-Cut levers, in the order I would apply them (each loses no result — content moves to the appendix, which is
-unlimited):
-1. Move `fig_routing_overview` (the Paris/Tokyo illustration) to the appendix. Saves ~1 page.
-2. Compress **Related Work** from four paragraphs to two; the "Closest attention interventions" paragraph can
-   keep its citations while dropping per-method description.
-3. Move the "Interventions and estimation" statistical machinery (matched-control equation, cluster tests,
-   Holm family) to an appendix subsection, leaving three sentences in the main text.
-4. Move `fig_natural_length_ladder` to the appendix and describe the divergence in text.
-5. Shrink Table 1 to the pretrained block only, full table to appendix.
+`neurips_2026.sty` in this directory is the official file, extracted from
+https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip
 
-Already applied: the replication audits and the paired-protocol schematic are in the appendix
-(Appendices A and B).
+The `dblblindworkshop` package option is the right one for this venue: it keeps the submission anonymous
+(prints "Anonymous Author(s)" and line numbers) and registers the workshop track. The workshop title set by
+`\workshoptitle{...}` only appears in the page-one notice under the `final` option, so for camera-ready swap
+`dblblindworkshop` for `final,dblblindworkshop`. In submission mode the generic "Submitted to ... Do not
+distribute." notice is expected and correct.
+
+## Page budget: fits
+Built with the official style: **main text pages 1-9** (limit 9), references 9-10, appendix 11, **11 pages
+total, 0 overfull hboxes**. References and the appendix do not count toward the limit.
+
+To fit, prose was compressed rather than cutting figures: the Related Work "closest interventions" and
+"retrieval architectures" paragraphs were merged, the introduction's results preview was tightened, and all
+six figure widths were scaled by 0.85. Every figure remains in the main text and every number is unchanged.
+
+If a future edit pushes it over again, the next levers in order are: move the "Interventions and estimation"
+statistical machinery (cluster tests, Holm family) to an appendix subsection; shrink Table 1 to the pretrained
+block with the full table in the appendix. Do **not** move figures to the appendix.
 
 ## Differences from the AAAI version
 - **The method is named here: SPS, the spectrum-preserving swap.** Defined at first use in the abstract and
