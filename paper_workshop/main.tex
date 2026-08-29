@@ -1,0 +1,558 @@
+% InterpScience @ NeurIPS 2026 (Sydney) -- non-archival workshop submission, long track (9 pages).
+% Requires neurips_2026.sty from https://neurips.cc/Conferences/2026/CallForPapers
+% (or start from the official NeurIPS 2026 Overleaf template and paste this body in).
+\documentclass{article}
+\usepackage[final]{neurips_2026}   % double-blind: keep the default (anonymous) submission mode
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage[hyphens]{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage[table]{xcolor}
+
+\newtheorem{proposition}{Proposition}
+
+\definecolor{pennblue}{HTML}{011F5B}
+\definecolor{pennred}{HTML}{990000}
+\definecolor{controlgray}{HTML}{444444}
+\definecolor{pennbluefill}{HTML}{E8EEF5}
+\definecolor{pennredfill}{HTML}{F7EAEA}
+\definecolor{controlfill}{HTML}{F3F3F3}
+
+\newcommand{\helpful}[1]{\textcolor{pennblue}{\bfseries #1}}
+\newcommand{\utilityhelpful}[1]{\textcolor{pennblue}{\bfseries #1}}
+\newcommand{\harmful}[1]{\textcolor{pennred}{\bfseries #1}}
+\newcommand{\neutral}[1]{\textcolor{controlgray}{#1}}
+\newcommand{\diagnostic}[1]{\textcolor{controlgray}{#1}}
+
+\title{Attention Concentration Does Not Identify Routing:\\
+Fixed-Spectrum Swaps Separate Capacity from Assignment}
+
+% Double-blind: the NeurIPS style prints "Anonymous Author(s)" in submission mode.
+\author{%
+  Anonymous Author(s)\\
+  Affiliation\\
+  \texttt{email}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Attention concentration cannot identify where a transformer routes information: two attention rows may share
+the same weight spectrum while assigning their largest weights to different tokens. This is a measurement
+validity problem. Entropy, the maximum weight, every norm, and the sorted spectrum are invariant to token
+permutation, so none of them can vary with the quantity a routing claim is about, and none can serve as
+evidence for it. We introduce
+fixed-spectrum swaps, a causal intervention that preserves every permutation-invariant property of an attention
+row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained language
+models, and context-grounded question answering, the intervention separates selective capacity from correct
+assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. A local value-aware
+utility term ranks finite margin effects in controlled retrieval with $0.989$ Spearman correlation and $99.5\%$
+sign agreement, and utility-selected circuits yield positive held-out effects on natural question answering.
+Context-length sweeps show where these diagnoses stop being sufficient: in some cases, behavior degrades
+without corresponding routing changes. Fixed-spectrum swaps give a controlled test of whether attention
+assignment causally affects a model's prediction.
+\end{abstract}
+
+\section{Introduction}
+
+Interpretability claims about transformers often rest on where attention concentrates. A sharper row, a lower
+entropy, or a larger maximum weight is read as evidence that a model is attending to the right evidence. We ask
+whether that inference is licensed. At fixed concentration, does assigning the same attention spectrum to
+task-required evidence change the prediction?
+
+The inference is not licensed, and the reason is structural. Entropy, the maximum weight, every norm, and the
+full sorted spectrum are invariant to permutations of token positions. Two attention rows can therefore share
+all of these statistics while one places its largest weight on the required evidence and the other places it on
+a distractor. A measurement that takes the same value on both rows cannot be evidence for either, so
+concentration is not an identifying measure of task-correct routing.
+
+The question matters where routing accounts are used. When performance declines with length, a transformer may
+learn a retrieval rule on short sequences and then lose it as distractors accumulate. We see this pattern in
+copying, key-value recall, and algorithmic tasks
+\citep{kazemnejad,nopeentropy,sparselong}. As contexts grow, attention often becomes more diffuse, entropy rises,
+and attention-output variance can collapse \citep{vanishingvariance}. These trends describe scale and
+concentration, yet they do not tell us where the attention goes.
+
+We test this with a fixed-spectrum intervention. At the answer query, we exchange the weight on a known source
+with a distractor weight and then run the unchanged model. Because the exchange preserves the complete
+spectrum, a distractor-only exchange gives a matched control. This paired design also lets us ask when moving
+weight to the source helps. The answer depends on the spectrum's selective capacity,
+its assignment to task-labeled positions, and the downstream utility of the moved values.
+
+Source-max raises per-token accuracy by $0.153$, source-min lowers it by
+$0.043$, and the distractor control changes it by $0.011$. As the spectrum sharpens, the gap between the two
+assignments grows even though sharpening the original assignment remains near zero. A local utility term then
+orders the finite margin effect with $0.989$ Spearman correlation and $99.5\%$ sign agreement. Qwen and Pythia
+show the same direction, while Gemma and SmolLM2 show saturation and selector mismatch.
+Utility-selected routing also transfers to context-grounded natural QA.
+
+Our contributions are:
+\begin{itemize}
+    \item \textbf{Fixed-spectrum identification.} We separate selective capacity from task-conditioned
+    assignment by preserving the complete attention spectrum and altering only its token placement.
+    \item \textbf{Utility-conditioned mechanism.} We characterize when source-donor reassignment changes
+    the final output and test the prediction against exact interventions.
+    \item \textbf{Transfer and boundaries.} We test the intervention across controlled tasks, pretrained models,
+    multi-evidence computation, and natural QA, and identify saturation and selector-mismatch regimes.
+\end{itemize}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.97\textwidth]{figures/fig_routing_overview.png}
+\caption{Question-answering use case. For the same context and question, a fixed-spectrum swap moves the
+maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model, values,
+and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects the answer.}
+\label{fig:overview}
+\end{figure}
+
+\section{Related Work}
+
+\paragraph{Attention concentration and what it does not identify.}
+Attention concentration has been connected to optimization, token selection, extrapolation, and sparse
+long-context computation \citep{maxmarginselection,nopeentropy,ssmax,sparselong}. Other accounts emphasize
+attention-output scale or normalization \citep{vanishingvariance,postnorm}. These statistics often move
+together as context length changes. They are used as evidence in routing accounts, but their status as
+identifying measures of task-correct routing is generally untested. Our intervention tests that identification
+question while the entire spectrum is held fixed.
+
+\paragraph{Attention intervention and non-identifiability.}
+Attention weights have long been studied as explanations, perturbed to test prediction sensitivity, and
+shown to be non-identifiable without their value vectors
+\citep{jainwallace2019,wiegreffepinter2019,brunner2020identifiability,kobayashi2020weight,hassid2022papa}.
+Causal circuit analysis patches internal activations and measures the resulting output change
+\citep{yamakoshi2023causal,conmy2023acdc}. Attribution patching uses a gradient approximation to screen many
+candidate components efficiently \citep{syed2023attribution,kramar2024atp}. Our utility term has a related
+first-order form. Here we evaluate it along an exact permutation of a model's own attention row, alongside the
+finite swap itself.
+
+\paragraph{Closest attention interventions.}
+Attention Knockout blocks selected edges and renormalizes the row to trace factual information flow
+\citep{geva2023dissecting}. Efficient attention projects a row onto its output-effective subspace and studies
+when attention supports causal explanation \citep{naim2024explaining}. Contribution Weights combine attention
+mass with projected-value magnitude and alignment, then test token importance through removal
+\citep{cunningham2026contribution}. These approaches delete, block, renormalize, or rank parts of an attention
+pathway. Our reassignment leaves the complete attention-weight multiset intact and changes its assignment to
+token positions. Equation~\ref{eq:margin-bound} then connects that finite, task-labeled swap to the target margin.
+
+\paragraph{Retrieval-based long-context architectures.}
+Sparse and retrieval-based architectures ask how a model can access distant context efficiently
+\citep{sparselong,hu2025causalretrieval}. Grouped Cross Attention, for example, learns to retrieve useful
+chunks into a bounded attention window. We study a different object: a trained attention row with a fixed
+weight spectrum. We isolate the behavioral effect of assigning its available selectivity to
+task-required evidence.
+
+\section{Methods}
+
+\subsection{Capacity and Assignment}
+
+At an answer query, let $a=(a_1,\ldots,a_n)$ be an attention row over $n$ token positions, where $a_j\ge0$
+and $\sum_j a_j=1$. Let $S\subseteq\{1,\ldots,n\}$ contain the $r=|S|$ task-required evidence positions,
+and let $a_{(1)}\ge\cdots\ge a_{(n)}$ denote the same weights in descending order. Define
+\begin{equation}
+\begin{aligned}
+ C_r^+&=\sum_{i=1}^{r}a_{(i)}, &
+ C_r^-&=\sum_{i=n-r+1}^{n}a_{(i)},\\
+ K_r(a)&=C_r^+-C_r^-.
+\end{aligned}
+\label{eq:capacity}
+\end{equation}
+$C_r^+$ and $C_r^-$ are the largest and smallest evidence masses available under permutations of the fixed
+spectrum, and $K_r(a)$ is the available routing range. An assignment is a permutation $\pi$ of
+$\{1,\ldots,n\}$ that places weight $a_{\pi(j)}$ at token position $j$. Its evidence mass and normalized
+assignment coordinate are
+\begin{equation}
+\begin{aligned}
+ m_S(\pi)&=\sum_{j\in S}a_{\pi(j)},\\
+ \rho_S(\pi)&=\frac{m_S(\pi)-C_r^-}{K_r(a)}\in[0,1],\qquad K_r(a)>0.
+\end{aligned}
+\label{eq:assignment-coordinate}
+\end{equation}
+Thus $m_S(\pi)=C_r^-+\rho_S(\pi)K_r(a)$. If $K_r(a)=0$, every assignment has the same evidence mass.
+
+\begin{center}
+\fcolorbox{pennblue}{pennbluefill}{\parbox{0.92\linewidth}{
+\textbf{Capacity} specifies how much evidence mass the spectrum can support.\\
+\textbf{Assignment} specifies where that mass is placed.\\
+\textbf{Utility} specifies whether moving it changes the answer.
+}}
+\end{center}
+
+\begin{proposition}[Fixed-spectrum capacity-assignment decomposition]
+For every assignment $\pi$ of a fixed weight multiset,
+\begin{equation}
+ C_r^-\le m_S(\pi)\le C_r^+,
+\end{equation}
+and both bounds are attained. If $K_r(a)>0$, Equation~\ref{eq:assignment-coordinate} defines a unique
+$\rho_S(\pi)$. No statistic invariant to token permutation can determine $\rho_S$.
+\label{prop:capacity}
+\end{proposition}
+
+\paragraph{Proof sketch.}
+An $r$-position evidence set receives at most the $r$ largest weights and at least the $r$ smallest. Assigning
+those weights to $S$ attains each endpoint. Normalizing evidence mass within this interval gives $\rho_S$.
+Any permutation-invariant statistic is constant across all assignments, including assignments at opposite
+endpoints. The supplementary material gives the full exchange argument and the corresponding affine margin range.
+The decomposition is algebraic for every $r$. Behavioral validation is positive for $r=1$ and $r=2$; the
+$r=3$ interval includes zero and the $r=4$ models miss competence, so efficacy at higher arity is unestablished.
+
+\subsection{Utility-Conditioned Output Effects}
+
+Capacity and assignment describe attention mass. Prediction also depends on values and downstream
+computation. Let $H$ be the selected attention heads. In each $h\in H$, let $s$ be the evidence position,
+$d_h$ the donor position whose weight is exchanged with it, and $a_{hj}$ the original attention weight on
+position $j$. Define the transferred mass $\delta_h=a_{h d_h}-a_{h s}$. Let $x_{hj}$ be token $j$'s
+residual-stream contribution after head $h$'s value and output projections. If $z$ is the unpatched residual
+state, the intervention gives $z'=z+\Delta z$, where
+\begin{equation}
+ \Delta z=\sum_{h\in H}\delta_h(x_{hs}-x_{hd_h}).
+\label{eq:residual-change}
+\end{equation}
+Let $\ell_k(z)$ be the downstream logit for token $k$, with target $y$ and competitor $c$. Define
+$M_c(z)=\ell_y(z)-\ell_c(z)$, the exact change $\Delta M_c=M_c(z+\Delta z)-M_c(z)$, and local utility
+$u_{hj}^{(c)}=\nabla_z M_c(z)^\top x_{hj}$.
+
+\begin{proposition}[Utility-conditioned swap effect]
+If $\nabla_z M_c$ is $L_c$-Lipschitz on $\{z+t\Delta z:t\in[0,1]\}$, then
+\begin{equation}
+ \Delta M_c=
+ \sum_{h\in H}\delta_h\big(u_{hs}^{(c)}-u_{hd_h}^{(c)}\big)+R,
+ \qquad |R|\le\frac{L_c}{2}\lVert\Delta z\rVert_2^2.
+\label{eq:margin-bound}
+\end{equation}
+For an affine downstream margin, $R=0$.
+\label{prop:utility}
+\end{proposition}
+
+The Taylor remainder is standard. The new component is the task-labeled capacity-assignment coordinate coupled
+to the exact fixed-spectrum swap vector in Equation~\ref{eq:residual-change}.
+
+The intervention transfers attention mass from a donor token to the source. It helps when the source
+contributes more positively to the target margin than the displaced donor, unless downstream curvature
+overwhelms that gain. Source-max can therefore succeed, saturate, or fail under the same attention-mass rule.
+The supplementary material derives Equation~\ref{eq:margin-bound}, extends it to evidence sets, and states a sufficient
+margin certificate.
+
+\section{Experimental Setup}
+
+\paragraph{Controlled tasks.}
+Argmax retrieval presents key-value pairs and requests the value paired with the largest key. Flag retrieval
+presents values with exactly one marked position and requests that value. Both have one labeled source.
+Two-evidence modular sum marks two digits and requests their sum modulo ten, so both sources are required.
+Four-layer decoders are trained with NoPE and RoPE and four seeds per cell; evaluation reaches $50\times$
+training length. An eight-layer, width-$512$ grid checks scale. The inverse temperature $\beta\in\{1,2,4\}$
+changes attention capacity while each assignment comparison preserves the resulting sorted spectrum.
+
+\paragraph{Pretrained and natural-language tasks.}
+In-context key-value recall lists pairs followed by a query key; the paired value is the labeled source.
+We test Qwen2.5, Pythia, Gemma, and SmolLM2 across increasing pair counts. The selector audit compares circuits
+ranked on disjoint calibration data by source mass or by output-conditioned utility. Natural MCQA uses
+four-choice questions with one gold passage and unrelated passages. Questions must be correct with the full
+context and gold passage alone, but incorrect without context. This filtering defines a model-specific
+context-dependent subset and is not intended to estimate average performance over the full dataset. Its length
+ladder freezes the four-passage circuit before forming nested 8-, 16-, and 32-passage contexts with additional
+unrelated passages.
+
+\paragraph{Interventions and estimation.}
+The distractor control swaps the largest and smallest non-source weights, preserving source mass while
+permuting the same attention row. For a source position $s$, let $d^+=\arg\max_j a_j$,
+$d^-=\arg\min_j a_j$, and $D=\{j:j\ne s\}$ over valid tokens. Source-max swaps $(s,d^+)$ and source-min
+swaps $(s,d^-)$. In controlled and pretrained key-value recall, the distractor control uses the maximum and
+minimum within $D$. Natural QA uses a displacement-matched control. With
+$\delta=a_{d^+}-a_s$, it chooses
+\begin{equation}
+ (p,q)=\arg\min_{\{j,k\}\subset D}
+ \big\vert\,|a_j-a_k|-\delta\,\big\vert
+ \label{eq:matched-control}
+\end{equation}
+and swaps $(p,q)$. Among all non-source pairs, this choice minimizes the absolute difference between the
+control's $L_1$ displacement and the treatment's $L_1$ displacement; the remaining difference is the minimum
+attainable mismatch for that row. It holds source mass fixed, and every control preserves the complete spectrum.
+For natural QA, displacement is matched first because it measures perturbation magnitude. The control does not
+match the donor token, positional distance, or value norm, which remain separate confounds. Calibration and
+evaluation examples are disjoint, circuits are frozen before paired evaluation, and hierarchical intervals
+resample calibration or model seeds above paired examples. We interpret a cell only after its frozen
+competence gate passes.
+Three confirmatory contrasts form one inferential family: controlled source-max versus distractor control,
+the capacity-by-assignment interaction, and natural utility-selected source-max versus matched control. We use
+two-sided exact sign-flip tests at the trained-model or calibration-seed cluster level and Holm correction across
+the family. Other intervals are descriptive and unadjusted.
+These swaps are counterfactual probes and need not lie on the model's endogenous query-key manifold. Treatment
+and control share this intervention class, so their contrast measures downstream sensitivity to assignment,
+rather than the frequency with which the model naturally creates a particular row. Layer controls ($+1.107$ for
+selected $K=8$ versus $-0.059$ for a random layer) and coverage dose response show greater sensitivity under this
+probe. They do not show that normal query-key computation produces swapped rows or that selected heads are the
+exclusive retrieval mechanism. In untouched distractor-order variants, the conditional source-mass coefficient
+is $+1.250$ ($p=.03125$), while the closest-spectrum paired effect is $+.026$ ($[-.017,+.070]$, $p=.25$).
+This connects the intervention to an endogenous association without establishing endogenous causality.
+
+% PAGE BUDGET: protocol schematic moved to Appendix B (the text above states the protocol in full).
+
+\paragraph{Measured outcomes.}
+We record task accuracy, target-versus-competitor margin, source mass, attention-output variance, entropy,
+norms, and the full sorted spectrum. Every fixed-spectrum condition preserves the selected attention rows to
+numerical precision. The supplementary material reports prompts, hyperparameters, per-length tables, competence failures,
+and preregistered decision rules.
+
+\section{Results and Discussion}
+
+\subsection{Assignment Changes Accuracy at Fixed Spectrum}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig_fixed_spectrum_result.png}
+\caption{Assignment changes retrieval despite an identical attention spectrum. Source-max improves accuracy,
+source-min harms it, and the distractor-only control remains near zero (a). The effect increases with the
+fraction of the selected circuit receiving the intervention (b). Diamonds and intervals summarize trained
+models; faint paths show individual cells.}
+\label{fig:assignment-effect}
+\end{figure}
+
+We begin with the simplest test: move the largest available weight to the source, move it away, or exchange
+two distractors. Across sixteen trained models, the mean changes are $+0.153$, $-0.043$, and $+0.011$,
+respectively (Figure~\ref{fig:assignment-effect}). Source-max beats the control in every model-length
+comparison. Their primary cluster-level contrast is $+.142$ (95\% CI $[+.080,+.206]$; exact
+$p=3.05\times10^{-5}$; Holm-adjusted $p=9.16\times10^{-5}$), while complete-spectrum invariant error stays
+below $10^{-6}$.
+
+The controlled audit contains 8,192 head-example pairs. Individual swaps are vacuous in 18.5\% of them, but
+only 86 of 1,024 complete eight-head circuits (8.4\%) are entirely vacuous. Mean exact margin change is $+3.891$
+over all circuits and $+4.248$ (95\% CI $[+3.863,+4.640]$) over the 938 active circuits. The median per-head
+transferred mass is $.025$ (90th percentile $.930$), and effect size rises across transfer quartiles. The
+supplementary displacement audit reports the full distribution.
+
+The effect grows with circuit coverage (Figure~\ref{fig:assignment-effect}b). Patching one, two, four, and eight
+selected heads gives mean source-max gains of $0.007$, $0.013$, $0.056$, and $0.153$ and is monotone in 31 of
+32 model-length comparisons, consistent with a distributed effect under the probe.
+
+Source attention tracks accuracy more closely than attention-output variance. Normalizing that variance leaves
+accuracy unchanged, whereas forcing mass onto the known source restores controlled retrieval. Sharpening the
+original row has little effect.
+
+The ordering survives the eight-layer replication, both positional encodings, four training seeds, and two
+controlled tasks. Random-layer and adjacent-layer interventions remain near zero when the selected circuit is
+held fixed. Full model-level intervals and the variance and patching results appear in the supplementary material.
+
+\subsection{Capacity Amplifies Assignment}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.84\textwidth]{figures/fig_capacity_assignment.png}
+\caption{Capacity controls leverage, and utility predicts the finite intervention. Sharper spectra
+increase the correct-versus-wrong assignment contrast while sharpening alone remains near zero (a). The
+first-order utility term predicts the exact source-max margin effect across tasks and positional encodings
+(b). Error bars summarize trained models.}
+\label{fig:capacity-assignment}
+\end{figure}
+
+We next vary spectrum and assignment independently. Temperature scaling changes the maximum available weight,
+and at every temperature we evaluate identity, source-max, source-min, and distractor control on the same
+examples. The source-max minus source-min contrast grows from $0.196$ to $0.346$, while sharpening the identity
+assignment changes accuracy by at most $0.009$ (Figure~\ref{fig:capacity-assignment}a). Capacity sets the
+possible leverage, while assignment determines where that leverage lands. The primary
+interaction is $+.150$ (95\% CI $[+.094,+.210]$; exact $p=6.10\times10^{-5}$; Holm-adjusted
+$p=1.22\times10^{-4}$).
+
+For held-out examples we differentiate the target margin along the exact source-max path. The first-order
+term in Proposition~\ref{prop:utility} predicts the finite margin change with $0.917$ Pearson correlation,
+$0.989$ Spearman correlation, and $99.5\%$ sign agreement
+(Figure~\ref{fig:capacity-assignment}b). The remaining error measures downstream curvature along the swap.
+
+Modular sum requires the model to route and combine two marked values. At $5\times$ training length,
+assigning the top two weights to evidence raises exact match by $0.066$, assigning the bottom two lowers it
+by $0.291$, and evidence-max exceeds a control that preserves both the spectrum and total evidence mass by
+$0.043$ (95\% CI $[0.017,0.072]$). The result therefore extends beyond copying one token. A registered
+three-evidence estimate includes zero, and four-evidence models miss the frozen competence gate. Higher
+arity remains unresolved.
+
+Evidence-max and evidence-min preserve the complete spectrum. The multi-evidence control also preserves
+total evidence mass, changing only which evidence token receives each weight. Its small effect separates
+aggregate source mass from useful evidence assignment.
+
+\subsection{The Same Intervention Produces Three Pretrained Regimes}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.68\textwidth]{figures/fig_pretrained_summary.png}
+\caption{Matched pretrained-model comparison (seed 0; $n=128$ paired examples per model-length cell).
+All panels use the 5-, 20-, and 80-pair ladder and report source-max, source-min, and untouched margin
+relative to the same distractor control. Qwen and Pythia respond positively, Gemma is saturated, and the
+source-mass-selected SmolLM2 circuit does not benefit. Error bars show paired 95\% intervals.}
+\label{fig:pretrained-summary}
+\end{figure}
+
+The pretrained models show why the utility term matters. Qwen and Pythia gain margin when source-max replaces
+the distractor control. Gemma stays accurate as context grows and gains little from extra source mass, even
+though source-min reliably harms it. This is the saturation regime predicted by Proposition~\ref{prop:utility}:
+removing evidence matters, while extra routing has little left to add. A quantized Qwen2.5-7B run preserves
+the positive margin direction.
+
+SmolLM2 provides the contrasting case. Its preregistered source-mass selector fails, yet ranking heads on
+disjoint calibration examples by output-conditioned gradient or utility restores a positive effect. A ten-seed
+ablation ranks source gradient, utility gain, and utility gap above source mass and transfer mass. Rankings vary
+by architecture, but circuit selection must account for the output.
+
+Interpolating from the natural row to the utility-selected swap gives a monotone margin path over five
+calibration seeds. On context-grounded natural QA, utility-selected routing improves margin over a
+displacement-matched control, while source-mass selection harms it. Across six disjoint calibration seeds, the
+utility-selected contrast is $+.378$ (hierarchical 95\% CI $[+.253,+.520]$; exact and Holm-adjusted
+$p=.03125$). All competence gates pass. An unconstrained generation audit finds no first-answer or repetition
+cost.
+
+The selector results judge a selector by the frozen circuits it finds and their paired margin effects. They do
+not test whether the per-row utility functional predicts a finite swap effect. That held-out predictor audit is
+reported separately in the supplementary material.
+
+\begin{table}[!t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{1.8pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrlrrrrr}
+\toprule
+\multicolumn{2}{l}{\textbf{Fixed-spectrum assignment}} & $n$ & Units & Unpatched & $\Delta$ source-max & $\Delta$ source-min & $\Delta$ distractor & \textbf{max $-$ distractor} \\
+\midrule
+Single evidence & $\beta=1$ & 8,192 & Acc. & $.619$ & \helpful{$+.153$} & \harmful{$-.043$} & \neutral{$+.011$} & \helpful{$+.142$} \\
+ & $\beta=4$ & 8,192 & Acc. & $.619$ & \helpful{$+.298$} & \harmful{$-.048$} & \neutral{$+.025$} & \helpful{$+.273$} \\
+\midrule
+Two evidence & $1\times$ & 2,048 & EM & $.952$ & \helpful{$+.019$} & \harmful{$-.559$} & \neutral{$+.012$} & \helpful{$+.007$} \\
+ & $5\times$ & 2,048 & EM & $.484$ & \helpful{$+.066$} & \harmful{$-.291$} & \neutral{$+.023$} & \helpful{$+.043$} \\
+\midrule
+Pretrained KV & Qwen2.5-1.5B & 384 & Margin & $-3.048$ & \helpful{$+1.990$} & \harmful{$-.961$} & \neutral{$+.192$} & \helpful{$+1.799$} \\
+ & Pythia-1.4B & 384 & Margin & $-3.805$ & \helpful{$+.826$} & \harmful{$-1.022$} & \neutral{$+.146$} & \helpful{$+.680$} \\
+ & Gemma-2-2B & 384 & Margin & $+2.234$ & \helpful{$+.040$} & \harmful{$-1.373$} & \neutral{$+.013$} & \helpful{$+.027$} \\
+ & SmolLM2-1.7B & 384 & Margin & $-2.782$ & \harmful{$-.168$} & \harmful{$-.112$} & \neutral{$-.077$} & \harmful{$-.091$} \\
+\midrule
+\multicolumn{2}{l}{\textbf{Output-conditioned circuit selection}} & $n$ & Units & \multicolumn{2}{c}{$\Delta M$ versus matched control} & $\Delta M$ source mass & $\Pr(\Delta M>0)$ & \textbf{utility $-$ source} \\
+\cmidrule(lr){5-6}
+Task & Model & & & Utility gain & Utility gap & & & \\
+\midrule
+Pretrained KV & Pythia-1.4B & 384 & Margin & \helpful{$+.519$} & \helpful{$+.359$} & \neutral{$+.006$} & $.810$ & \helpful{$+.513$} \\
+ & SmolLM2-1.7B & 384 & Margin & \helpful{$+1.253$} & \helpful{$+.859$} & \neutral{$+.006$} & $.969$ & \helpful{$+1.247$} \\
+ & Qwen2.5-1.5B & 384 & Margin & \helpful{$+1.493$} & \helpful{$+1.493$} & \helpful{$+.069$} & $.956$ & \helpful{$+1.424$} \\
+\bottomrule
+\end{tabular*}
+\caption{Benchmark summary. The pretrained fixed-spectrum rows use the matched 5-, 20-, and 80-pair ladder
+from Figure~\ref{fig:pretrained-summary}, with 128 paired examples per model-length cell and $n=384$ per model.
+Units make upper-block baselines comparable only within task. The lower block reports the three model families
+with completed matched selector runs; a Gemma selector-family run was not conducted. It has no unpatched
+baseline and evaluates selector quality using fixed-spectrum control effects, not per-row utility prediction;
+the supplementary held-out audit evaluates that prediction.
+$\Pr(\Delta M>0)$ is the fraction of paired evaluation examples with a positive utility-gain source-max
+minus matched-control margin. Bold final columns remain identifiable in grayscale. Full cells and 95\%
+intervals are in the supplementary material.}
+\label{tab:evidence-summary}
+\end{table}
+
+Clean-to-corrupt activation patching rescues $+.308$ margin but only between $2.5\%$ and $3.3\%$ of median corruption damage.
+It restores selected-head outputs after source-value corruption, so its magnitude is not directly comparable
+to reassignment on an unchanged input.
+
+\subsection{Natural Context Marks the Scope Boundary}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/fig_natural_length_ladder.png}
+\caption{Matched natural-QA length ladder (seed 0; $n=128$ paired examples per model-length cell).
+From 4 to 32 passages, accuracy falls (a), source routing moves in opposite directions (b), and
+frozen-circuit rescue stays flat or weakens (c). Bands are paired-example bootstrap 95\% intervals.}
+\label{fig:natural-length-ladder}
+\end{figure}
+
+The fixed-context natural-QA result establishes causal routing in ordinary text. The length ladder is a scope
+test: it asks whether the same fixed-context protocol remains informative as context grows. We select the circuit
+at four passages, freeze every choice, and append unrelated passages to form nested 4, 8, 16, and 32-passage
+contexts. The matched figure fixes seed 0 and resamples paired questions; repeated passage observations from
+one circuit are not treated as independent models. The supplementary material reports the additional Qwen seed separately.
+
+Both Qwen and SmolLM2 lose margin and accuracy by 32 passages, yet their source-mass trajectories diverge.
+Qwen source mass rises as intervention rescue weakens. SmolLM2 source mass falls while rescue stays flat.
+The shared degradation cannot be attributed to one consistent source-mass trajectory. This is a scope limit of
+the diagnosis, not a failed prediction.
+
+The protocol has a narrower interpretation. At a fixed context, a spectrum-preserving swap measures whether a
+chosen circuit can use reassigned evidence. As contexts grow, representation quality, distractor semantics,
+answer competition, and computation outside that circuit can also matter. The theorem concerns a specified
+swap at a fixed context; this experiment does not resolve the other long-context bottlenecks. Exact 32-minus-4
+changes and hierarchical intervals appear in the supplementary material.
+
+The arity checks provide another limit. The two-evidence task
+passes and supports the mass-preserving control; the three-evidence interval includes zero, and the
+four-evidence model misses competence. Higher arity remains unresolved. An eight-token generation audit also
+leaves first-answer accuracy and repetition unchanged, so simple format collapse is not driving the result.
+
+\subsection{Identification and Replication Audits}
+
+Replication checks vary the calibration sample, patch budget, and model family, and they support the same
+reading. Selected circuits are positive at every head budget, adjacent and random layers are smaller or near
+zero, the utility term ranks exact effects within every competent cell while calibrating them imperfectly, and
+an exact rerun reproduces the direction with an atypically large original magnitude. Appendix~\ref{app:audits}
+reports these audits in full.
+
+\section{Limitations}
+
+Fixed-spectrum swaps identify the causal effect of a specified attention reassignment, not a complete account
+of model computation. The protocol requires identifiable evidence positions and a chosen intervention circuit;
+output-conditioned selection also requires disjoint calibration examples. The post-softmax swap is an
+off-manifold counterfactual. Preserving the full weight spectrum isolates assignment, but does not show that
+training would produce the same row or that the intervention is a practical inference-time policy.
+
+Our empirical scope covers controlled retrieval and four pretrained families, including one quantized 7B
+replication. Natural QA is causal at fixed context, while divergent length-ladder trajectories show that the
+circuit does not explain every long-context failure. Higher arity remains competence-limited, the generation
+audit is short-horizon, and utility ranks swaps better than it calibrates large effects.
+
+{\small
+\bibliographystyle{plainnat}
+\bibliography{references}
+}
+
+\appendix
+
+\section{Identification and replication audits}
+\label{app:audits}
+
+Replication checks vary the calibration sample, patch budget, and model family. Across three frozen Qwen
+calibration seeds, selected circuits are positive at every head budget: $K=2,4,8$ gives
+$+.460$, $+1.054$, and $+1.107$ margin. Adjacent layers are smaller and inconsistent ($+.147$ and
+$-.131$), while random layers average near zero ($-.059$). Full intervals and seed standard deviations are
+reported in the supplementary package.
+
+A separate replication tests the utility relation. Circuits are chosen by source mass on
+disjoint calibration examples; utility is then computed on held-out evaluation rows. Across three seeds per
+family, every competent source-max cell is positive, and predicted effects rank the exact effects within each
+cell. Mean Spearman correlations are $.866$ for Qwen2.5-1.5B, $.544$ for Pythia-1.4B, and $.554$ for
+Gemma-2-2B, with sign agreements $.805$, $.807$, and $.714$. The approximation is imperfect at large effects,
+so we use it as a local ranking signal rather than a calibrated finite-effect estimator. For the 32 controlled
+cell means in Figure~\ref{fig:capacity-assignment}b, the actual-on-predicted fit is $1.387x-.102$
+(Pearson $.978$), which deviates from identity calibration.
+
+The exact Qwen rerun keeps precision, lengths, contrast, and sample counts fixed. All five new seeds are positive
+(mean $+.042$); the combined six-seed test gives $p=.03125$, while the original $+1.882$ magnitude is atypical.
+
+Output-conditioned selectors lead in each family, although their internal ranking changes by architecture. Full
+selector results, competence-gate failures, and the anonymized code package appear in the supplementary
+material.
+
+\section{Paired causal protocol}
+\label{app:protocol}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.96\linewidth]{figures/fig_paired_causal_protocol.png}
+\caption{Paired causal protocol. A circuit selected on disjoint calibration data is frozen before
+treatment and control are applied to the same evaluation row. Both paths preserve the spectrum; the natural
+QA control additionally minimizes displacement mismatch in Equation~\ref{eq:matched-control}.}
+\label{fig:paired-protocol}
+\end{figure}
+
+\end{document}
