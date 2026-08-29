@@ -40,8 +40,13 @@ Already applied: the replication audits and the paired-protocol schematic are in
 (Appendices A and B).
 
 ## Differences from the AAAI version
-- Retitled to lead with identification: *Attention Concentration Does Not Identify Routing: Fixed-Spectrum
-  Swaps Separate Capacity from Assignment.*
+- **The method is named here: SPS, the spectrum-preserving swap.** Defined at first use in the abstract and
+  again in the introduction, then used as shorthand. The name states the invariant the method holds fixed
+  (the sorted weight multiset) rather than anything about a mean, which would be both wrong and vacuous since
+  an attention row always sums to one. Adjectival uses ("fixed-spectrum condition", "fixed-spectrum
+  assignment") are left as they were.
+- Retitled to lead with identification: *Attention Concentration Does Not Identify Routing:
+  Spectrum-Preserving Swaps Separate Capacity from Assignment.*
 - Abstract gained a measurement-validity framing sentence (permutation-invariant statistics cannot vary with
   the quantity a routing claim is about).
 - "Background" became "Introduction" and now opens on the identification problem rather than the

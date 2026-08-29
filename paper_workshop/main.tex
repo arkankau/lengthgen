@@ -35,7 +35,7 @@
 \newcommand{\diagnostic}[1]{\textcolor{controlgray}{#1}}
 
 \title{Attention Concentration Does Not Identify Routing:\\
-Fixed-Spectrum Swaps Separate Capacity from Assignment}
+Spectrum-Preserving Swaps Separate Capacity from Assignment}
 
 % Double-blind: the NeurIPS style prints "Anonymous Author(s)" in submission mode.
 \author{%
@@ -52,15 +52,15 @@ Attention concentration cannot identify where a transformer routes information: 
 the same weight spectrum while assigning their largest weights to different tokens. This is a measurement
 validity problem. Entropy, the maximum weight, every norm, and the sorted spectrum are invariant to token
 permutation, so none of them can vary with the quantity a routing claim is about, and none can serve as
-evidence for it. We introduce
-fixed-spectrum swaps, a causal intervention that preserves every permutation-invariant property of an attention
-row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained language
+evidence for it. We introduce the
+spectrum-preserving swap (SPS), a causal intervention that preserves every permutation-invariant property of an
+attention row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained language
 models, and context-grounded question answering, the intervention separates selective capacity from correct
 assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. A local value-aware
 utility term ranks finite margin effects in controlled retrieval with $0.989$ Spearman correlation and $99.5\%$
 sign agreement, and utility-selected circuits yield positive held-out effects on natural question answering.
 Context-length sweeps show where these diagnoses stop being sufficient: in some cases, behavior degrades
-without corresponding routing changes. Fixed-spectrum swaps give a controlled test of whether attention
+without corresponding routing changes. SPS gives a controlled test of whether attention
 assignment causally affects a model's prediction.
 \end{abstract}
 
@@ -84,8 +84,8 @@ copying, key-value recall, and algorithmic tasks
 and attention-output variance can collapse \citep{vanishingvariance}. These trends describe scale and
 concentration, yet they do not tell us where the attention goes.
 
-We test this with a fixed-spectrum intervention. At the answer query, we exchange the weight on a known source
-with a distractor weight and then run the unchanged model. Because the exchange preserves the complete
+We test this with a spectrum-preserving swap (SPS). At the answer query, we exchange the weight on a known
+source with a distractor weight and then run the unchanged model. Because the exchange preserves the complete
 spectrum, a distractor-only exchange gives a matched control. This paired design also lets us ask when moving
 weight to the source helps. The answer depends on the spectrum's selective capacity,
 its assignment to task-labeled positions, and the downstream utility of the moved values.
@@ -110,7 +110,7 @@ Our contributions are:
 \begin{figure}[!t]
 \centering
 \includegraphics[width=0.97\textwidth]{figures/fig_routing_overview.png}
-\caption{Question-answering use case. For the same context and question, a fixed-spectrum swap moves the
+\caption{Question-answering use case. For the same context and question, a spectrum-preserving swap (SPS) moves the
 maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model, values,
 and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects the answer.}
 \label{fig:overview}
@@ -235,7 +235,7 @@ For an affine downstream margin, $R=0$.
 \end{proposition}
 
 The Taylor remainder is standard. The new component is the task-labeled capacity-assignment coordinate coupled
-to the exact fixed-spectrum swap vector in Equation~\ref{eq:residual-change}.
+to the exact SPS vector in Equation~\ref{eq:residual-change}.
 
 The intervention transfers attention mass from a donor token to the source. It helps when the source
 contributes more positively to the target margin than the displaced donor, unless downstream curvature
@@ -500,7 +500,7 @@ reports these audits in full.
 
 \section{Limitations}
 
-Fixed-spectrum swaps identify the causal effect of a specified attention reassignment, not a complete account
+SPS identifies the causal effect of a specified attention reassignment, not a complete account
 of model computation. The protocol requires identifiable evidence positions and a chosen intervention circuit;
 output-conditioned selection also requires disjoint calibration examples. The post-softmax swap is an
 off-manifold counterfactual. Preserving the full weight spectrum isolates assignment, but does not show that
