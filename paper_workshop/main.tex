@@ -6,8 +6,8 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[hyphens]{url}   % must precede hyperref, which loads url itself (option clash otherwise)
 \usepackage{hyperref}
-\usepackage[hyphens]{url}
 \usepackage{booktabs}
 \usepackage{amsfonts}
 \usepackage{nicefrac}
@@ -107,14 +107,7 @@ Our contributions are:
     multi-evidence computation, and natural QA, and identify saturation and selector-mismatch regimes.
 \end{itemize}
 
-\begin{figure}[!t]
-\centering
-\includegraphics[width=0.97\textwidth]{figures/fig_routing_overview.png}
-\caption{Question-answering use case. For the same context and question, a spectrum-preserving swap (SPS) moves the
-maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model, values,
-and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects the answer.}
-\label{fig:overview}
-\end{figure}
+% PAGE BUDGET: the illustrative routing schematic is Figure~\ref{fig:overview} in Appendix~\ref{app:overview}.
 
 \section{Related Work}
 
@@ -542,6 +535,19 @@ The exact Qwen rerun keeps precision, lengths, contrast, and sample counts fixed
 Output-conditioned selectors lead in each family, although their internal ranking changes by architecture. Full
 selector results, competence-gate failures, and the anonymized code package appear in the supplementary
 material.
+
+\section{Illustration of a spectrum-preserving swap}
+\label{app:overview}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.97\textwidth]{figures/fig_routing_overview.png}
+\caption{Question-answering use case. For the same context and question, a spectrum-preserving swap (SPS)
+moves the maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model,
+values, and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects
+the answer.}
+\label{fig:overview}
+\end{figure}
 
 \section{Paired causal protocol}
 \label{app:protocol}
