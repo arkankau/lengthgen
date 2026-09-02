@@ -5,6 +5,10 @@
 % dblblindworkshop keeps the submission anonymous (the style's default) and prints the workshop notice.
 \usepackage[dblblindworkshop]{neurips_2026}
 \workshoptitle{Interpretability as a Science: Toward Rigorous Foundations for Understanding LLMs}
+% Name the workshop in the submission footer (the style prints the generic conference notice otherwise).
+\makeatletter
+\renewcommand{\@noticestring}{Submitted to the NeurIPS 2026 Workshop on Interpretability as a Science. Do not distribute.}
+\makeatother
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -60,9 +64,9 @@ fixed-spectrum swap (FSS), a causal intervention that preserves every permutatio
 attention row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained
 language models, and context-grounded question answering, FSS separates selective capacity from correct
 assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. Outcome-blind selection
-by source mass fails where outcome-aware selection succeeds; because our utility term is the gradient of the
-margin it predicts, this establishes that outcome-aware selection helps rather than isolating a special role
-for utility, and separating the two needs an outcome-aware but non-utility baseline. Pretrained effect
+by source mass fails where outcome-aware selection succeeds; but a selector ablation shows this is the general
+value of outcome-awareness rather than a special role for our utility term, since a plain gradient score beats
+it and the pre-registered utility-specificity test fails. Pretrained effect
 magnitudes are seed-sensitive, so we report them as directional: on the one condition we replicate across
 seeds, the original seed is $45\times$ the five-seed mean. On natural question answering the prediction is
 sensitive to reassignment onto the gold evidence, though a semantic-distractor control is still needed to
@@ -110,17 +114,20 @@ Our contributions are:
     determine the causal effect: outcome-blind source-mass selection fails where outcome-aware selection
     succeeds.
     \item \textbf{Transfer and boundaries.} We test the intervention across controlled tasks, pretrained models,
-    multi-evidence computation, and natural QA, and identify saturation and selector-mismatch regimes together
+    a two-required-token task, and natural QA, and identify saturation and selector-mismatch regimes together
     with the seed, endogenous, selector-circularity, and length boundaries where the reading stops being
     sufficient.
 \end{itemize}
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.74\textwidth]{figures/fig_routing_overview.png}
-\caption{Question-answering use case. For the same context and question, a fixed-spectrum swap (FSS) moves
-the maximum attention weight from a distractor (``Paris'') to required evidence (``Tokyo''). The model, values,
-and weight spectrum remain unchanged; the paired target-answer margin tests whether assignment affects the answer.}
+\includegraphics[width=0.69\textwidth]{figures/fig_routing_overview.png}
+\caption{The fixed-spectrum swap (FSS) operation. The maximum attention weight is moved onto a chosen target
+while the model, values, and complete weight spectrum are held fixed, and the paired target-answer margin
+measures the effect. The instance drawn here, moving mass off an answer-shaped distractor (``Paris'') onto the
+required evidence (``Tokyo''), is the \emph{semantic-distractor} comparison we identify as the key control not
+yet run: the experiments in this paper instead move mass between task-irrelevant tokens (Section~\ref{app:scope},
+Limitations). It illustrates the target claim, not a completed condition.}
 \label{fig:overview}
 \end{figure}
 
@@ -298,7 +305,7 @@ comparison that bound this reading.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.74\linewidth]{figures/fig_paired_causal_protocol.png}
+\includegraphics[width=0.69\linewidth]{figures/fig_paired_causal_protocol.png}
 \caption{Paired causal protocol. A circuit selected on disjoint calibration data is frozen before
 treatment and control are applied to the same evaluation row. Both paths preserve the spectrum; the natural
 QA control additionally minimizes displacement mismatch in Equation~\ref{eq:matched-control}.}
@@ -317,7 +324,7 @@ and preregistered decision rules.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.68\textwidth]{figures/fig_fixed_spectrum_result.png}
+\includegraphics[width=0.63\textwidth]{figures/fig_fixed_spectrum_result.png}
 \caption{Assignment changes retrieval despite an identical attention spectrum. Source-max improves accuracy,
 source-min harms it, and the distractor-only control remains near zero (a). The effect increases with the
 fraction of the selected circuit receiving the intervention (b). Diamonds and intervals summarize trained
@@ -345,11 +352,12 @@ and variance and patching results are in the supplementary material.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.64\textwidth]{figures/fig_capacity_assignment.png}
-\caption{Capacity controls leverage, and utility predicts the finite intervention. Sharper spectra
+\includegraphics[width=0.6\textwidth]{figures/fig_capacity_assignment.png}
+\caption{Capacity controls leverage, and utility ranks the finite intervention. Sharper spectra
 increase the correct-versus-wrong assignment contrast while sharpening alone remains near zero (a). The
-first-order utility term predicts the exact source-max margin effect across tasks and positional encodings
-(b). Error bars summarize trained models.}
+first-order utility term ranks the exact source-max margin effect (b); panel (b) pools 32 controlled cell
+means, so it shows the aggregate relation, and the honest per-model correlations ($0.87$/$0.54$/$0.55$) are
+in Appendix~\ref{app:audits}. Error bars summarize trained models.}
 \label{fig:capacity-assignment}
 \end{figure}
 
@@ -387,7 +395,7 @@ aggregate source mass from useful evidence assignment.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.52\textwidth]{figures/fig_pretrained_summary.png}
+\includegraphics[width=0.48\textwidth]{figures/fig_pretrained_summary.png}
 \caption{Matched pretrained-model comparison. A single calibration seed (seed 0) is shown because the frozen
 circuit is selected once per seed and the panels compare conditions within that fixed circuit; seed-pooled
 results are in the supplementary material. Error bars are paired $95\%$ intervals over $n=128$ examples per
@@ -397,26 +405,35 @@ saturated, and the source-mass-selected SmolLM2 circuit does not benefit.}
 \label{fig:pretrained-summary}
 \end{figure}
 
-We read the pretrained results as directional, not as calibrated magnitudes, because the magnitudes are
-seed-sensitive. The one condition we replicated across seeds is telling: on Qwen, the headline seed selects a
-layer-19 circuit with a source-max margin of $+1.882$, while five further seeds all select a layer-14 circuit
-with margins near $+0.04$ (mean $+0.042$), a $45\times$ gap. The six-seed mean is $+0.349$ with a hierarchical
-$95\%$ interval of $[+.037,+.982]$ that excludes zero, so the direction is reproducible while the size is not,
-and the single-seed magnitudes in Table~\ref{tab:evidence-summary} should be read as upper estimates. The
+We read the pretrained results as directional, not calibrated, because the selection procedure itself is
+seed-unstable. On the one condition we replicated, the Qwen headline seed selects a layer-19 circuit while five
+further seeds all select a layer-14 circuit, so different seeds recover different circuits, not noisier
+estimates of one. That headline circuit gives a source-max margin of $+1.882$ on the exact contrast
+(Table~\ref{tab:qwen-seeds}) and $+1.990$ over the 5/20/80 ladder in Table~\ref{tab:evidence-summary} (same
+seed, two aggregations), whereas the five replication seeds sit near $+0.04$: a $45\times$ gap. The six-seed
+mean $+0.349$ ($95\%$ CI $[+.037,+.982]$) excludes zero, so the direction reproduces while the size and the
+circuit do not, and the single-seed magnitudes in Table~\ref{tab:evidence-summary} are directional only. The
 robust reading is the sign and the regime pattern: Qwen and Pythia gain margin from source-max, Gemma stays
 accurate and gains little from extra source mass while source-min still harms it (the saturation regime of
-Proposition~\ref{prop:utility}), and the source-mass-selected SmolLM2 circuit does not benefit.
+Proposition~\ref{prop:utility}), and the source-mass-selected SmolLM2 circuit does not benefit. Gemma's
+asymmetry ($+0.04$ gain against a $-1.37$ loss) is not the generic ``destruction hurts more than construction
+helps'' pattern, because that pattern is absent in the other models: Qwen and Pythia gain \emph{more} from
+source-max than they lose from source-min. The gain-poor, loss-rich profile is specific to Gemma, the one model
+already accurate at long context, which is the saturation signature.
 
 SmolLM2's source-mass selector fails, yet ranking heads by an output-conditioned score restores a positive
-effect. We are cautious about how much this isolates: our utility term is the gradient of the very margin we
+effect. We are careful about what this isolates, because our utility term is the gradient of the very margin we
 then measure, so selecting heads by predicted $\Delta M$ and finding large $\Delta M$ is close to guaranteed by
-Proposition~\ref{prop:utility}, and disjoint calibration data controls overfitting but not this circularity of
-functional form. The supported claim is therefore the weaker one that \emph{outcome-aware} selection beats
-outcome-blind source-mass selection; isolating a special role for the utility functional would require an
-outcome-aware but non-utility baseline, such as attribution-patching or ablation-based head scores, which we
-have not run. On context-grounded natural QA the same pattern holds directionally across six seeds (mean
-contrast $+.378$, one seed dominant, leave-one-seed-out $+.19$ to $+.55$); we report the interval rather than a
-significance claim, since an exact sign test at six seeds bottoms out at the $p=.03125$ we reach.
+Proposition~\ref{prop:utility}. A ten-seed selector ablation separates the two effects. Outcome-aware scores
+clearly beat outcome-blind ones: source-gradient and utility-gain reach $+0.75$ and $+0.60$ mean margin, while
+source mass, transfer mass, and a random selector are all near zero or negative ($-0.04$, $-0.09$, $-0.02$).
+But the utility functional earns no special credit: a plain source-gradient score \emph{beats} it
+($\text{utility-gain} - \text{source-gradient} = -0.15$, $95\%$ CI $[-0.27,-0.03]$), and the preregistered
+utility-specificity test fails. The supported claim is thus that outcome-aware selection beats outcome-blind
+selection, not that this particular utility term is the right one. On context-grounded natural QA the same
+directional pattern holds across six seeds (mean contrast $+.378$, one seed dominant, leave-one-seed-out $+.19$
+to $+.55$); we report the interval rather than a significance claim, since an exact sign test at six seeds
+bottoms out at the $p=.03125$ we reach.
 
 \begin{table}[!t]
 \centering
@@ -499,7 +516,7 @@ report is one contribution among several rather than the dominant pathway.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.62\textwidth]{figures/fig_natural_length_ladder.png}
+\includegraphics[width=0.58\textwidth]{figures/fig_natural_length_ladder.png}
 \caption{Matched natural-QA length ladder (seed 0; the four-passage circuit is frozen once per seed and reused
 at every length, and the additional Qwen seed is in the supplementary material). Bands are paired bootstrap
 $95\%$ intervals over $n=128$ examples per cell. From 4 to 32 passages, accuracy falls (a), source routing
@@ -508,18 +525,14 @@ moves in opposite directions across models (b), and frozen-circuit rescue stays 
 \end{figure}
 
 At a fixed context in ordinary text, the answer is sensitive to a spectrum-preserving reassignment onto the
-gold evidence. We stop short of ``causal routing to the required evidence'': without the semantic-distractor
-control (Limitations), the result is still compatible with sensitivity to any answer-shaped token, and that
-control is the precondition for the stronger claim. The length ladder is a scope
-test: we select the circuit at four passages, freeze every choice, and append unrelated passages to form
-nested 4-, 8-, 16-, and 32-passage contexts. Both Qwen and SmolLM2 lose margin and accuracy by 32 passages, yet
-their source-mass trajectories diverge: Qwen source mass rises as rescue weakens, while SmolLM2 source mass
-falls with rescue flat. The shared degradation cannot be attributed to one consistent source-mass trajectory,
-so this is a scope limit of the diagnosis, not a failed prediction. At a fixed context the swap measures
-whether a chosen circuit can use reassigned evidence; as contexts grow, representation quality, distractor
-semantics, and computation outside the circuit also matter, and the theorem, which concerns a specified swap at
-a fixed context, does not resolve those bottlenecks. Exact 32-minus-4 changes are in the supplementary
-material.
+gold evidence, short of ``causal routing to the required evidence'' pending the semantic-distractor control
+(Limitations). The length ladder is a scope test: we select the circuit at four passages, freeze it, and
+append unrelated passages to form nested 4- to 32-passage contexts. Both Qwen and SmolLM2 lose margin and
+accuracy by 32 passages, yet their source-mass trajectories diverge: Qwen source mass rises as rescue weakens,
+while SmolLM2 source mass falls with rescue flat. The shared degradation cannot be pinned to one source-mass
+trajectory, so this is a scope limit of the diagnosis, not a failed prediction; the fixed-context swap measures
+whether a chosen circuit can use reassigned evidence, and as contexts grow, representation quality and
+computation outside the circuit also matter. Exact 32-minus-4 changes are in the supplementary material.
 
 \subsection{Identification and Replication Audits}
 
@@ -533,15 +546,15 @@ reports these audits in full.
 
 FSS identifies the causal effect of a specified post-softmax reassignment, not a complete account of model
 computation: the swap is an off-manifold counterfactual, and preserving the spectrum isolates assignment
-without showing that training produces the same row. One control is also missing and bounds the natural-QA
-reading. The displacement-matched control moves mass between two task-irrelevant tokens, whereas the treatment
-moves it onto a semantically loaded token; a stronger control moves the same maximum onto a competitor answer
-token, matched for spectrum and displacement, to separate assignment to required evidence from assignment to
-any answer-shaped token (source-min is not a substitute, since it also changes the magnitude moved). We flag
-this semantic-distractor control as the primary missing comparison, alongside adding calibration seeds so the
-pretrained cells report distributions, not point estimates. Higher arity is competence-limited and the
-generation audit is short-horizon. Anonymized code, seeds, prompts, and per-example outputs accompany the
-submission and will be released on acceptance.
+without showing that training produces the same row. Four comparisons would each strengthen a claim we
+currently mark as bounded. The \emph{semantic-distractor} control (Figure~\ref{fig:overview}), moving the
+maximum onto a competitor answer token at matched spectrum and displacement, is the primary one: without it,
+the natural-QA result is compatible with sensitivity to any answer-shaped token rather than to the required
+evidence. Adding calibration seeds would let the pretrained cells report distributions rather than
+seed-fragile point estimates, and a head-to-head against Attention Knockout and Contribution Weights would
+make the ``leave the multiset intact'' distinction empirical rather than conceptual. Higher arity is
+competence-limited and the generation audit is short-horizon. Anonymized code, seeds, prompts, and per-example
+outputs accompany the submission and will be released on acceptance.
 
 {\small
 \bibliographystyle{plainnat}
