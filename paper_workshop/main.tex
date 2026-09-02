@@ -70,8 +70,10 @@ it and the pre-registered utility-specificity test fails. Pretrained effect
 magnitudes are seed-sensitive, so we report them as directional: on the one condition we replicate across
 seeds, the original seed is $45\times$ the five-seed mean. On natural question answering the prediction is
 sensitive to reassignment onto the gold evidence, though a semantic-distractor control is still needed to
-separate routing to required evidence from routing to any answer-shaped token. FSS gives a controlled test of
-whether a specified post-softmax reassignment of attention changes a model's prediction.
+separate routing to required evidence from routing to any answer-shaped token. Behavioral validation is
+strongest for single-token retrieval and reaches at most two required tokens; higher arity is unresolved. FSS
+gives a controlled test of whether a specified post-softmax reassignment of attention changes a model's
+prediction.
 \end{abstract}
 
 \section{Introduction}
@@ -110,26 +112,19 @@ Our contributions are:
 \begin{itemize}
     \item \textbf{Fixed-spectrum identification.} We separate selective capacity from task-conditioned
     assignment by preserving the complete attention spectrum and altering only its token placement.
-    \item \textbf{Source mass is not sufficient.} We show that source mass identifies assignment but does not
-    determine the causal effect: outcome-blind source-mass selection fails where outcome-aware selection
-    succeeds.
+    \item \textbf{Source mass is not sufficient (a methodological observation).} Source mass identifies
+    assignment but does not determine the causal effect: outcome-blind source-mass selection fails where
+    outcome-aware selection succeeds. Because our utility term is the gradient of the measured margin, this is
+    close to definitional and we present it as an observation, not a discovery about attention mass.
     \item \textbf{Transfer and boundaries.} We test the intervention across controlled tasks, pretrained models,
     a two-required-token task, and natural QA, and identify saturation and selector-mismatch regimes together
     with the seed, endogenous, selector-circularity, and length boundaries where the reading stops being
     sufficient.
 \end{itemize}
 
-\begin{figure}[!t]
-\centering
-\includegraphics[width=0.69\textwidth]{figures/fig_routing_overview.png}
-\caption{The fixed-spectrum swap (FSS) operation. The maximum attention weight is moved onto a chosen target
-while the model, values, and complete weight spectrum are held fixed, and the paired target-answer margin
-measures the effect. The instance drawn here, moving mass off an answer-shaped distractor (``Paris'') onto the
-required evidence (``Tokyo''), is the \emph{semantic-distractor} comparison we identify as the key control not
-yet run: the experiments in this paper instead move mass between task-irrelevant tokens (Section~\ref{app:scope},
-Limitations). It illustrates the target claim, not a completed condition.}
-\label{fig:overview}
-\end{figure}
+% Teaser figure removed: the earlier illustration depicted the semantic-distractor swap, which is the control
+% we do not run (see Limitations). Rather than lead with a non-executed condition, we open on the protocol
+% figure below, which shows an actually-run condition.
 
 \section{Related Work}
 
@@ -479,14 +474,15 @@ Qwen2.5-1.5B & \helpful{$+1.493$} & \helpful{$+1.493$} & \helpful{$+.069$} & \he
 \bottomrule
 \end{tabular*}
 \caption{Pretrained models, target-margin units ($n=384$ per model, matched 5/20/80-pair ladder from
-Figure~\ref{fig:pretrained-summary}). \textbf{These are single-calibration-seed point estimates and should be
-read as directional, not calibrated:} the only condition we replicated across seeds ($\dagger$, Qwen top-block
-source-max) shows the headline seed is $45\times$ the five-seed mean (six-seed mean $+0.349$, $95\%$ CI
-$[+.037,+.982]$; Appendix~\ref{app:audits}), so the other single-seed magnitudes are likely inflated. Top:
-fixed-spectrum assignment. Bottom: output-conditioned circuit selection; because the utility term is the
-gradient of this margin, its advantage over source mass (src mass column) shows that outcome-aware beats
-outcome-blind selection rather than isolating utility. A Gemma selector run was not conducted. Full cells and
-$95\%$ intervals are in the supplementary material.}
+Figure~\ref{fig:pretrained-summary}). \textbf{These are single-calibration-seed magnitudes and must not be read
+as effect sizes; use them only for the sign.} The one condition we replicated ($\dagger$, Qwen top-block
+source-max) collapses under reseeding, from the headline $+1.99$ to a six-seed mean of $+0.35$ (median
+$\approx+0.04$; the per-seed distribution is Table~\ref{tab:qwen-seeds}), so the other single-seed magnitudes
+are unquantified and likely inflated. What is robust is the sign pattern (top block) and the regime taxonomy.
+Bottom: output-conditioned circuit selection; because the utility term is the gradient of this margin, its
+advantage over source mass (src mass column) shows that outcome-aware beats outcome-blind selection rather than
+isolating utility (a plain source-gradient selector does as well; Section~\ref{sec:pretrained-regimes}). A
+Gemma selector run was not conducted. Full cells and $95\%$ intervals are in the supplementary material.}
 \label{tab:evidence-summary}
 \end{table}
 
@@ -501,9 +497,14 @@ variants, where we do not swap, the conditional source-mass coefficient is $+1.2
 mass is associated with the outcome in endogenous data. The matched fixed-spectrum contrast on those same
 endogenous rows, however, is $+.026$ with a $95\%$ interval of $[-.017,+.070]$ that includes zero. The
 intervention thus measures sensitivity to a counterfactual reassignment, and it does not establish that normal
-query-key computation creates the swapped rows. This is the central caveat of an off-manifold probe, and the
-near-zero endogenous contrast is why we frame FSS as a test of a specified reassignment rather than of the
-model's spontaneous routing.
+query-key computation creates the swapped rows. This directly reconciles the large injected effects in
+Table~\ref{tab:evidence-summary} (for example $+1.99$ on Qwen) with the near-zero endogenous contrast here:
+source-max is a large off-distribution reassignment, while the endogenous rows carry the small,
+model-produced mass differences, and the effect is present in the former and absent in the latter. The
+consistent reading is that assignment is causally potent when attention is pushed well off what the model
+would produce, whereas within the model's own distribution source mass on the gold token behaves as a
+correlate of the query-key computation more than as the operative channel. We therefore frame FSS as a test of
+a specified reassignment, not of the model's spontaneous routing.
 
 Second, restoring the selected circuit recovers little of the damage from corrupting it. Clean-to-corrupt
 activation patching on the selected heads rescues $+.308$ margin, which is only $2.5$ to $3.3\%$ of the median
@@ -547,7 +548,7 @@ reports these audits in full.
 FSS identifies the causal effect of a specified post-softmax reassignment, not a complete account of model
 computation: the swap is an off-manifold counterfactual, and preserving the spectrum isolates assignment
 without showing that training produces the same row. Four comparisons would each strengthen a claim we
-currently mark as bounded. The \emph{semantic-distractor} control (Figure~\ref{fig:overview}), moving the
+currently mark as bounded. The \emph{semantic-distractor} control, moving the
 maximum onto a competitor answer token at matched spectrum and displacement, is the primary one: without it,
 the natural-QA result is compatible with sensitivity to any answer-shaped token rather than to the required
 evidence. Adding calibration seeds would let the pretrained cells report distributions rather than
@@ -636,9 +637,9 @@ With the group log-mean-exp score $\bar s_G=T\log(|G|^{-1}\sum_{j\in G}e^{s_j/T}
 m_S\ge\alpha \Longleftrightarrow \bar s_S-\bar s_D\ge T\left(\log\tfrac{|D|}{|S|}+\operatorname{logit}(\alpha)\right).
 \label{eq:app-length-cost}
 \end{equation}
-These Gibbs partition-function identities \citep{ramsauer2021hopfield} make the dependence on distractor scores
-explicit: distractor count alone is insufficient, since arbitrarily many negligible-score distractors need not
-reduce evidence mass.
+These are elementary partition-function identities; we state them only to make the dependence on distractor
+scores explicit, since distractor count alone is insufficient when arbitrarily many negligible-score
+distractors need not reduce evidence mass.
 
 \paragraph{Capacity--assignment decomposition.}
 Let $a_{(1)}\ge\cdots\ge a_{(n)}$, let $S$ contain $r$ evidence positions, and define
