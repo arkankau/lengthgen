@@ -59,12 +59,15 @@ assignment, still does not determine the causal effect of that assignment on the
 fixed-spectrum swap (FSS), a causal intervention that preserves every permutation-invariant property of an
 attention row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained
 language models, and context-grounded question answering, FSS separates selective capacity from correct
-assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. Selecting circuits by
-source mass fails where selecting by a local value-aware utility term succeeds: source-mass selection produces
-near-zero held-out margin change, while utility selection is large and positive and ranks finite margin
-effects with per-model Spearman correlations of $0.54$ to $0.87$. Context-length sweeps mark where the
-diagnosis stops being sufficient, since behavior can degrade without a corresponding routing change. FSS gives
-a controlled test of whether a specified post-softmax reassignment of attention changes a model's prediction.
+assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. Outcome-blind selection
+by source mass fails where outcome-aware selection succeeds; because our utility term is the gradient of the
+margin it predicts, this establishes that outcome-aware selection helps rather than isolating a special role
+for utility, and separating the two needs an outcome-aware but non-utility baseline. Pretrained effect
+magnitudes are seed-sensitive, so we report them as directional: on the one condition we replicate across
+seeds, the original seed is $45\times$ the five-seed mean. On natural question answering the prediction is
+sensitive to reassignment onto the gold evidence, though a semantic-distractor control is still needed to
+separate routing to required evidence from routing to any answer-shaped token. FSS gives a controlled test of
+whether a specified post-softmax reassignment of attention changes a model's prediction.
 \end{abstract}
 
 \section{Introduction}
@@ -104,11 +107,12 @@ Our contributions are:
     \item \textbf{Fixed-spectrum identification.} We separate selective capacity from task-conditioned
     assignment by preserving the complete attention spectrum and altering only its token placement.
     \item \textbf{Source mass is not sufficient.} We show that source mass identifies assignment but does not
-    determine the causal effect: selecting circuits by source mass fails where a value-aware utility term
+    determine the causal effect: outcome-blind source-mass selection fails where outcome-aware selection
     succeeds.
     \item \textbf{Transfer and boundaries.} We test the intervention across controlled tasks, pretrained models,
     multi-evidence computation, and natural QA, and identify saturation and selector-mismatch regimes together
-    with the endogenous and length boundaries where the diagnosis stops being sufficient.
+    with the seed, endogenous, selector-circularity, and length boundaries where the reading stops being
+    sufficient.
 \end{itemize}
 
 \begin{figure}[!t]
@@ -393,31 +397,26 @@ saturated, and the source-mass-selected SmolLM2 circuit does not benefit.}
 \label{fig:pretrained-summary}
 \end{figure}
 
-The pretrained models show why the utility term matters. Qwen and Pythia gain margin when source-max replaces
-the distractor control. Gemma stays accurate as context grows and gains little from extra source mass, even
-though source-min reliably harms it. This is the saturation regime predicted by Proposition~\ref{prop:utility}:
-removing evidence matters, while extra routing has little left to add. A quantized Qwen2.5-7B run preserves
-the positive margin direction.
+We read the pretrained results as directional, not as calibrated magnitudes, because the magnitudes are
+seed-sensitive. The one condition we replicated across seeds is telling: on Qwen, the headline seed selects a
+layer-19 circuit with a source-max margin of $+1.882$, while five further seeds all select a layer-14 circuit
+with margins near $+0.04$ (mean $+0.042$), a $45\times$ gap. The six-seed mean is $+0.349$ with a hierarchical
+$95\%$ interval of $[+.037,+.982]$ that excludes zero, so the direction is reproducible while the size is not,
+and the single-seed magnitudes in Table~\ref{tab:evidence-summary} should be read as upper estimates. The
+robust reading is the sign and the regime pattern: Qwen and Pythia gain margin from source-max, Gemma stays
+accurate and gains little from extra source mass while source-min still harms it (the saturation regime of
+Proposition~\ref{prop:utility}), and the source-mass-selected SmolLM2 circuit does not benefit.
 
-SmolLM2 provides the contrasting case. Its preregistered source-mass selector fails, yet ranking heads on
-disjoint calibration examples by output-conditioned gradient or utility restores a positive effect. A ten-seed
-ablation ranks source gradient, utility gain, and utility gap above source mass and transfer mass. Rankings vary
-by architecture, but circuit selection must account for the output.
-
-Interpolating from the natural row to the utility-selected swap gives a monotone margin path over five
-calibration seeds. On context-grounded natural QA, utility-selected routing improves margin over a
-displacement-matched control, while source-mass selection harms it. The direction is consistent across all six
-disjoint calibration seeds (mean contrast $+.378$), but the magnitude is not evenly distributed: one seed
-carries most of the pooled mean, and a leave-one-seed-out check ranges from $+.19$ to $+.55$, so we read the
-result as directionally reliable and magnitude-uncertain. We deliberately avoid a significance claim here: an
-exact two-sided sign test at six seeds has a minimum attainable $p$ of $.03125$, which we reach, so the test
-has no resolution to distinguish this effect from any all-positive one and the interval, not a $p$-value, is
-the honest summary. All competence gates pass, and an unconstrained generation audit finds no first-answer or
-repetition cost.
-
-The selector results judge a selector by the frozen circuits it finds and their paired margin effects. They do
-not test whether the per-row utility functional predicts a finite swap effect. That held-out predictor audit is
-reported separately in the supplementary material.
+SmolLM2's source-mass selector fails, yet ranking heads by an output-conditioned score restores a positive
+effect. We are cautious about how much this isolates: our utility term is the gradient of the very margin we
+then measure, so selecting heads by predicted $\Delta M$ and finding large $\Delta M$ is close to guaranteed by
+Proposition~\ref{prop:utility}, and disjoint calibration data controls overfitting but not this circularity of
+functional form. The supported claim is therefore the weaker one that \emph{outcome-aware} selection beats
+outcome-blind source-mass selection; isolating a special role for the utility functional would require an
+outcome-aware but non-utility baseline, such as attribution-patching or ablation-based head scores, which we
+have not run. On context-grounded natural QA the same pattern holds directionally across six seeds (mean
+contrast $+.378$, one seed dominant, leave-one-seed-out $+.19$ to $+.55$); we report the interval rather than a
+significance claim, since an exact sign test at six seeds bottoms out at the $p=.03125$ we reach.
 
 \begin{table}[!t]
 \centering
@@ -449,7 +448,7 @@ complete spectrum. Full cells and $95\%$ intervals are in the supplementary mate
 \toprule
 Model & Unpatched & $\Delta$ src-max & $\Delta$ src-min & \textbf{max$-$distr.} \\
 \midrule
-Qwen2.5-1.5B & $-3.048$ & \helpful{$+1.990$} & \harmful{$-.961$} & \helpful{$+1.799$} \\
+Qwen2.5-1.5B$^\dagger$ & $-3.048$ & \helpful{$+1.990$} & \harmful{$-.961$} & \helpful{$+1.799$} \\
 Pythia-1.4B & $-3.805$ & \helpful{$+.826$} & \harmful{$-1.022$} & \helpful{$+.680$} \\
 Gemma-2-2B & $+2.234$ & \helpful{$+.040$} & \harmful{$-1.373$} & \helpful{$+.027$} \\
 SmolLM2-1.7B & $-2.782$ & \harmful{$-.168$} & \harmful{$-.112$} & \harmful{$-.091$} \\
@@ -462,11 +461,15 @@ SmolLM2-1.7B & \helpful{$+1.253$} & \helpful{$+.859$} & \neutral{$+.006$} & \hel
 Qwen2.5-1.5B & \helpful{$+1.493$} & \helpful{$+1.493$} & \helpful{$+.069$} & \helpful{$+1.424$} \\
 \bottomrule
 \end{tabular*}
-\caption{Pretrained models, all in target-margin units ($n=384$ per model, matched 5/20/80-pair ladder from
-Figure~\ref{fig:pretrained-summary}). Top: fixed-spectrum assignment. Bottom: output-conditioned circuit
-selection, where selecting by source mass gives near-zero margin change (src mass column) while selecting by a
-value-aware utility term is large and positive (util$-$src column); a Gemma selector run was not conducted.
-Full cells and $95\%$ intervals are in the supplementary material.}
+\caption{Pretrained models, target-margin units ($n=384$ per model, matched 5/20/80-pair ladder from
+Figure~\ref{fig:pretrained-summary}). \textbf{These are single-calibration-seed point estimates and should be
+read as directional, not calibrated:} the only condition we replicated across seeds ($\dagger$, Qwen top-block
+source-max) shows the headline seed is $45\times$ the five-seed mean (six-seed mean $+0.349$, $95\%$ CI
+$[+.037,+.982]$; Appendix~\ref{app:audits}), so the other single-seed magnitudes are likely inflated. Top:
+fixed-spectrum assignment. Bottom: output-conditioned circuit selection; because the utility term is the
+gradient of this margin, its advantage over source mass (src mass column) shows that outcome-aware beats
+outcome-blind selection rather than isolating utility. A Gemma selector run was not conducted. Full cells and
+$95\%$ intervals are in the supplementary material.}
 \label{tab:evidence-summary}
 \end{table}
 
@@ -504,7 +507,10 @@ moves in opposite directions across models (b), and frozen-circuit rescue stays 
 \label{fig:natural-length-ladder}
 \end{figure}
 
-The fixed-context natural-QA result establishes causal routing in ordinary text. The length ladder is a scope
+At a fixed context in ordinary text, the answer is sensitive to a spectrum-preserving reassignment onto the
+gold evidence. We stop short of ``causal routing to the required evidence'': without the semantic-distractor
+control (Limitations), the result is still compatible with sensitivity to any answer-shaped token, and that
+control is the precondition for the stronger claim. The length ladder is a scope
 test: we select the circuit at four passages, freeze every choice, and append unrelated passages to form
 nested 4-, 8-, 16-, and 32-passage contexts. Both Qwen and SmolLM2 lose margin and accuracy by 32 passages, yet
 their source-mass trajectories diverge: Qwen source mass rises as rescue weakens, while SmolLM2 source mass
@@ -532,11 +538,10 @@ reading. The displacement-matched control moves mass between two task-irrelevant
 moves it onto a semantically loaded token; a stronger control moves the same maximum onto a competitor answer
 token, matched for spectrum and displacement, to separate assignment to required evidence from assignment to
 any answer-shaped token (source-min is not a substitute, since it also changes the magnitude moved). We flag
-this semantic-distractor control as the primary missing comparison. Finally, higher arity is
-competence-limited, the generation audit is short-horizon, the six-seed families have no resolution below the
-sign-test floor and are reported descriptively, and utility ranks swaps better than it calibrates them.
-Anonymized code, seeds, prompts, and per-example outputs accompany the submission and will be released on
-acceptance.
+this semantic-distractor control as the primary missing comparison, alongside adding calibration seeds so the
+pretrained cells report distributions, not point estimates. Higher arity is competence-limited and the
+generation audit is short-horizon. Anonymized code, seeds, prompts, and per-example outputs accompany the
+submission and will be released on acceptance.
 
 {\small
 \bibliographystyle{plainnat}
@@ -563,17 +568,41 @@ so we use it as a local ranking signal rather than a calibrated finite-effect es
 cell means in Figure~\ref{fig:capacity-assignment}b, the actual-on-predicted fit is $1.387x-.102$
 (Pearson $.978$), which deviates from identity calibration.
 
-The exact Qwen rerun keeps precision, lengths, contrast, and sample counts fixed. It is the clearest case of
-directional consistency with magnitude instability: the original seed gives $+1.882$, the five new seeds give a
-mean of $+.042$, and all six are positive. The sign is reproducible while the magnitude is not, and the pooled
-mean of the natural-QA contrast in Section~\ref{sec:pretrained-regimes} is dominated by the original seed.
-Because an exact two-sided sign test at six seeds bottoms out at $p=.03125$, we report the seed-level values and
-the leave-one-seed-out range rather than a significance verdict for these six-seed families. Adding seeds is
-the natural next step and is left to an extended version.
+The exact Qwen rerun, with precision, lengths, contrast, and sample counts fixed, is the sharpest evidence that
+the pretrained magnitudes are seed-sensitive and the main reason we present them as directional. Each seed
+selects its own circuit before evaluation, and the headline seed selects a different circuit from the other
+five (Table~\ref{tab:qwen-seeds}). The sign is reproducible in all six seeds, the six-seed mean source-max
+minus control margin is $+0.349$ with a hierarchical $95\%$ interval of $[+.037,+.982]$ that excludes zero, but
+the size varies by more than an order of magnitude. A two-sided exact sign test at six seeds bottoms out at
+$p=.03125$, so we report the seed-level values rather than a significance verdict. Adding seeds to every
+pretrained cell, so that Table~\ref{tab:evidence-summary} reports distributions rather than point estimates, is
+the most important open item, not a cosmetic extension.
 
-Output-conditioned selectors lead in each family, although their internal ranking changes by architecture. Full
-selector results, competence-gate failures, and the anonymized code package appear in the supplementary
-material.
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}rlll}
+\toprule
+Seed & Layer & Heads & Mean margin \\
+\midrule
+0 (headline) & 19 & $[3,1,0,2]$ & $+1.882$ \\
+1 & 14 & $[3,4,0,1]$ & $+0.041$ \\
+2 & 14 & $[3,4,0,1]$ & $+0.036$ \\
+3 & 14 & $[3,0,4,1]$ & $+0.053$ \\
+4 & 14 & $[3,0,4,1]$ & $+0.039$ \\
+5 & 14 & $[3,0,4,1]$ & $+0.044$ \\
+\bottomrule
+\end{tabular*}
+\caption{Exact multi-seed Qwen replication. The headline seed selects a layer-19 circuit and a margin $45\times$
+the mean of the five replication seeds, which agree on a layer-14 circuit near $+0.04$. The effect is
+directionally reproducible and magnitude-unstable.}
+\label{tab:qwen-seeds}
+\end{table}
+
+Output-conditioned selectors lead source-mass selection in each family, but this comparison is
+outcome-aware versus outcome-blind and does not isolate the utility functional, which is the gradient of the
+measured margin; an outcome-aware but non-utility baseline is not run here. Full selector results,
+competence-gate failures, and the anonymized code package appear in the supplementary material.
 
 \section{Theory details}
 \label{app:theory}
