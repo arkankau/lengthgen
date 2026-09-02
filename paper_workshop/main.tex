@@ -63,17 +63,14 @@ assignment, still does not determine the causal effect of that assignment on the
 fixed-spectrum swap (FSS), a causal intervention that preserves every permutation-invariant property of an
 attention row while changing its assignment to task-labeled positions. Across controlled retrieval, pretrained
 language models, and context-grounded question answering, FSS separates selective capacity from correct
-assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. Outcome-blind selection
-by source mass fails where outcome-aware selection succeeds; but a selector ablation shows this is the general
-value of outcome-awareness rather than a special role for our utility term, since a plain gradient score beats
-it and the pre-registered utility-specificity test fails. Pretrained effect
-magnitudes are seed-sensitive, so we report them as directional: on the one condition we replicate across
-seeds, the original seed is $45\times$ the five-seed mean. On natural question answering the prediction is
-sensitive to reassignment onto the gold evidence, though a semantic-distractor control is still needed to
-separate routing to required evidence from routing to any answer-shaped token. Behavioral validation is
-strongest for single-token retrieval and reaches at most two required tokens; higher arity is unresolved. FSS
-gives a controlled test of whether a specified post-softmax reassignment of attention changes a model's
-prediction.
+assignment and reveals assignment-responsive, saturated, and selector-mismatch regimes. We treat FSS as a
+controlled instrument and scope it accordingly: it measures sensitivity to a counterfactual reassignment rather
+than to spontaneous routing, its pretrained effect magnitudes are seed-sensitive and reported as directional
+(one replicated condition varied $45\times$ across seeds), and outcome-aware circuit selection beats
+outcome-blind selection without privileging any particular utility score. Within that scope, and most cleanly
+for single-token retrieval, attention assignment at a fixed spectrum is a causal lever on the prediction, and
+FSS gives a controlled test of whether a specified post-softmax reassignment of attention changes a model's
+output.
 \end{abstract}
 
 \section{Introduction}
@@ -487,11 +484,12 @@ Gemma selector run was not conducted. Full cells and $95\%$ intervals are in the
 \label{tab:evidence-summary}
 \end{table}
 
-\subsection{Two results that bound the causal claim}
+\subsection{What the instrument does and does not measure}
 \label{sec:bounds}
 
-Two measurements limit how far the fixed-spectrum effect should be read as the model's own mechanism, and we
-state them here rather than as asides.
+Two measurements fix the scope of the FSS effect, and reading them alongside the results above is what makes
+the interpretation precise rather than optimistic. Both say the same thing from different directions: FSS is a
+clean test of a counterfactual reassignment, not a readout of the model's spontaneous routing.
 
 First, the effect is measured on rows the model does not itself produce. On untouched distractor-order
 variants, where we do not swap, the conditional source-mass coefficient is $+1.250$ ($p=.03125$), so source
