@@ -285,8 +285,8 @@ $\delta=a_{d^+}-a_s$, it chooses
 and swaps $(p,q)$, minimizing the $L_1$-displacement mismatch to the treatment while holding source mass fixed;
 every control preserves the complete spectrum. The control does not match the donor token, positional distance,
 or value norm, which remain separate confounds. Calibration and evaluation examples are disjoint, circuits are
-frozen before paired evaluation, hierarchical intervals resample calibration or model seeds above paired
-examples, and a cell is interpreted only after its frozen competence gate passes. Three confirmatory contrasts
+frozen before paired evaluation (Figure~\ref{fig:paired-protocol}), hierarchical intervals resample calibration
+or model seeds above paired examples, and a cell is interpreted only after its frozen competence gate passes. Three confirmatory contrasts
 form one inferential family (controlled source-max versus distractor control, the capacity-by-assignment
 interaction, and natural utility-selected source-max versus matched control), tested with two-sided exact
 sign-flip tests at the cluster level with Holm correction; other intervals are descriptive and unadjusted.
@@ -329,7 +329,8 @@ models; faint paths show individual cells.}
 
 We begin with the simplest test: move the largest available weight to the source, move it away, or exchange
 two distractors. Across sixteen trained models, the mean changes are $+0.153$, $-0.043$, and $+0.011$,
-respectively (Figure~\ref{fig:assignment-effect}). Source-max beats the control in every model-length
+respectively (Figure~\ref{fig:assignment-effect}, with controlled cells in Table~\ref{tab:controlled-summary}).
+Source-max beats the control in every model-length
 comparison. Their primary cluster-level contrast is $+.142$ (95\% CI $[+.080,+.206]$; exact
 $p=3.05\times10^{-5}$; Holm-adjusted $p=9.16\times10^{-5}$), while complete-spectrum invariant error stays
 below $10^{-6}$.
@@ -481,7 +482,7 @@ $\approx+0.04$; the per-seed distribution is Table~\ref{tab:qwen-seeds}), so the
 are unquantified and likely inflated. What is robust is the sign pattern (top block) and the regime taxonomy.
 Bottom: output-conditioned circuit selection; because the utility term is the gradient of this margin, its
 advantage over source mass (src mass column) shows that outcome-aware beats outcome-blind selection rather than
-isolating utility (a plain source-gradient selector does as well; Section~\ref{sec:pretrained-regimes}). A
+isolating utility (a plain source-gradient selector does slightly better; Section~\ref{sec:pretrained-regimes}). A
 Gemma selector run was not conducted. Full cells and $95\%$ intervals are in the supplementary material.}
 \label{tab:evidence-summary}
 \end{table}
@@ -527,8 +528,9 @@ moves in opposite directions across models (b), and frozen-circuit rescue stays 
 
 At a fixed context in ordinary text, the answer is sensitive to a spectrum-preserving reassignment onto the
 gold evidence, short of ``causal routing to the required evidence'' pending the semantic-distractor control
-(Limitations). The length ladder is a scope test: we select the circuit at four passages, freeze it, and
-append unrelated passages to form nested 4- to 32-passage contexts. Both Qwen and SmolLM2 lose margin and
+(Limitations). The length ladder is a scope test (Figure~\ref{fig:natural-length-ladder}): we select the
+circuit at four passages, freeze it, and append unrelated passages to form nested 4- to 32-passage contexts.
+Both Qwen and SmolLM2 lose margin and
 accuracy by 32 passages, yet their source-mass trajectories diverge: Qwen source mass rises as rescue weakens,
 while SmolLM2 source mass falls with rescue flat. The shared degradation cannot be pinned to one source-mass
 trajectory, so this is a scope limit of the diagnosis, not a failed prediction; the fixed-context swap measures
