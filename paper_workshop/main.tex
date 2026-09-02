@@ -98,11 +98,10 @@ capacity, its assignment to task-labeled positions, and the downstream utility o
 find that source mass alone does not determine it: selecting circuits by source mass fails where selecting by a
 value-aware utility term succeeds.
 
-Length is a boundary we test, not a phenomenon we promise to explain. Performance often declines as distractors
-accumulate \citep{kazemnejad,nopeentropy,sparselong}, and attention grows more diffuse while its output
-variance can collapse \citep{vanishingvariance}. We use context-length sweeps to ask how far the fixed-spectrum
-diagnosis remains informative, and we report where it stops rather than claiming it accounts for long-context
-failure.
+We treat length as a boundary to test. Performance often declines as distractors accumulate
+\citep{kazemnejad,nopeentropy,sparselong}, and attention grows more diffuse while its output variance can
+collapse \citep{vanishingvariance}. We use context-length sweeps to ask how far the fixed-spectrum diagnosis
+remains informative, and we report where it stops; we do not claim it accounts for long-context failure.
 
 
 Our contributions are:
@@ -112,7 +111,8 @@ Our contributions are:
     \item \textbf{Source mass is not sufficient (a methodological observation).} Source mass identifies
     assignment but does not determine the causal effect: outcome-blind source-mass selection fails where
     outcome-aware selection succeeds. Because our utility term is the gradient of the measured margin, this is
-    close to definitional and we present it as an observation, not a discovery about attention mass.
+    close to definitional. We present it as a methodological observation, and it makes no discovery about
+    attention mass itself.
     \item \textbf{Transfer and boundaries.} We test the intervention across controlled tasks, pretrained models,
     a two-required-token task, and natural QA, and identify saturation and selector-mismatch regimes together
     with the seed, endogenous, selector-circularity, and length boundaries where the reading stops being
@@ -126,9 +126,9 @@ Our contributions are:
 \emph{Mechanism} (left, middle): the two attention rows hold the same sorted weights, and source-max moves the
 maximum onto the gold-evidence token (``Tokyo'') while preserving the complete spectrum. \emph{Use case}
 (right): at a fixed context, routing attention to the gold evidence flips the model's answer from a competitor
-(``Paris'') to the correct token and turns the target-answer margin positive. FSS is a diagnostic of whether
-the answer depends on routing to the required evidence, not an inference-time fix, and the margin scale here is
-illustrative; the matched control instead swaps two task-irrelevant weights, sharing spectrum and displacement.}
+(``Paris'') to the correct token and turns the target-answer margin positive. FSS diagnoses whether the answer
+depends on routing to the required evidence; it is not an inference-time fix, and the margin scale here is
+illustrative. The matched control instead swaps two task-irrelevant weights, sharing spectrum and displacement.}
 \label{fig:teaser}
 \end{figure}
 
@@ -193,13 +193,9 @@ assignment coordinate are
 \end{equation}
 Thus $m_S(\pi)=C_r^-+\rho_S(\pi)K_r(a)$. If $K_r(a)=0$, every assignment has the same evidence mass.
 
-\begin{center}
-\fcolorbox{pennblue}{pennbluefill}{\parbox{0.92\linewidth}{
-\textbf{Capacity} specifies how much evidence mass the spectrum can support.\\
-\textbf{Assignment} specifies where that mass is placed.\\
-\textbf{Utility} specifies whether moving it changes the answer.
-}}
-\end{center}
+The spectrum's capacity sets how much evidence mass is available, the assignment places that mass among the
+token positions, and the downstream utility of the moved values governs whether the placement changes the
+answer.
 
 \begin{proposition}[Fixed-spectrum capacity-assignment decomposition]
 For every assignment $\pi$ of a fixed weight multiset,
@@ -344,7 +340,7 @@ below $10^{-6}$.
 The effect grows with circuit coverage (Figure~\ref{fig:assignment-effect}b): patching one, two, four, and
 eight selected heads gives mean source-max gains of $0.007$, $0.013$, $0.056$, and $0.153$, monotone in 31 of
 32 comparisons, consistent with a distributed effect. Source attention tracks accuracy more closely than
-attention-output variance: normalizing that variance leaves accuracy unchanged, whereas forcing mass onto the
+attention-output variance. Normalizing that variance leaves accuracy unchanged, whereas forcing mass onto the
 known source restores controlled retrieval, and sharpening the original row has little effect. The ordering
 survives the eight-layer replication, both positional encodings, four seeds, and both controlled tasks, while
 random-layer and adjacent-layer interventions stay near zero. The full displacement audit, per-cell intervals,
@@ -375,22 +371,25 @@ For held-out examples we differentiate the target margin along the exact source-
 in Proposition~\ref{prop:utility} ranks the finite margin change, with per-model Spearman correlations of
 $0.87$, $0.54$, and $0.55$ on Qwen2.5-1.5B, Pythia-1.4B, and Gemma-2-2B and sign agreements of $0.81$, $0.81$,
 and $0.71$ (Appendix~\ref{app:audits}). Aggregating to the $32$ controlled cell means in
-Figure~\ref{fig:capacity-assignment}b raises the rank correlation to $0.989$, but that pooled figure overstates
-the per-row relation and we do not use it as the headline. The slope of the actual-on-predicted fit is
-$1.387$, off by about $39\%$, so we read the utility term as a usable local ranking signal rather than a
-calibrated estimator of effect size. The remaining error measures downstream curvature along the swap.
+Figure~\ref{fig:capacity-assignment}b raises the rank correlation to $0.989$; the per-model correlations above
+are the ones we rely on.
 
 Modular sum requires the model to route and combine two marked values. At $5\times$ training length,
 assigning the top two weights to evidence raises exact match by $0.066$, assigning the bottom two lowers it
 by $0.291$, and evidence-max exceeds a control that preserves both the spectrum and total evidence mass by
 $0.043$ (95\% CI $[0.017,0.072]$). This is a small but positive two-evidence effect at $5\times$ (the effect at
-$1\times$ is $+0.007$), so the result reaches two required tokens rather than one; it does not establish general
-multi-token routing. A registered three-evidence estimate includes zero, and four-evidence models miss the
-frozen competence gate, so arity beyond two remains unresolved.
+$1\times$ is $+0.007$), so the result reaches two required tokens rather than one.
 
 The multi-evidence control preserves both the spectrum and the total evidence mass, changing only which
 evidence token receives each weight, so its small effect separates aggregate source mass from useful evidence
 assignment.
+
+Two qualifications close this section. The utility term ranks the finite effects but does not calibrate their
+size; the actual-on-predicted slope is $1.387$, about $39\%$ from identity, so we use it as a local ranking
+signal and treat the magnitudes with care, and its remaining error measures downstream curvature along the
+swap. The two-evidence effect does not extend past two required tokens, since the registered three-evidence
+estimate includes zero and four-evidence models miss the competence gate. Section~\ref{sec:pretrained-regimes}
+probes the selector and the pretrained magnitudes directly.
 
 \subsection{The Same Intervention Produces Three Pretrained Regimes}
 \label{sec:pretrained-regimes}
@@ -407,8 +406,8 @@ saturated, and the source-mass-selected SmolLM2 circuit does not benefit.}
 \label{fig:pretrained-summary}
 \end{figure}
 
-We read the pretrained results as directional, not calibrated, because the selection procedure itself is
-seed-unstable. On the one condition we replicated, the Qwen headline seed selects a layer-19 circuit while five
+We read the pretrained results as directional and do not treat their magnitudes as calibrated, because the
+selection procedure itself is seed-unstable. On the one condition we replicated, the Qwen headline seed selects a layer-19 circuit while five
 further seeds all select a layer-14 circuit, so different seeds recover different circuits, not noisier
 estimates of one. That headline circuit gives a source-max margin of $+1.882$ on the exact contrast
 (Table~\ref{tab:qwen-seeds}) and $+1.990$ over the 5/20/80 ladder in Table~\ref{tab:evidence-summary} (same
@@ -432,7 +431,8 @@ source mass, transfer mass, and a random selector are all near zero or negative 
 But the utility functional earns no special credit: a plain source-gradient score \emph{beats} it
 ($\text{utility-gain} - \text{source-gradient} = -0.15$, $95\%$ CI $[-0.27,-0.03]$), and the preregistered
 utility-specificity test fails. The supported claim is thus that outcome-aware selection beats outcome-blind
-selection, not that this particular utility term is the right one. On context-grounded natural QA the same
+selection. It does not establish that this particular utility term is the right one. On context-grounded
+natural QA the same
 directional pattern holds across six seeds (mean contrast $+.378$, one seed dominant, leave-one-seed-out $+.19$
 to $+.55$); we report the interval rather than a significance claim, since an exact sign test at six seeds
 bottoms out at the $p=.03125$ we reach.
@@ -497,7 +497,7 @@ Gemma selector run was not conducted. Full cells and $95\%$ intervals are in the
 \label{sec:bounds}
 
 Two measurements fix the scope of the FSS effect and, read alongside the results above, keep the
-interpretation precise: FSS is a clean test of a counterfactual reassignment, not a readout of spontaneous
+interpretation precise. FSS is a clean test of a counterfactual reassignment, not a readout of spontaneous
 routing.
 
 First, the effect is measured on rows the model does not itself produce. On untouched distractor-order variants
@@ -515,7 +515,7 @@ Second, restoring the selected circuit recovers little of the damage from corrup
 activation patching on the selected heads rescues $+.308$ margin, only $2.5$ to $3.3\%$ of the median corruption
 damage. Patching and reassignment are not directly comparable (one restores head outputs after corruption, the
 other acts on an unchanged input), but the small recovered fraction indicates the selected heads are one
-contribution among several, not the dominant pathway.
+contribution among several and do not form the dominant pathway.
 
 \subsection{Natural Context Marks the Scope Boundary}
 
@@ -524,9 +524,9 @@ gold evidence, short of ``causal routing to the required evidence'' pending the 
 (Limitations). The length ladder is a scope test (Figure~\ref{fig:natural-length-ladder}): we select the
 circuit at four passages, freeze it, and append unrelated passages to form nested 4- to 32-passage contexts.
 Both Qwen and SmolLM2 lose margin and
-accuracy by 32 passages, yet their source-mass trajectories diverge: Qwen source mass rises as rescue weakens,
+accuracy by 32 passages, yet their source-mass trajectories diverge. Qwen source mass rises as rescue weakens,
 while SmolLM2 source mass falls with rescue flat. The shared degradation cannot be pinned to one source-mass
-trajectory, so this is a scope limit of the diagnosis, not a failed prediction; the fixed-context swap measures
+trajectory, so this is a scope limit of the diagnosis, not a failed prediction. The fixed-context swap measures
 whether a chosen circuit can use reassigned evidence, and as contexts grow, representation quality and
 computation outside the circuit also matter. Exact 32-minus-4 changes are in the supplementary material.
 
@@ -540,12 +540,12 @@ reports these audits in full.
 
 \section{Limitations}
 
-FSS identifies the causal effect of a specified post-softmax reassignment, not a complete account of model
-computation: the swap is an off-manifold counterfactual, and preserving the spectrum isolates assignment
+FSS identifies the causal effect of a specified post-softmax reassignment. It is not a complete account of
+model computation. The swap is an off-manifold counterfactual, and preserving the spectrum isolates assignment
 without showing that training produces the same row. Three comparisons would each strengthen a bounded claim.
-The \emph{semantic-distractor} control, moving the maximum onto a competitor answer token at matched spectrum
-and displacement, is the primary one: without it the natural-QA result is compatible with sensitivity to any
-answer-shaped token rather than to the required evidence. Adding calibration seeds would replace the
+The \emph{semantic-distractor} control moves the maximum onto a competitor answer token at matched spectrum
+and displacement; it is the primary one, because without it the natural-QA result is compatible with
+sensitivity to any answer-shaped token rather than to the required evidence. Adding calibration seeds would replace the
 seed-fragile pretrained point estimates with distributions, and a head-to-head against Attention Knockout and
 Contribution Weights would make the ``leave the multiset intact'' distinction empirical. Higher arity is
 competence-limited and the generation audit is short-horizon. Anonymized code, seeds, prompts, and per-example
@@ -584,7 +584,7 @@ minus control margin is $+0.349$ with a hierarchical $95\%$ interval of $[+.037,
 the size varies by more than an order of magnitude. A two-sided exact sign test at six seeds bottoms out at
 $p=.03125$, so we report the seed-level values rather than a significance verdict. Adding seeds to every
 pretrained cell, so that Table~\ref{tab:evidence-summary} reports distributions rather than point estimates, is
-the most important open item, not a cosmetic extension.
+the most important open item. We do not treat it as a cosmetic extension.
 
 \begin{table}[!ht]
 \centering
@@ -693,9 +693,9 @@ improves the margin whenever the summed evidence--donor utility gain exceeds the
 
 The decomposition and corollary are algebraic for arbitrary $r$. Their behavioral premise is established for
 $r=1$ and $r=2$; the three-evidence interval includes zero and the four-evidence models miss the competence
-gate, so efficacy beyond $r=2$ remains open. The condition is sufficient, not necessary: source-max can fail
-when evidence values have no greater downstream utility, patched heads cancel, or curvature dominates, so
-natural source mass alone is not a universal circuit-selection rule.
+gate, so efficacy beyond $r=2$ remains open. The condition is sufficient without being necessary. Source-max
+can fail when evidence values have no greater downstream utility, patched heads cancel, or curvature dominates,
+so natural source mass alone is not a universal circuit-selection rule.
 
 \section{Experimental protocol}
 \label{app:protocol}
